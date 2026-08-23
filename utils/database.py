@@ -154,7 +154,9 @@ def add_conversion(filename: str, fmt: str, source_path: str) -> int:
 def get_conversions() -> list[dict[str, object]]:
     conn = get_db()
     try:
-        cursor = conn.execute("SELECT * FROM conversions ORDER BY created_at DESC LIMIT 50")
+        cursor = conn.execute(
+            "SELECT * FROM conversions ORDER BY created_at DESC LIMIT 50"
+        )
         return [dict(row) for row in cursor.fetchall()]
     finally:
         conn.close()
@@ -296,7 +298,9 @@ def get_requisites(obj_id: int) -> dict[str, object] | None:
 def save_requisites(obj_id: int, data: dict[str, str]) -> None:
     conn = get_db()
     try:
-        existing = conn.execute("SELECT id FROM requisites WHERE object_id = ?", (obj_id,)).fetchone()
+        existing = conn.execute(
+            "SELECT id FROM requisites WHERE object_id = ?", (obj_id,)
+        ).fetchone()
         fields = [
             "developer_name",
             "developer_ogrn",
