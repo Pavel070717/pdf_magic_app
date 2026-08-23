@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% set page = "files" %}
+{% block content %}
+
+<div class="flex items-center gap-3 px-5 py-4 border-b border-border">
+  <div class="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
+    <span class="text-accent text-lg">📁</span>
+  </div>
+  <div>
+    <h1 class="text-lg font-bold text-text-primary">Файлы</h1>
+    <p class="text-xs text-text-muted">Загрузка и управление файлами</p>
+  </div>
+</div>
+
+<div class="p-5 max-w-4xl">
+  <form id="upload-form" class="bg-bg-secondary border border-border rounded-xl p-6 mb-6" onsubmit="return uploadFiles(event)">
+    <h3 class="text-sm font-semibold mb-3">Загрузить файлы</h3>
+    <div class="flex gap-3">
+      <input type="file" id="file-input" name="files" multiple required
+        class="flex-1 file:bg-bg-secondary file:text-text-muted file:border file:border-border file:rounded-lg file:px-3 file:py-1.5 file:mr-3 file:cursor-pointer file:text-sm">
+      <button type="submit" class="px-4 py-2.5 rounded-xl bg-accent text-white text-sm font-medium hover:bg-accent-dim transition-all duration-200">
+        Загрузить
+      </button>
+    </div>
+    <p class="text-[11px] text-text-muted mt-2">PDF, DOCX, XLSX, DWG, JPG, PNG — макс 100 МБ</p>
+    <div id="upload-msg" class="mt-2 text-sm"></div>
+  </form>
+
+  <div class="bg-bg-secondary border border-border rounded-xl p-6">
+    <h3 class="text-sm font-semibold mb-4">Список файлов</h3>
+    <div id="file-list"><span class="text-text-muted text-sm">Загрузка...</span></div>
+  </div>
+</div>
+
+<script>
+// =============================================================================
+// Upload files (multipart via FormData + fetch)
+// =============================================================================
+function uploadFiles(e) {
+  e.preventDefault();
+  var form = document.getElementById('upload-form');
+  var data = new FormData(form);
+  var msg = document.getElementById('upload-msg');
+  msg.innerHTML = '<span class="text-text-muted">Загрузка...</span>';
+
+  fetch('/api/files/add', { method: 'POST', body: data })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.success) {
+        msg.innerHTML = '<span class="text-green-400">✅ Загружено: ' + (d.files || []).length + ' файл(ов)</span>';
+        document.getElementById('file-input').value = '';
+        loadFiles();
+      } else {
+        msg.innerHTML = '<span class="text-red-400">❌ ' + (d.error || 'Ошибка') + '</span>';
+      }
+    })
+    .catch(function(err) {
+      msg.innerHTML = '<span class="text-red-400">❌ Ошибка сети: ' + err.message + '</span>';
+    });
+  return false;
+}
+
+// =============================================================================
+// Load file list
+// =============================================================================
+function loadFiles() {
+  fetch('/api/files').then(function(r) { return r.json(); }).then(function(d) {
+    var el = document.getElementById('file-list');
+    if (!d.files || !d.files.length) {
+      el.innerHTML = '<span class="text-text-muted">Файлы не загружены</span>';
+      return;
+    }
+    el.innerHTML = d.files.map(function(f, idx) {
+      var order = f.display_order || (idx + 1);
+      var num = String(order).padStart(2, '0');
+      return '<div class="flex items-center gap-3 py-2 border-b border-border last:border-0">' +
+        '<span class="text-accent text-xs font-mono font-bold w-7 shrink-0">' + num + '.</span>' +
+        '<span class="text-text-muted text-[20px]">📎</span>' +
+        '<span class="flex-1 text-sm text-text-primary truncate">' + escapeHtml(f.name || f.filename || '') + '</span>' +
+        '<span class="text-xs text-text-muted">' + (f.size ? (f.size / 1024).toFixed(0) + ' KB' : '') + '</span>' +
+        '<button class="text-red-400 text-xs hover:text-red-300" onclick="deleteFile(\'' + escapeHtml(f.id || '') + '\')">🗑️</button>' +
+        '</div>';
+    }).join('');
+  }).catch(function() {
+    document.getElementById('file-list').innerHTML = '<span class="text-red-400">Ошибка загрузки</span>';
+  });
+}
+
+// =============================================================================
+// Delete file
+// =============================================================================
+function deleteFile(id) {
+  if (!confirm('Удалить файл?')) return;
+  fetch('/api/files/remove', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: id })
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.success) loadFiles();
+  });
+}
+
+// =============================================================================
+// Helpers
+// =============================================================================
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  var div = document.createElement('div');
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+
+function showToast(msg, type) {
+  var toast = document.createElement('div');
+  toast.style.cssText = 'position:fixed;bottom:80px;right:24px;z-index:9999;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,0.4);animation:fadeIn 0.3s ease;';
+  toast.style.background = type === 'error' ? 'rgba(248,81,73,0.95)' : 'rgba(35,134,54,0.95)';
+  toast.style.color = '#fff';
+  toast.style.border = type === 'error' ? '1px solid #f85149' : '1px solid #238636';
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(function() { toast.remove(); }, 3000);
+}
+
+// =============================================================================
+// Init
+// =============================================================================
+document.addEventListener('DOMContentLoaded', loadFiles);
+</script>
+
+{% endblock %}

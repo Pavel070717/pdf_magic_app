@@ -1,0 +1,44 @@
+# ─── Python ────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+
+# ─── Runtime data ──────────────────────────────────────
+state.json
+*.db
+data/*.db
+logs/*.log
+temp_uploads/
+
+# ─── Secrets ───────────────────────────────────────────
+.env
+!.env.example
+
+# ─── Session / agent state ─────────────────────────────
+# Skills (.agents/) — COMMITTED: AI instructions shared across all your PCs
+# Session state (.deepseek/) — IGNORED: runtime data, changes every session
+.deepseek/
+# .agents/ — tracked, do NOT ignore
+
+# ─── IDE / editor ──────────────────────────────────────
+.roo/
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ─── OS ────────────────────────────────────────────────
+Thumbs.db
+.DS_Store
+
+# ─── Frontend (also covered by frontend/.gitignore) ────
+frontend/dist/
+frontend/node_modules/
+
+# ─── Graphify output ────────────────────────────────────
+graphify-out/cache/

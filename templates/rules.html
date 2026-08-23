@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% set page = "rules" %}
+{% block content %}
+
+<div class="page-header">
+  <div class="page-header-icon">🔧</div>
+  <div>
+    <h1>Правила замены</h1>
+    <p>Автоматическое переименование файлов</p>
+  </div>
+</div>
+
+<div style="padding: 24px; max-width: 800px;">
+  <div class="glass-card padded" style="margin-bottom: 16px;">
+    <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 16px;">Добавить правило</h3>
+    <form id="rule-add" style="display: flex; gap: 10px; flex-wrap: wrap;" onsubmit="return addRule(event)">
+      <select name="type">
+        <option value="text">Текстовое</option>
+        <option value="symbol">Символьное</option>
+      </select>
+      <input type="text" name="from" placeholder="Что заменить" required style="flex: 1; min-width: 140px;">
+      <input type="text" name="to" placeholder="На что заменить" required style="flex: 1; min-width: 140px;">
+      <button type="submit" class="btn btn-primary">Добавить</button>
+    </form>
+    <div id="rule-msg" style="margin-top: 10px; font-size: 13px;"></div>
+  </div>
+
+  <div class="glass-card padded">
+    <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 16px;">Список правил</h3>
+    <div id="rules-list"><span class="text-muted text-sm">Загрузка...</span></div>
+  </div>
+</div>
+
+<script>
+// =============================================================================
+// Add rule (JSON POST via fetch)
+// =============================================================================
+function addRule(e) {
+  e.preventDefault();
+  var form = document.getElementById('rule-add');
+  var payload = {
+    type: form.querySelector('[name="type"]').value,
+    from: form.querySelector('[name="from"]').value,
+    to: form.querySelector('[name="to"]').value
+  };
+  var msg = document.getElementById('rule-msg');
+  msg.innerHTML = '<span class="text-muted">Добавление...</span>';
+
+  fetch('/api/replace-rules/add', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.success) {
+      msg.innerHTML = '<span class="text-success">✅ Правило добавлено</span>';
+      form.reset();
+      loadRules();
+    } else {
+      msg.innerHTML = '<span class="text-danger">❌ ' + escapeHtml(d.error || 'Ошибка') + '</span>';
+    }
+  }).catch(function(err) {
+    msg.innerHTML = '<span class="text-danger">❌ Ошибка сети: ' + err.message + '</span>';
+  });
+  return false;
+}
+
+// =============================================================================
+// Load rules list
+// =============================================================================
+function loadRules() {
+  fetch('/api/replace-rules').then(function(r) { return r.json(); }).then(function(d) {
+    var el = document.getElementById('rules-list');
+    var rules = d.rules || d || [];
+    if (!rules.length) {
+      el.innerHTML = '<span class="text-muted">Правила не заданы</span>';
+      return;
+    }
+    el.innerHTML = rules.map(function(r) {
+      var isSymbol = r.type === 'symbol';
+      return '<div style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border);">' +
+        '<span class="badge ' + (isSymbol ? 'badge-accent' : 'badge-success') + '">' + (isSymbol ? 'СИМ' : 'ТЕКСТ') + '</span>' +
+        '<span class="text-sm" style="color: var(--text-secondary);">' + escapeHtml(r.from || '') + '</span>' +
+        '<span class="text-muted">→</span>' +
+        '<span class="text-sm" style="color: var(--text-secondary);">' + escapeHtml(r.to || '') + '</span>' +
+        '<button class="btn btn-danger btn-sm" style="margin-left: auto;" onclick="deleteRule(' + (r.id || 0) + ')">🗑️</button>' +
+        '</div>';
+    }).join('');
+    // Remove last border
+    var items = el.querySelectorAll('div[style*="border-bottom"]');
+    if (items.length) items[items.length - 1].style.borderBottom = 'none';
+  }).catch(function() {
+    document.getElementById('rules-list').innerHTML = '<span class="text-danger">Ошибка</span>';
+  });
+}
+
+// =============================================================================
+// Delete rule (DELETE via fetch)
+// =============================================================================
+function deleteRule(id) {
+  if (!confirm('Удалить правило?')) return;
+  fetch('/api/replace-rules/' + encodeURIComponent(id), { method: 'DELETE' })
+    .then(function(r) { return r.json(); }).then(function(d) {
+    if (d.success) {
+      loadRules();
+      showToast('Правило удалено', 'success');
+    }
+  });
+}
+
+// =============================================================================
+// Helpers
+// =============================================================================
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  var div = document.createElement('div');
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+
+// =============================================================================
+// Init
+// =============================================================================
+document.addEventListener('DOMContentLoaded', loadRules);
+</script>
+
+{% endblock %}

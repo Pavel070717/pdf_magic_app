@@ -1,0 +1,73 @@
+<!-- Registry modal content — ALL fields matching Excel registry output -->
+<div id="registry-form-wrap">
+  <form id="registry-form" hx-post="/api/registry/data" hx-encoding="application/json" hx-ext="json-enc" hx-target="#registry-form-wrap" hx-swap="outerHTML">
+
+    <div class="field"><label>Наименование строительной организации</label><input type="text" name="org_name" value="{{ data.org_name or '' }}" placeholder="ООО «СтройМонтаж»" autofocus></div>
+
+    <div class="field"><label>Наименование объекта, шифр проекта</label><input type="text" name="object_name" value="{{ data.object_name or '' }}" placeholder="Жилой дом №5, шифр 01-2026-АР"></div>
+
+    <div class="field"><label>Застройщик или технический заказчик</label><input type="text" name="customer" value="{{ data.customer or '' }}" placeholder="ООО «ЗаказчикСтрой»"></div>
+
+    <div class="field"><label>Представитель службы строительного контроля технического заказчика</label><input type="text" name="sk_representative" value="{{ data.sk_representative or '' }}" placeholder="ООО «СтройКонтроль»"></div>
+
+    <div class="field"><label>Генподрядчик</label><input type="text" name="general_contractor" value="{{ data.general_contractor or '' }}" placeholder="ООО «ГенПодряд»"></div>
+
+    <div class="field"><label>Исполнитель работ</label><input type="text" name="work_executor" value="{{ data.work_executor or '' }}" placeholder="ООО «Исполнитель»"></div>
+
+    <div class="field"><label>Номер реестра</label><input type="text" name="registry_number" value="{{ data.registry_number or '' }}" placeholder="№ 1"></div>
+
+    <hr style="border-color: var(--border); margin: 14px 0;">
+
+    <div class="field"><label>Сдал — представитель подрядчика (должность, ФИО)</label><input type="text" name="signature_sdal" value="{{ data.signature_sdal or '' }}" placeholder="Прораб Иванов И.И."></div>
+
+    <div class="field"><label>Проверил — представитель технадзора (должность, ФИО)</label><input type="text" name="signature_proveril" value="{{ data.signature_proveril or '' }}" placeholder="Инженер ТН Петров П.П."></div>
+
+    <div class="field"><label>Принял — представитель заказчика (должность, ФИО)</label><input type="text" name="signature_prinyal" value="{{ data.signature_prinyal or '' }}" placeholder="Начальник участка Сидоров С.С."></div>
+
+    <div style="padding-top: 14px; display: flex; justify-content: flex-end;">
+      <button type="submit" class="btn-save-glass">
+        <span>💾</span> Сохранить
+      </button>
+    </div>
+  </form>
+</div>
+
+<style>
+  .btn-save-glass {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 24px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+    color: #fff; font-size: 14px; font-weight: 600;
+    border: none; border-radius: 12px; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(79,143,255,0.3);
+    transition: all 0.2s ease;
+  }
+  .btn-save-glass:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(79,143,255,0.45);
+  }
+  .btn-save-glass:active { transform: translateY(0); }
+</style>
+
+<script>
+  (function() {
+    var form = document.getElementById('registry-form');
+    if (!form) return;
+
+    form.addEventListener('htmx:afterRequest', function(evt) {
+      if (evt.detail.successful) {
+        // Close modal
+        var modal = document.getElementById('registry-modal');
+        if (modal) modal.classList.add('hidden');
+        // Show toast
+        if (typeof showToast === 'function') {
+          showToast('✅ Данные реестра сохранены', 'success');
+        }
+      } else {
+        if (typeof showToast === 'function') {
+          showToast('❌ Ошибка сохранения', 'error');
+        }
+      }
+    });
+  })();
+</script>

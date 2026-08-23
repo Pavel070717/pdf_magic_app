@@ -1,0 +1,281 @@
+{% extends "base.html" %}
+{% set page = "directories" %}
+{% block content %}
+
+<div class="page-header">
+  <div class="page-header-icon">📂</div>
+  <div>
+    <h1>Директории</h1>
+    <p id="current-dir-label">Создание и управление папками проекта</p>
+  </div>
+</div>
+
+<div class="padded flex gap-5" style="height: calc(100vh - 140px); align-items: start;">
+  <!-- Left: Create + List -->
+  <div style="width: 320px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px;">
+    <div class="glass-card padded">
+      <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 12px;">Новая директория</h3>
+      <form id="dir-create" onsubmit="return createDir(event)">
+        <div class="field" style="margin-bottom: 10px;">
+          <input type="text" name="project_code" required placeholder="Шифр проекта">
+        </div>
+        <div class="field" style="margin-bottom: 14px;">
+          <input type="text" name="parent_path" value="C:\Users\User\Desktop">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Создать</button>
+        <div id="dir-msg" style="margin-top: 10px; font-size: 13px;"></div>
+      </form>
+    </div>
+
+    <div class="glass-card padded" style="flex: 1; overflow: auto;">
+      <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 12px;">Список директорий</h3>
+      <div id="dir-list"><span class="text-muted text-sm">Загрузка...</span></div>
+    </div>
+  </div>
+
+  <!-- Right: Directory detail -->
+  <div class="glass-card padded" style="flex: 1; overflow: auto; min-height: 300px;" id="dir-detail">
+    <div style="text-align: center; color: var(--text-muted); padding: 80px 0;">
+      <div style="font-size: 48px; margin-bottom: 12px;">📂</div>
+      <p>Выберите директорию слева</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// Create
+function createDir(e) {
+  e.preventDefault();
+  var f = document.getElementById('dir-create');
+  var msg = document.getElementById('dir-msg');
+  msg.innerHTML = '<span class="text-muted">Создание...</span>';
+  var payload = {
+    project_code: f.querySelector('[name="project_code"]').value,
+    parent_path: f.querySelector('[name="parent_path"]').value
+  };
+  fetch('/api/directory/create', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(payload)
+  }).then(r => r.json()).then(d => {
+    if (d.success) {
+      msg.innerHTML = '<span class="text-success">✅ Создана: ' + esc(d.path||'') + '</span>';
+      f.reset();
+      loadDirs();
+    } else {
+      msg.innerHTML = '<span class="text-danger">❌ ' + esc(d.error||'Ошибка') + '</span>';
+    }
+  }).catch(e => { msg.innerHTML = '<span class="text-danger">❌ ' + e.message + '</span>'; });
+  return false;
+}
+
+// List
+function loadDirs() {
+  fetch('/api/directory/scan', {method:'POST'}).then(r => r.json()).then(d => {
+    var el = document.getElementById('dir-list');
+    var tree = d.tree || [];
+    if (!tree.length) { el.innerHTML = '<span class="text-muted text-sm">Нет директорий</span>'; return; }
+    var html = '';
+    tree.forEach(function(dateNode) {
+      var projects = dateNode.children || [];
+      if (!projects.length) return;
+      html += '<div class="text-xs" style="color: var(--text-muted); font-weight: 600; margin-top: 12px; margin-bottom: 4px;">📅 ' + esc(dateNode.name) + '</div>';
+      projects.forEach(function(proj) {
+        var p = proj.path || proj.full_path || '';
+        var n = proj.name || p || '';
+        html += '<div style="padding: 4px 0;">'+
+          '<div class="dir-row" style="display: flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: var(--radius); cursor: pointer; transition: background var(--transition);">'+
+          '<span style="font-size: 18px; flex-shrink: 0;">📁</span>'+
+          '<span style="flex: 1; font-size: 13px; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" onclick=\'openDir('+JSON.stringify(p)+','+JSON.stringify(n)+')\'>' + esc(n) + '</span>'+
+          '<button class="btn-icon" style="opacity: 0; font-size: 16px;" onclick=\'event.stopPropagation();promptSubfolder('+JSON.stringify(p)+')\' title="Добавить подпапку">➕</button>'+
+          '<button class="btn-icon" style="opacity: 0; color: var(--danger);" onclick=\'event.stopPropagation();deleteDir('+JSON.stringify(p)+')\'>🗑️</button>'+
+          '</div>'+
+          renderSubfolders(proj.children||proj.subfolders||[], 1)+
+          '</div>';
+      });
+    });
+    el.innerHTML = html || '<span class="text-muted text-sm">Нет директорий</span>';
+
+    // Hover effects
+    el.querySelectorAll('.dir-row').forEach(function(row) {
+      row.addEventListener('mouseenter', function() {
+        this.style.background = 'var(--bg-primary)';
+        this.querySelectorAll('.btn-icon').forEach(function(b) { b.style.opacity = '1'; });
+      });
+      row.addEventListener('mouseleave', function() {
+        this.style.background = 'transparent';
+        this.querySelectorAll('.btn-icon').forEach(function(b) { b.style.opacity = '0'; });
+      });
+    });
+  });
+}
+
+// Open directory detail
+function openDir(path, name) {
+  document.getElementById('current-dir-label').textContent = 'Директория: ' + (name||path);
+  var detail = document.getElementById('dir-detail');
+  detail.innerHTML = '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 18px;">'+
+    '<span style="font-size: 28px;">📁</span>'+
+    '<h2 style="font-size: 18px; font-weight: 700; color: var(--text-primary);">' + esc(name||path) + '</h2>'+
+    '<span style="font-size: 12px; color: var(--text-muted); margin-left: auto;">' + esc(path) + '</span>'+
+    '</div>'+
+
+    // Upload area
+    '<div class="glass-card padded" style="margin-bottom: 14px; background: var(--bg-primary);">'+
+    '<h3 style="font-size: 14px; font-weight: 700; margin-bottom: 10px;">📎 Загрузить файлы</h3>'+
+    '<input type="file" id="file-input" multiple onchange=\'uploadFilesAuto(event,'+JSON.stringify(path)+')\' style="width: 100%;">'+
+    '<div id="upload-msg" style="margin-top: 10px; font-size: 13px;"></div>'+
+    '</div>'+
+
+    // Files + subfolders list
+    '<div class="glass-card padded" style="margin-bottom: 14px; background: var(--bg-primary);">'+
+    '<h3 style="font-size: 14px; font-weight: 700; margin-bottom: 10px;">📋 Содержимое</h3>'+
+    '<div id="dir-contents"><span class="text-muted text-sm">Загрузка...</span></div>'+
+    '</div>'+
+
+    // Magic button
+    '<div class="glass-card padded" style="background: var(--bg-primary);">'+
+    '<h3 style="font-size: 14px; font-weight: 700; margin-bottom: 10px;">📝 Генерация реестра</h3>'+
+    '<button class="btn btn-primary" onclick=\'startMagic('+JSON.stringify(path)+')\'>🚀 Сформировать реестр</button>'+
+    '<div id="magic-msg" style="margin-top: 10px; font-size: 13px;"></div>'+
+    '</div>';
+
+  // Load contents (files + subfolders)
+  listDirContents(path);
+}
+
+// Auto-upload files on selection
+function uploadFilesAuto(e, dirPath) {
+  var input = e.target;
+  var msg = document.getElementById('upload-msg');
+  if (!input.files.length) return;
+  msg.innerHTML = '<span class="text-muted">Загрузка...</span>';
+  var fd = new FormData();
+  for (var f of input.files) fd.append('files', f);
+  fetch('/api/files/add', { method:'POST', body:fd }).then(r => r.json()).then(d => {
+    if (d.success) {
+      msg.innerHTML = '<span class="text-success">✅ Загружено: '+(d.files||[]).length+' файлов</span>';
+      input.value='';
+      listDirContents(dirPath);
+    } else {
+      msg.innerHTML = '<span class="text-danger">❌ '+(d.error||'Ошибка')+'</span>';
+    }
+  }).catch(e => { msg.innerHTML = '<span class="text-danger">❌ '+e.message+'</span>'; });
+}
+
+// Magic
+function startMagic(dirPath) {
+  var msg = document.getElementById('magic-msg');
+  msg.innerHTML = '<span class="text-muted">Запуск магии...</span>';
+  fetch('/api/magic/start', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({target_dir: dirPath})
+  }).then(r => r.json()).then(d => {
+    if (d.success) { msg.innerHTML = '<span class="text-success">✅ Реестр сформирован!</span>'; }
+    else { msg.innerHTML = '<span class="text-danger">❌ '+(d.error||'Ошибка')+'</span>'; }
+  }).catch(e => { msg.innerHTML = '<span class="text-danger">❌ '+e.message+'</span>'; });
+}
+
+// List directory contents (subfolders + uploaded files)
+function listDirContents(path) {
+  // Fetch subfolders from FS scan
+  fetch('/api/directory/scan', {method:'POST'}).then(r => r.json()).then(function(d) {
+    var tree = d.tree || [];
+    var found = findNode(tree, path);
+    var html = '';
+    if (found) {
+      var subs = found.children || found.subfolders || [];
+      if (subs.length) {
+        html += '<div style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase;">📁 Папки</div>';
+        subs.forEach(function(s) {
+          var sp = s.path || s.full_path || '';
+          html += '<div style="display: flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: var(--radius); cursor: pointer; font-size: 13px;" class="dir-sub-row" onclick=\'openDir('+JSON.stringify(sp)+','+JSON.stringify(s.name||sp)+')\'>'+
+            '📁 <span class="text-accent" style="text-decoration: none;">'+esc(s.name||sp)+'</span></div>';
+        });
+      }
+    }
+    // Fetch uploaded files from state
+    return fetch('/api/files').then(r => r.json()).then(function(fd) {
+      var files = fd.files || [];
+      if (files.length) {
+        html += '<div style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px; margin-top: 12px; text-transform: uppercase;">📄 Загруженные файлы ('+files.length+')</div>';
+        files.forEach(function(f, idx) {
+          var order = f.display_order || (idx + 1);
+          var num = String(order).padStart(2, '0');
+          html += '<div style="display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 13px;">'+
+            '<span class="text-accent" style="font-weight: 700; width: 24px;">'+num+'.</span>'+
+            '<span style="color: var(--text-primary);">'+esc(f.name||f.filename||'')+'</span></div>';
+        });
+      }
+      if (!html) html = '<span class="text-muted text-sm">Пусто</span>';
+      var el = document.getElementById('dir-contents');
+      el.innerHTML = html;
+      el.querySelectorAll('.dir-sub-row').forEach(function(row) {
+        row.addEventListener('mouseenter', function() { this.style.background = 'var(--bg-secondary)'; });
+        row.addEventListener('mouseleave', function() { this.style.background = 'transparent'; });
+      });
+    });
+  });
+}
+
+function findNode(tree, path) {
+  for (var i = 0; i < tree.length; i++) {
+    if ((tree[i].path||tree[i].full_path||'') === path) return tree[i];
+    var found = findNode(tree[i].children||tree[i].subfolders||[], path);
+    if (found) return found;
+  }
+  return null;
+}
+
+// Render subfolders recursively
+function renderSubfolders(subs, depth) {
+  if (!subs||!subs.length) return '';
+  var pad = depth * 16;
+  return subs.map(function(s) {
+    var sp = s.path||s.full_path||'';
+    var sn = s.name||sp||'';
+    return '<div style="padding: 4px 0;">'+
+      '<div class="dir-row" style="display: flex; align-items: center; gap: 4px; padding: 4px 8px; padding-left:'+(pad+8)+'px; border-radius: var(--radius); cursor: pointer; transition: background var(--transition);">'+
+      '<span style="font-size: 14px; flex-shrink: 0;">📂</span>'+
+      '<span style="flex: 1; font-size: 13px; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" onclick=\'openDir('+JSON.stringify(sp)+','+JSON.stringify(sn)+')\'>'+esc(sn)+'</span>'+
+      '<button class="btn-icon" style="opacity: 0; font-size: 14px;" onclick=\'event.stopPropagation();promptSubfolder('+JSON.stringify(sp)+')\' title="Добавить подпапку">➕</button>'+
+      '</div>'+
+      renderSubfolders(s.children||s.subfolders||[], depth+1)+
+      '</div>';
+  }).join('');
+}
+
+// Prompt for subfolder name
+function promptSubfolder(parentPath) {
+  var name = prompt('Имя подпапки:');
+  if (!name||!name.trim()) return;
+  fetch('/api/directory/add-folder', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({parent_path: parentPath, folder_name: name.trim()})
+  }).then(r => r.json()).then(d => {
+    if (d.success) loadDirs();
+    else alert(d.error||'Ошибка');
+  });
+}
+
+// Delete dir
+function deleteDir(path) {
+  if (!confirm('Удалить: ' + path + '?')) return;
+  fetch('/api/directory/delete', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({full_path:path})
+  }).then(r => r.json()).then(d => {
+    if (d.success) loadDirs();
+    else alert(d.error||'Ошибка');
+  });
+}
+
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+document.addEventListener('DOMContentLoaded', loadDirs);
+</script>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+# PDF Magic App — production dependencies
+# Install: pip install -r requirements.txt
+
+# Web framework
+Flask==2.3.3
+Flask-Cors==4.0.0
+waitress==2.1.2
+python-dotenv==1.2.2
+
+# Document processing
+openpyxl==3.1.2
+pypdf==3.17.0
+opendataloader-pdf==2.4.7
+
+# Windows-specific (optional — Excel PDF export via win32com)
+pywin32==311
+
+# Development
+pytest==9.1.1
+
+# File sorting & safe delete
+natsort==8.4.0
+Send2Trash==1.8.3

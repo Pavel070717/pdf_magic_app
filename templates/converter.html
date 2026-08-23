@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+{% set page = "converter" %}
+{% block content %}
+
+<div class="page-header">
+  <div class="page-header-icon">📄</div>
+  <div>
+    <h1>Конвертер PDF</h1>
+    <p>OpenDataLoader — Markdown, JSON, HTML, Text, Tagged PDF</p>
+  </div>
+</div>
+
+<div class="padded" style="max-width: 900px;">
+  <!-- Upload zone -->
+  <div class="glass-card padded" style="margin-bottom: 18px;">
+    <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 14px;">Загрузить PDF для конвертации</h3>
+
+    <!-- Format selector -->
+    <div class="flex gap-2" style="margin-bottom: 14px; flex-wrap: wrap;" id="format-btns">
+      <button type="button" class="btn format-btn active" data-fmt="markdown">Markdown</button>
+      <button type="button" class="btn format-btn" data-fmt="json">JSON</button>
+      <button type="button" class="btn format-btn" data-fmt="html">HTML</button>
+      <button type="button" class="btn format-btn" data-fmt="text">Текст</button>
+      <button type="button" class="btn format-btn" data-fmt="tagged-pdf">Tagged PDF</button>
+    </div>
+
+    <form id="convert-form" onsubmit="return startConversion(event)">
+      <input type="hidden" name="format" id="fmt-input" value="markdown">
+      <div style="display: flex; gap: 12px;">
+        <input type="file" name="file" id="pdf-file" accept=".pdf" required style="flex: 1;">
+        <button type="submit" id="convert-btn" class="btn btn-primary">
+          Конвертировать
+        </button>
+      </div>
+    </form>
+
+    <div id="progress-panel" style="margin-top: 14px;"></div>
+  </div>
+
+  <!-- History -->
+  <div class="glass-card padded">
+    <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 14px;">📋 История конвертаций</h3>
+    <div id="history-table"><span class="text-muted text-sm">Загрузка...</span></div>
+  </div>
+</div>
+
+<script>
+// =============================================================================
+// Format selector
+// =============================================================================
+document.addEventListener('DOMContentLoaded', function() {
+  var btns = document.querySelectorAll('.format-btn');
+  btns.forEach(function(btn) {
+    btn.onclick = function() {
+      btns.forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('fmt-input').value = btn.dataset.fmt;
+    };
+  });
+});
+
+// =============================================================================
+// Poll state
+// =============================================================================
+var pollTimer = null;
+
+// =============================================================================
+// Start conversion — upload file via fetch, then poll for progress
+// =============================================================================
+function startConversion(e) {
+  e.preventDefault();
+
+  var fileInput = document.getElementById('pdf-file');
+  if (!fileInput.files.length) return false;
+
+  var fmt = document.getElementById('fmt-input').value;
+  var formData = new FormData();
+  formData.append('file', fileInput.files[0]);
+  formData.append('format', fmt);
+
+  var panel = document.getElementById('progress-panel');
+  panel.innerHTML = '<div class="text-muted text-sm">⏳ Загрузка и запуск конвертации...</div>';
+
+  var btn = document.getElementById('convert-btn');
+  btn.disabled = true;
+  btn.textContent = 'Отправка...';
+
+  fetch('/api/converter/convert', { method: 'POST', body: formData })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      btn.disabled = false;
+      btn.textContent = 'Конвертировать';
+
+      var job = d.job || d;
+      if (!job || !job.id) {
+        panel.innerHTML = '<div class="text-danger text-sm">❌ ' + escapeHtml(d.error || 'Не удалось запустить конвертацию') + '</div>';
+        return;
+      }
+      if (job.status === 'completed') {
+        renderProgress(job);
+        loadHistory();
+        return;
+      }
+      // Start polling
+      if (pollTimer) clearInterval(pollTimer);
+      pollTimer = setInterval(function() { pollProgress(job.id); }, 1000);
+    })
+    .catch(function(err) {
+      btn.disabled = false;
+      btn.textContent = 'Конвертировать';
+      panel.innerHTML = '<div class="text-danger text-sm">❌ Ошибка сети: ' + err.message + '</div>';
+    });
+
+  return false;
+}
+
+// =============================================================================
+// Poll progress endpoint
+// =============================================================================
+function pollProgress(jobId) {
+  fetch('/api/converter/progress/' + encodeURIComponent(jobId))
+    .then(function(r) { return r.json(); })
+    .then(function(job) {
+      var jobData = job.job || job;
+      renderProgress(jobData);
+
+      if (jobData.status === 'completed' || jobData.status === 'failed' || jobData.status === 'error') {
+        if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+        if (jobData.status === 'completed') loadHistory();
+      }
+    })
+    .catch(function() {
+      // Keep polling on transient errors
+    });
+}
+
+// =============================================================================
+// Render progress bar and result
+// =============================================================================
+function renderProgress(job) {
+  var panel = document.getElementById('progress-panel');
+  var pct = job.progress || 0;
+  var stage = job.stage || 'Обработка';
+  var pageInfo = job.current_page ? ' (стр. ' + job.current_page + '/' + job.page_count + ')' : '';
+
+  var html = '<div style="margin-top: 12px;">' +
+    '<div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">' +
+    '<span>' + escapeHtml(stage) + '</span>' +
+    '<span>' + pct + '%' + escapeHtml(pageInfo) + '</span>' +
+    '</div>' +
+    '<div class="progress">' +
+    '<div class="progress-fill" style="width:' + pct + '%"></div>' +
+    '</div>';
+
+  if (job.status === 'completed') {
+    var resultText = (job.result_text || '').replace(/</g, '&lt;').slice(0, 10000);
+    html += '<div style="margin-top: 14px; padding: 14px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: var(--radius);">' +
+      '<div style="display: flex; gap: 10px; margin-bottom: 10px;">';
+    if (job.result_path) {
+      html += '<a href="/api/converter/download/' + encodeURIComponent(job.id) + '" class="btn btn-primary btn-sm" style="display: inline-block;">📥 Скачать</a>';
+    }
+    html += '<button class="btn btn-ghost btn-sm" onclick="togglePreview(this)">📄 Предпросмотр</button>' +
+      '<div class="hidden" style="margin-top: 10px; width: 100%;"><pre style="background: var(--bg-deep); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; font-size: 12px; color: var(--text-secondary); max-height: 300px; overflow: auto; white-space: pre-wrap;">' + resultText + '</pre></div>' +
+      '</div></div>';
+  } else if (job.error) {
+    html += '<div style="margin-top: 10px; font-size: 13px;" class="text-danger">❌ ' + escapeHtml(job.error) + '</div>';
+  }
+
+  html += '</div>';
+  panel.innerHTML = html;
+}
+
+// =============================================================================
+// Toggle preview visibility
+// =============================================================================
+function togglePreview(btn) {
+  var preview = btn.nextElementSibling;
+  if (preview) preview.classList.toggle('hidden');
+}
+
+// =============================================================================
+// Load conversion history
+// =============================================================================
+function loadHistory() {
+  fetch('/api/converter/history')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var el = document.getElementById('history-table');
+      var items = d.history || d.jobs || [];
+      if (!items.length) {
+        el.innerHTML = '<span class="text-muted text-sm">История пуста</span>';
+        return;
+      }
+      var html = '<table><thead><tr>' +
+        '<th>Файл</th><th>Формат</th>' +
+        '<th>Статус</th><th>Дата</th>' +
+        '<th></th></tr></thead><tbody>';
+      items.forEach(function(item) {
+        var statusClass = item.status === 'completed' ? 'text-success' : item.status === 'failed' ? 'text-danger' : 'text-muted';
+        var statusLabel = item.status === 'completed' ? '✅ Готово' : item.status === 'failed' ? '❌ Ошибка' : '⏳ ' + (item.status || 'В процессе');
+        html += '<tr>' +
+          '<td>' + escapeHtml(item.filename || item.name || '') + '</td>' +
+          '<td>' + escapeHtml(item.format || '') + '</td>' +
+          '<td class="' + statusClass + '">' + statusLabel + '</td>' +
+          '<td class="text-muted text-sm">' + escapeHtml(item.created_at || item.date || '') + '</td>' +
+          '<td>';
+        if (item.status === 'completed') {
+          html += '<a class="text-accent text-sm" href="/api/converter/download/' + encodeURIComponent(item.id) + '" style="margin-right: 8px;">📥</a>';
+        }
+        html += '<button class="btn btn-danger btn-sm" onclick="deleteHistory(\'' + escapeHtml(item.id || '') + '\')">🗑️</button>' +
+          '</td></tr>';
+      });
+      html += '</tbody></table>';
+      el.innerHTML = html;
+    })
+    .catch(function() {
+      document.getElementById('history-table').innerHTML = '<span class="text-danger text-sm">Ошибка загрузки истории</span>';
+    });
+}
+
+// =============================================================================
+// Delete history item
+// =============================================================================
+function deleteHistory(id) {
+  if (!confirm('Удалить запись из истории?')) return;
+  fetch('/api/converter/history/' + encodeURIComponent(id), { method: 'DELETE' })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.success) {
+        loadHistory();
+        showToast('Запись удалена', 'success');
+      }
+    });
+}
+
+// =============================================================================
+// Helpers
+// =============================================================================
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  var div = document.createElement('div');
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+
+// =============================================================================
+// Init
+// =============================================================================
+document.addEventListener('DOMContentLoaded', loadHistory);
+</script>
+
+{% endblock %}

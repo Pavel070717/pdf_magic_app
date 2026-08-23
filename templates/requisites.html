@@ -1,0 +1,642 @@
+{% extends "base.html" %}
+{% set page = "requisites" %}
+{% block content %}
+
+<style>
+  /* ── Template-specific: Requisites ── */
+  .header-box {
+    display: flex; align-items: center; gap: 14px;
+    background: linear-gradient(135deg, var(--glass-highlight), transparent);
+    border: 1px solid var(--glass-border); border-radius: 14px;
+    padding: 18px 22px; margin-bottom: 18px;
+  }
+  .header-box .icon-circle {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: rgba(79,143,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; flex-shrink: 0;
+  }
+  .header-box h1 { font-size: 18px; font-weight: 700; color: var(--text-primary); line-height: 1.3; }
+
+  /* ── Two-panel layout ── */
+  .req-grid {
+    display: grid; grid-template-columns: 280px 1fr; gap: 16px;
+    height: calc(100vh - 220px);
+  }
+
+  /* ── LEFT panel ── */
+  .req-left {
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: var(--radius); display: flex; flex-direction: column;
+    overflow: hidden; min-width: 0;
+  }
+  .req-left-header {
+    padding: 14px 16px; border-bottom: 1px solid var(--border);
+    font-weight: 600; font-size: 14px; color: var(--text-primary);
+    display: flex; align-items: center; gap: 8px;
+    flex-shrink: 0;
+  }
+  .req-left-header .icon { color: var(--accent); font-size: 18px; }
+  .req-left-list { flex: 1; overflow-y: auto; padding: 8px; }
+  .req-left-add {
+    padding: 10px; border-top: 1px solid var(--border);
+    display: flex; gap: 6px; flex-shrink: 0;
+  }
+  .req-left-add input {
+    flex: 1; font-size: 13px; padding: 9px 12px;
+    background: var(--bg-deep); border: 1px solid var(--border); border-radius: var(--radius);
+    color: var(--text-primary); outline: none; min-width: 0;
+  }
+  .req-left-add input:focus { border-color: var(--accent); }
+  .req-left-add button {
+    white-space: nowrap; padding: 9px 16px;
+    background: var(--accent); border: none; border-radius: var(--radius);
+    color: #fff; font-size: 16px; font-weight: 600; cursor: pointer;
+    transition: background 0.15s; flex-shrink: 0;
+  }
+  .req-left-add button:hover { background: var(--accent-hover); }
+
+  .obj-item {
+    display: flex; align-items: center; gap: 6px;
+    padding: 9px 12px; border-radius: var(--radius); cursor: pointer;
+    transition: all 0.15s; margin-bottom: 3px;
+    font-size: 13px; color: var(--text-secondary);
+  }
+  .obj-item:hover { background: var(--bg-primary); color: var(--text-primary); }
+  .obj-item.active { background: var(--accent); color: #fff; }
+  .obj-item .name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .obj-item .del {
+    opacity: 0; color: var(--danger); font-size: 14px; cursor: pointer;
+    padding: 2px 6px; border-radius: 4px; transition: opacity 0.15s;
+    line-height: 1; flex-shrink: 0;
+  }
+  .obj-item.active .del,
+  .obj-item:hover .del { opacity: 1; }
+  .obj-item .del:hover { background: rgba(248,81,73,0.25); }
+  .obj-empty { color: var(--text-muted); font-size: 13px; text-align: center; padding: 20px 10px; }
+
+  /* ── RIGHT panel ── */
+  .req-right {
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: var(--radius); display: flex; flex-direction: column;
+    overflow: hidden; min-width: 0;
+  }
+  .req-right-header {
+    padding: 14px 18px; border-bottom: 1px solid var(--border);
+    font-weight: 600; font-size: 15px; color: var(--text-primary);
+    display: flex; align-items: center; gap: 8px;
+    flex-shrink: 0;
+  }
+  .req-right-header .name { color: var(--accent); }
+  .req-right-placeholder {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); font-size: 14px; text-align: center; padding: 40px;
+  }
+  .req-form-wrap { flex: 1; overflow-y: auto; display: none; flex-direction: column; }
+  .req-form-wrap.visible { display: flex; }
+
+  /* ── Section overrides for requisites ── */
+  .section-card {
+    background: transparent; border-bottom: 1px solid var(--border); overflow: hidden;
+    border-radius: 0; margin-bottom: 0;
+  }
+  .section-card:last-child { border-bottom: none; }
+  .section-card:hover { border-color: var(--border); }
+  .section-header .s-icon { color: var(--accent); font-size: 16px; width: 20px; text-align: center; flex-shrink: 0; }
+  .section-header .s-title { font-weight: 600; font-size: 14px; color: var(--text-primary); flex: 1; }
+
+  /* ── SRO sub-section ── */
+  .sro-block {
+    background: var(--bg-primary); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px; margin-top: 14px;
+  }
+  .sro-block .sro-title {
+    font-size: 12px; color: var(--text-muted); text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 12px; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .sro-block .sro-title::before { content: '🔒'; font-size: 13px; }
+
+  /* ── Rep block ── */
+  .rep-block {
+    background: var(--bg-primary); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 14px; margin-bottom: 12px;
+  }
+  .rep-block:last-child { margin-bottom: 0; }
+  .rep-block .rep-title {
+    font-size: 12px; color: var(--text-muted); text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 10px; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .rep-block .rep-title::before { content: '👤'; font-size: 13px; }
+
+  /* ── Footer ── */
+  .req-form-footer {
+    padding: 12px 18px; border-top: 1px solid var(--border);
+    display: none; align-items: center; gap: 12px;
+    flex-shrink: 0;
+  }
+  .req-form-footer.visible { display: flex; }
+  .btn-save {
+    background: var(--accent); color: #fff; border: none;
+    border-radius: var(--radius); padding: 9px 22px; font-size: 14px;
+    font-weight: 600; cursor: pointer; transition: background 0.15s;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-save:hover { background: var(--accent-hover); }
+  .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+  #req-save-status { font-size: 13px; transition: opacity 0.3s; }
+</style>
+
+<div class="padded">
+  <!-- PAGE HEADER -->
+  <div class="header-box">
+    <div class="icon-circle">🏢</div>
+    <div>
+      <h1>Реквизиты</h1>
+    </div>
+  </div>
+
+  <div class="req-grid">
+    <!-- ========================================================================
+         LEFT PANEL — Objects list
+         ======================================================================== -->
+    <div class="req-left">
+      <div class="req-left-header"><span class="icon">🏗️</span> Объекты</div>
+      <div class="req-left-list" id="req-objects-list">
+        <div class="obj-empty">Загрузка...</div>
+      </div>
+      <div class="req-left-add">
+        <input type="text" id="new-obj-name" placeholder="Название объекта" maxlength="200">
+        <button type="button" id="add-obj-btn" title="Добавить объект">+</button>
+      </div>
+    </div>
+
+    <!-- ========================================================================
+         RIGHT PANEL — Requisites form (collapsible sections)
+         ======================================================================== -->
+    <div class="req-right" id="req-right-panel">
+      <div class="req-right-header">
+        <span>📝 Реквизиты:</span>
+        <span class="name" id="req-obj-name">—</span>
+      </div>
+
+      <!-- Placeholder (shown when no object selected) -->
+      <div class="req-right-placeholder" id="req-placeholder">
+        Выберите объект слева для редактирования реквизитов
+      </div>
+
+      <!-- Form (shown when object selected) -->
+      <div class="req-form-wrap" id="req-form-wrap">
+        <div style="flex: 1; overflow-y: auto;" id="req-form-body">
+
+          <!-- SECTION 1: Застройщик -->
+          <div class="section-card">
+            <div class="section-header">
+              <span class="s-icon">🏢</span><span class="s-title">1. Застройщик, технический заказчик, лицо, обеспечивающее строительство</span><span class="s-arrow">▶</span>
+            </div>
+            <div class="section-body">
+              <div class="field"><label>Наименование (полное)</label><input type="text" id="req_developer_name" placeholder="ООО «...»"></div>
+              <div class="grid-2">
+                <div class="field"><label>ОГРН</label><input type="text" id="req_developer_ogrn" placeholder="1234567890123"></div>
+                <div class="field"><label>ИНН</label><input type="text" id="req_developer_inn" placeholder="1234567890"></div>
+              </div>
+              <div class="field"><label>Юридический адрес</label><input type="text" id="req_developer_address" placeholder="г. Москва, ул. ..."></div>
+              <div class="field"><label>Телефон</label><input type="text" id="req_developer_phone" placeholder="+7 (495) 123-45-67"></div>
+            </div>
+          </div>
+
+          <!-- SECTION 2: Подрядчик (Строитель) -->
+          <div class="section-card">
+            <div class="section-header">
+              <span class="s-icon">👷</span><span class="s-title">2. Лицо, осуществляющее строительство (подрядчик)</span><span class="s-arrow">▶</span>
+            </div>
+            <div class="section-body">
+              <div class="field"><label>Наименование (полное)</label><input type="text" id="req_builder_name" placeholder="ООО «...»"></div>
+              <div class="grid-2">
+                <div class="field"><label>ОГРН</label><input type="text" id="req_builder_ogrn" placeholder="1234567890123"></div>
+                <div class="field"><label>ИНН</label><input type="text" id="req_builder_inn" placeholder="1234567890"></div>
+              </div>
+              <div class="field"><label>Юридический адрес</label><input type="text" id="req_builder_address" placeholder="г. Москва, ул. ..."></div>
+              <div class="field"><label>Телефон</label><input type="text" id="req_builder_phone" placeholder="+7 (495) 123-45-67"></div>
+              <div class="sro-block">
+                <div class="sro-title">СРО Подрядчика</div>
+                <div class="grid-2">
+                  <div class="field"><label>Номер СРО</label><input type="text" id="req_builder_sro_number" placeholder="СРО-С-123-45-6789"></div>
+                  <div class="field"><label>Наименование СРО</label><input type="text" id="req_builder_sro_name" placeholder="Ассоциация «...»"></div>
+                </div>
+                <div class="grid-2">
+                  <div class="field"><label>ОГРН СРО</label><input type="text" id="req_builder_sro_ogrn" placeholder="1234567890123"></div>
+                  <div class="field"><label>ИНН СРО</label><input type="text" id="req_builder_sro_inn" placeholder="1234567890"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 3: Проектировщик -->
+          <div class="section-card">
+            <div class="section-header">
+              <span class="s-icon">📐</span><span class="s-title">3. Лицо, осуществляющее подготовку проектной документации</span><span class="s-arrow">▶</span>
+            </div>
+            <div class="section-body">
+              <div class="field"><label>Наименование (полное)</label><input type="text" id="req_designer_name" placeholder="ООО «...»"></div>
+              <div class="grid-2">
+                <div class="field"><label>ОГРН</label><input type="text" id="req_designer_ogrn" placeholder="1234567890123"></div>
+                <div class="field"><label>ИНН</label><input type="text" id="req_designer_inn" placeholder="1234567890"></div>
+              </div>
+              <div class="field"><label>Юридический адрес</label><input type="text" id="req_designer_address" placeholder="г. Москва, ул. ..."></div>
+              <div class="field"><label>Телефон</label><input type="text" id="req_designer_phone" placeholder="+7 (495) 123-45-67"></div>
+              <div class="sro-block">
+                <div class="sro-title">СРО Проектировщика</div>
+                <div class="grid-2">
+                  <div class="field"><label>Номер СРО</label><input type="text" id="req_designer_sro_number" placeholder="СРО-П-123-45-6789"></div>
+                  <div class="field"><label>Наименование СРО</label><input type="text" id="req_designer_sro_name" placeholder="Ассоциация «...»"></div>
+                </div>
+                <div class="grid-2">
+                  <div class="field"><label>ОГРН СРО</label><input type="text" id="req_designer_sro_ogrn" placeholder="1234567890123"></div>
+                  <div class="field"><label>ИНН СРО</label><input type="text" id="req_designer_sro_inn" placeholder="1234567890"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 4: Стройконтроль -->
+          <div class="section-card">
+            <div class="section-header">
+              <span class="s-icon">🔍</span><span class="s-title">4. Стройконтроль</span><span class="s-arrow">▶</span>
+            </div>
+            <div class="section-body">
+              <div class="field"><label>Наименование организации</label><input type="text" id="req_control_name" placeholder="ООО «...»"></div>
+              <div class="grid-2">
+                <div class="field"><label>ОГРН</label><input type="text" id="req_control_ogrn" placeholder="1234567890123"></div>
+                <div class="field"><label>ИНН</label><input type="text" id="req_control_inn" placeholder="1234567890"></div>
+              </div>
+              <div class="field"><label>Юридический адрес</label><input type="text" id="req_control_address" placeholder="г. Москва, ул. ..."></div>
+              <div class="field"><label>Телефон</label><input type="text" id="req_control_phone" placeholder="+7 (495) 123-45-67"></div>
+              <div class="sro-block">
+                <div class="sro-title">СРО Стройконтроля</div>
+                <div class="grid-2">
+                  <div class="field"><label>Номер СРО</label><input type="text" id="req_control_sro_number" placeholder="СРО-..."></div>
+                  <div class="field"><label>Наименование СРО</label><input type="text" id="req_control_sro_name" placeholder="Ассоциация «...»"></div>
+                </div>
+                <div class="grid-2">
+                  <div class="field"><label>ОГРН СРО</label><input type="text" id="req_control_sro_ogrn" placeholder="1234567890123"></div>
+                  <div class="field"><label>ИНН СРО</label><input type="text" id="req_control_sro_inn" placeholder="1234567890"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 5: Представители -->
+          <div class="section-card">
+            <div class="section-header">
+              <span class="s-icon">👥</span><span class="s-title">5. Представители</span><span class="s-arrow">▶</span>
+            </div>
+            <div class="section-body">
+
+              <!-- Rep: Developer -->
+              <div class="rep-block">
+                <div class="rep-title">Представитель застройщика</div>
+                <div class="grid-3">
+                  <div class="field"><label>Должность</label><input type="text" id="req_rep_developer_position" placeholder="Главный инженер"></div>
+                  <div class="field"><label>ФИО</label><input type="text" id="req_rep_developer_name" placeholder="Иванов И.И."></div>
+                  <div class="field"><label>Документ</label><input type="text" id="req_rep_developer_doc" placeholder="Приказ №..."></div>
+                </div>
+              </div>
+
+              <!-- Rep: Builder -->
+              <div class="rep-block">
+                <div class="rep-title">Представитель подрядчика</div>
+                <div class="grid-3">
+                  <div class="field"><label>Должность</label><input type="text" id="req_rep_builder_position" placeholder="Производитель работ"></div>
+                  <div class="field"><label>ФИО</label><input type="text" id="req_rep_builder_name" placeholder="Петров П.П."></div>
+                  <div class="field"><label>Документ</label><input type="text" id="req_rep_builder_doc" placeholder="Приказ №..."></div>
+                </div>
+              </div>
+
+              <!-- Rep: Builder Control -->
+              <div class="rep-block">
+                <div class="rep-title">Представитель стройконтроля</div>
+                <div class="grid-3">
+                  <div class="field"><label>Должность</label><input type="text" id="req_rep_builder_ctrl_position" placeholder="Инженер СК"></div>
+                  <div class="field"><label>ФИО</label><input type="text" id="req_rep_builder_ctrl_name" placeholder="Сидоров С.С."></div>
+                  <div class="field"><label>Документ</label><input type="text" id="req_rep_builder_ctrl_doc" placeholder="Приказ №..."></div>
+                </div>
+              </div>
+
+              <!-- Rep: Designer -->
+              <div class="rep-block">
+                <div class="rep-title">Представитель проектировщика</div>
+                <div class="grid-3">
+                  <div class="field"><label>Должность</label><input type="text" id="req_rep_designer_position" placeholder="ГИП"></div>
+                  <div class="field"><label>ФИО</label><input type="text" id="req_rep_designer_name" placeholder="Козлов К.К."></div>
+                  <div class="field"><label>Документ</label><input type="text" id="req_rep_designer_doc" placeholder="Приказ №..."></div>
+                </div>
+              </div>
+
+              <!-- Rep: Contractor -->
+              <div class="rep-block">
+                <div class="rep-title">Представитель подрядчика (выполнившего работы)</div>
+                <div class="grid-3">
+                  <div class="field"><label>Должность</label><input type="text" id="req_rep_contractor_position" placeholder="Производитель работ"></div>
+                  <div class="field"><label>ФИО</label><input type="text" id="req_rep_contractor_name" placeholder="Николаев Н.Н."></div>
+                  <div class="field"><label>Документ</label><input type="text" id="req_rep_contractor_doc" placeholder="Приказ №..."></div>
+                </div>
+              </div>
+
+              <!-- Rep: Others -->
+              <div class="rep-block">
+                <div class="rep-title">Другие представители</div>
+                <div class="field"><label>Организация</label><input type="text" id="req_rep_others_org" placeholder="Наименование организации"></div>
+                <div class="grid-3">
+                  <div class="field"><label>Должность</label><input type="text" id="req_rep_others_position" placeholder="Инженер"></div>
+                  <div class="field"><label>ФИО</label><input type="text" id="req_rep_others_name" placeholder="Фёдоров Ф.Ф."></div>
+                  <div class="field"><label>Документ</label><input type="text" id="req_rep_others_doc" placeholder="Приказ №..."></div>
+                </div>
+                <div class="field"><label>Продолжение (доп. сведения)</label><input type="text" id="req_rep_others_continued" placeholder="Дополнительная информация"></div>
+              </div>
+
+            </div>
+          </div>
+
+        </div><!-- /req-form-body -->
+
+        <!-- Footer -->
+        <div class="req-form-footer" id="req-form-footer">
+          <button type="button" class="btn-save" id="req-save-btn">💾 Сохранить</button>
+          <span id="req-save-status"></span>
+        </div>
+      </div><!-- /req-form-wrap -->
+    </div><!-- /right panel -->
+  </div><!-- /req-grid -->
+</div>
+
+<script>
+// =============================================================================
+// State
+// =============================================================================
+var currentObjectId = null;
+var currentRequisites = {};  // cached requisites data
+
+// =============================================================================
+// Section toggle — delegated via event listener
+// =============================================================================
+document.addEventListener('DOMContentLoaded', function() {
+  // Toggle collapsible sections (right panel)
+  document.getElementById('req-form-body').addEventListener('click', function(e) {
+    var header = e.target.closest('.section-header');
+    if (!header) return;
+    header.classList.toggle('open');
+    header.nextElementSibling.classList.toggle('open');
+  });
+
+  // Save button
+  document.getElementById('req-save-btn').addEventListener('click', saveRequisites);
+
+  // Add object button
+  document.getElementById('add-obj-btn').addEventListener('click', addObject);
+
+  // Enter key in new-object input
+  document.getElementById('new-obj-name').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') addObject();
+  });
+
+  // Delegated click for object list (select + delete)
+  document.getElementById('req-objects-list').addEventListener('click', function(e) {
+    // Delete button
+    var delBtn = e.target.closest('.del');
+    if (delBtn) {
+      e.stopPropagation();
+      var objId = parseInt(delBtn.getAttribute('data-id'));
+      if (!isNaN(objId)) deleteObject(objId);
+      return;
+    }
+    // Select object (click on the item itself)
+    var item = e.target.closest('.obj-item');
+    if (item) {
+      var objId = parseInt(item.getAttribute('data-id'));
+      var objName = item.getAttribute('data-name') || '';
+      if (!isNaN(objId)) selectObject(objId, objName);
+    }
+  });
+});
+
+// =============================================================================
+// Load objects list
+// =============================================================================
+function loadObjects() {
+  fetch('/api/requisites/objects')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data.success) { showToast('Ошибка загрузки объектов', 'error'); return; }
+      renderObjects(data.objects || []);
+    })
+    .catch(function(err) { showToast('Ошибка сети', 'error'); });
+}
+
+function renderObjects(objects) {
+  var list = document.getElementById('req-objects-list');
+  if (!objects || objects.length === 0) {
+    list.innerHTML = '<div class="obj-empty">Нет объектов. Добавьте первый.</div>';
+    return;
+  }
+  var html = '';
+  objects.forEach(function(obj) {
+    var activeClass = (obj.id === currentObjectId) ? ' active' : '';
+    html += '<div class="obj-item' + activeClass + '" data-id="' + obj.id + '" data-name="' + escapeHtml(obj.name) + '">' +
+      '<span class="name">' + escapeHtml(obj.name) + '</span>' +
+      '<span class="del" data-id="' + obj.id + '" title="Удалить">✕</span>' +
+      '</div>';
+  });
+  list.innerHTML = html;
+}
+
+// =============================================================================
+// Select object → load requisites from API
+// =============================================================================
+function selectObject(id, name) {
+  currentObjectId = id;
+  document.getElementById('req-obj-name').textContent = name;
+
+  // Show form elements
+  document.getElementById('req-placeholder').style.display = 'none';
+  document.getElementById('req-form-wrap').classList.add('visible');
+  document.getElementById('req-form-footer').classList.add('visible');
+
+  // Fetch requisites
+  fetch('/api/requisites/' + id)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data.success) { showToast('Ошибка загрузки реквизитов', 'error'); return; }
+      currentRequisites = data.requisites || {};
+      fillForm(currentRequisites);
+    })
+    .catch(function(err) { showToast('Ошибка сети', 'error'); });
+
+  // Highlight in list
+  renderActiveObject();
+}
+
+function renderActiveObject() {
+  var items = document.querySelectorAll('.obj-item');
+  items.forEach(function(item) {
+    var objId = parseInt(item.getAttribute('data-id'));
+    if (objId === currentObjectId) {
+      item.classList.add('active');
+    } else {
+      item.classList.remove('active');
+    }
+  });
+}
+
+// =============================================================================
+// Fill form from requisites data
+// =============================================================================
+function fillForm(reqs) {
+  var fields = [
+    'developer_name','developer_ogrn','developer_inn','developer_address','developer_phone',
+    'builder_name','builder_ogrn','builder_inn','builder_address','builder_phone',
+    'builder_sro_number','builder_sro_name','builder_sro_ogrn','builder_sro_inn',
+    'designer_name','designer_ogrn','designer_inn','designer_address','designer_phone',
+    'designer_sro_number','designer_sro_name','designer_sro_ogrn','designer_sro_inn',
+    'control_name','control_ogrn','control_inn','control_address','control_phone',
+    'control_sro_number','control_sro_name','control_sro_ogrn','control_sro_inn',
+    'rep_developer_position','rep_developer_name','rep_developer_doc',
+    'rep_builder_position','rep_builder_name','rep_builder_doc',
+    'rep_builder_ctrl_position','rep_builder_ctrl_name','rep_builder_ctrl_doc',
+    'rep_designer_position','rep_designer_name','rep_designer_doc',
+    'rep_contractor_position','rep_contractor_name','rep_contractor_doc',
+    'rep_others_org','rep_others_position','rep_others_name','rep_others_doc',
+    'rep_others_continued'
+  ];
+  fields.forEach(function(f) {
+    var el = document.getElementById('req_' + f);
+    if (el) { el.value = reqs[f] || ''; }
+  });
+}
+
+// =============================================================================
+// Collect all form data
+// =============================================================================
+function collectFormData() {
+  var data = {};
+  var allInputs = document.querySelectorAll('#req-form-body input, #req-form-body textarea');
+  allInputs.forEach(function(input) {
+    if (input.id && input.id.startsWith('req_')) {
+      var fieldName = input.id.substring(4);
+      data[fieldName] = input.value;
+    }
+  });
+  return data;
+}
+
+// =============================================================================
+// Save requisites
+// =============================================================================
+function saveRequisites() {
+  if (!currentObjectId) { showToast('Выберите объект', 'error'); return; }
+
+  var statusEl = document.getElementById('req-save-status');
+  statusEl.textContent = '⏳ Сохранение...';
+  statusEl.style.color = 'var(--text-muted)';
+
+  var data = collectFormData();
+
+  fetch('/api/requisites/' + currentObjectId, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(result) {
+    if (result.success) {
+      currentRequisites = data;  // update cache
+      statusEl.textContent = '✅ Сохранено';
+      statusEl.style.color = 'var(--success)';
+      setTimeout(function() { statusEl.textContent = ''; }, 2000);
+    } else {
+      statusEl.textContent = '❌ Ошибка: ' + (result.error || '');
+      statusEl.style.color = 'var(--danger)';
+    }
+  })
+  .catch(function(err) {
+    statusEl.textContent = '❌ Ошибка сети';
+    statusEl.style.color = 'var(--danger)';
+  });
+}
+
+// =============================================================================
+// Add object
+// =============================================================================
+function addObject() {
+  var input = document.getElementById('new-obj-name');
+  var name = input.value.trim();
+  if (!name) { showToast('Введите название объекта', 'error'); return; }
+
+  fetch('/api/requisites/objects', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: name })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(result) {
+    if (result.success) {
+      input.value = '';
+      loadObjects();
+      showToast('Объект добавлен', 'success');
+    } else {
+      showToast('Ошибка: ' + (result.error || ''), 'error');
+    }
+  })
+  .catch(function(err) { showToast('Ошибка сети', 'error'); });
+}
+
+// =============================================================================
+// Delete object
+// =============================================================================
+function deleteObject(id) {
+  if (!confirm('Удалить объект и все его реквизиты?')) return;
+
+  fetch('/api/requisites/objects/' + id, { method: 'DELETE' })
+    .then(function(r) { return r.json(); })
+    .then(function(result) {
+      if (result.success) {
+        if (currentObjectId === id) {
+          resetRightPanel();
+        }
+        loadObjects();
+        showToast('Объект удалён', 'success');
+      } else {
+        showToast('Ошибка: ' + (result.error || ''), 'error');
+      }
+    })
+    .catch(function(err) { showToast('Ошибка сети', 'error'); });
+}
+
+function resetRightPanel() {
+  currentObjectId = null;
+  currentRequisites = {};
+  document.getElementById('req-obj-name').textContent = '—';
+  document.getElementById('req-placeholder').style.display = '';
+  document.getElementById('req-form-wrap').classList.remove('visible');
+  document.getElementById('req-form-footer').classList.remove('visible');
+  document.getElementById('req-save-status').textContent = '';
+}
+
+// =============================================================================
+// Helpers
+// =============================================================================
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  var div = document.createElement('div');
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+
+// =============================================================================
+// Boot
+// =============================================================================
+loadObjects();
+</script>
+
+{% endblock %}

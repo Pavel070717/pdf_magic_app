@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Magic App</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script src="/static/js/htmx.min.js"></script>
+  <script src="/static/js/htmx-json-enc.js"></script>
+</head>
+<body>
+  <!-- Animated background orbs -->
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+
+  <div class="app-shell">
+    <!-- Sidebar — Glassmorphism -->
+    <aside class="sidebar-glass">
+      <div class="sidebar-brand">
+        <div class="brand-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <rect width="28" height="28" rx="8" fill="url(#brand-grad)"/>
+            <defs><linearGradient id="brand-grad" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#4f8fff"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs>
+            <text x="14" y="20" text-anchor="middle" fill="white" font-size="16" font-weight="700">P</text>
+          </svg>
+        </div>
+        <span class="brand-text">PDF Magic</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        {% macro nav_item(url, icon, label, p) %}
+        <a href="{{ url }}" class="nav-link {% if page == p %}active{% endif %}">
+          <span class="nav-icon">{{ icon }}</span>
+          <span class="nav-label">{{ label }}</span>
+          {% if page == p %}<span class="nav-indicator"></span>{% endif %}
+        </a>
+        {% endmacro %}
+
+        {{ nav_item('/', '📊', 'Дашборд', 'dashboard') }}
+        {{ nav_item('/directories/create', '📂', 'Директории', 'directories') }}
+        {{ nav_item('/converter', '📄', 'Конвертер PDF', 'converter') }}
+        {{ nav_item('/aocr', '📋', 'АОСР', 'aocr') }}
+        {{ nav_item('/requisites', '🏢', 'Реквизиты', 'requisites') }}
+        {{ nav_item('/rules', '🔧', 'Правила замены', 'rules') }}
+        {{ nav_item('/materials', '🗄️', 'Материалы', 'materials') }}
+
+        <a href="#" onclick="document.getElementById('registry-modal').classList.remove('hidden'); htmx.ajax('GET', '/api/registry/form', {target:'#registry-content'})" class="nav-link">
+          <span class="nav-icon">📝</span>
+          <span class="nav-label">Данные реестра</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="version-badge">v2.0</div>
+      </div>
+    </aside>
+
+    <!-- Main content area -->
+    <div class="main-area">
+      <header class="header-glass">
+        <span class="header-title">Исполнительная документация в строительстве</span>
+        <span class="header-status">
+          <span class="status-dot"></span>
+          Активно
+        </span>
+      </header>
+      <main class="content-area">
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </div>
+
+  <!-- Registry Modal — Glassmorphism -->
+  <div id="registry-modal" class="modal-overlay hidden" onclick="if(event.target===this)this.classList.add('hidden')">
+    <div class="modal-glass">
+      <div class="modal-header">
+        <span class="text-lg">📝</span>
+        <h2>Данные реестра</h2>
+        <button onclick="document.getElementById('registry-modal').classList.add('hidden')" class="modal-close">&times;</button>
+      </div>
+      <div id="registry-content" class="text-muted text-sm">Загрузка...</div>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script>
+    // Global toast handler (htmx-aware)
+    document.body.addEventListener('htmx:afterRequest', function(evt) {
+      var toast = evt.detail.xhr.getResponseHeader('X-Toast');
+      if (toast) {
+        showToast(toast, evt.detail.successful ? 'success' : 'error');
+      }
+    });
+
+    function showToast(msg, type) {
+      var d = document.createElement('div');
+      d.className = 'toast toast-' + (type || 'success');
+      d.textContent = msg;
+      document.getElementById('toast-container').appendChild(d);
+      requestAnimationFrame(function() { d.classList.add('show'); });
+      setTimeout(function() {
+        d.classList.remove('show');
+        setTimeout(function() { d.remove(); }, 400);
+      }, 3500);
+    }
+  </script>
+</body>
+</html>

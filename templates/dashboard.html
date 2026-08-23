@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+{% set page = "dashboard" %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-icon">📊</div>
+  <div>
+    <h1>Дашборд</h1>
+    <p>Обзор состояния исполнительной документации</p>
+  </div>
+</div>
+
+<div style="padding: 24px; display: flex; flex-direction: column; gap: 20px;">
+
+  <!-- Stat cards -->
+  <div class="grid-4 stagger" id="stats-grid">
+    <div class="stat-card">
+      <div class="stat-value" id="stat-files">—</div>
+      <div class="stat-label">Файлов</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-dirs">—</div>
+      <div class="stat-label">Директорий</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-rules">—</div>
+      <div class="stat-label">Правил замены</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-materials">—</div>
+      <div class="stat-label">Материалов</div>
+    </div>
+  </div>
+
+  <!-- Chart + Events side by side -->
+  <div style="display: grid; grid-template-columns: 1fr 380px; gap: 20px; align-items: start;">
+
+    <!-- Activity chart — SVG line chart -->
+    <div class="glass-card padded">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+        <h3 style="font-size: 15px; font-weight: 700;">Активность за неделю</h3>
+        <span style="font-size: 11px; color: var(--text-muted);">файлы / директории</span>
+      </div>
+
+      <div style="display: flex; gap: 16px; margin-bottom: 12px; justify-content: center;">
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted);">
+          <span style="width: 10px; height: 10px; border-radius: 3px; background: #4f8fff; display: inline-block;"></span>
+          Файлы
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted);">
+          <span style="width: 10px; height: 10px; border-radius: 3px; background: #7c3aed; display: inline-block;"></span>
+          Директории
+        </div>
+      </div>
+
+      <svg id="activity-chart" viewBox="0 0 660 200" width="100%" height="200" style="display: block;">
+        <!-- Gradients -->
+        <defs>
+          <linearGradient id="areaGrad-files" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#4f8fff" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#4f8fff" stop-opacity="0.02"/>
+          </linearGradient>
+          <linearGradient id="areaGrad-dirs" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#7c3aed" stop-opacity="0.02"/>
+          </linearGradient>
+          <filter id="glow-files">
+            <feGaussianBlur stdDeviation="1.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="glow-dirs">
+            <feGaussianBlur stdDeviation="1.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- Horizontal grid lines -->
+        <g stroke="rgba(255,255,255,0.05)" stroke-width="1">
+          <line x1="40" y1="160" x2="640" y2="160"/>
+          <line x1="40" y1="120" x2="640" y2="120"/>
+          <line x1="40" y1="80" x2="640" y2="80"/>
+          <line x1="40" y1="40" x2="640" y2="40"/>
+        </g>
+
+        <!-- Area fills -->
+        <path id="chart-area-files" d="" fill="url(#areaGrad-files)" stroke="none"/>
+        <path id="chart-area-dirs" d="" fill="url(#areaGrad-dirs)" stroke="none"/>
+
+        <!-- Lines -->
+        <polyline id="chart-line-files" fill="none" stroke="#4f8fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow-files)" points=""/>
+        <polyline id="chart-line-dirs" fill="none" stroke="#7c3aed" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow-dirs)" points=""/>
+
+        <!-- Day labels injected by JS -->
+        <g id="chart-labels" fill="#6e7681" font-size="11" text-anchor="middle"></g>
+      </svg>
+    </div>
+
+    <!-- Recent events -->
+    <div class="glass-card padded">
+      <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 16px;">📋 Последние события</h3>
+      <div id="recent-events" style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="color: var(--text-muted); font-size: 13px; padding: 12px; text-align: center;">Загрузка...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var CHART_W = 660, CHART_H = 200;
+  var PAD_LEFT = 40, PAD_RIGHT = 20, PAD_TOP = 20, PAD_BOTTOM = 40;
+  var AREA_W = CHART_W - PAD_LEFT - PAD_RIGHT;
+  var AREA_H = CHART_H - PAD_TOP - PAD_BOTTOM;
+
+  var typeColors = {
+    'directory_created': { bg: 'rgba(79,143,255,0.12)', dot: '#4f8fff', emoji: '📂' },
+    'file_uploaded':     { bg: 'rgba(63,185,80,0.12)',  dot: '#3fb950', emoji: '📄' },
+    'file_deleted':      { bg: 'rgba(248,81,73,0.12)',  dot: '#f85149', emoji: '🗑️' },
+    'rule_added':        { bg: 'rgba(210,153,34,0.12)', dot: '#d29922', emoji: '🔧' },
+    'material_added':    { bg: 'rgba(124,58,237,0.12)', dot: '#7c3aed', emoji: '🗄️' }
+  };
+  var defaultColor = { bg: 'rgba(255,255,255,0.05)', dot: '#6e7681', emoji: '📌' };
+
+  function drawChart(activity) {
+    if (!activity || !activity.length) {
+      document.getElementById('chart-labels').innerHTML =
+        '<text x="330" y="100" fill="#6e7681" font-size="13" text-anchor="middle">Нет данных</text>';
+      return;
+    }
+
+    var maxVal = 1;
+    activity.forEach(function(d) {
+      var sum = (d.files || 0) + (d.dirs || 0);
+      if (sum > maxVal) maxVal = sum;
+    });
+    maxVal = Math.ceil(maxVal * 1.2) || 4;
+
+    var n = activity.length;
+    var xStep = n > 1 ? AREA_W / (n - 1) : AREA_W / 2;
+
+    function x(i) { return PAD_LEFT + i * xStep; }
+    function y(v) { return PAD_TOP + AREA_H - (v / maxVal) * AREA_H; }
+
+    var filesPts = [], dirsPts = [];
+    activity.forEach(function(d, i) {
+      filesPts.push(x(i).toFixed(1) + ',' + y(d.files || 0).toFixed(1));
+      dirsPts.push(x(i).toFixed(1) + ',' + y(d.dirs || 0).toFixed(1));
+    });
+
+    // Lines
+    document.getElementById('chart-line-files').setAttribute('points', filesPts.join(' '));
+    document.getElementById('chart-line-dirs').setAttribute('points', dirsPts.join(' '));
+
+    // Area fills
+    function areaPath(pts) {
+      if (pts.length === 0) return '';
+      var first = pts[0].split(',');
+      var last = pts[pts.length - 1].split(',');
+      var d = 'M' + first[0] + ',' + first[1];
+      for (var i = 1; i < pts.length; i++) {
+        d += ' L' + pts[i];
+      }
+      d += ' L' + last[0] + ',' + (PAD_TOP + AREA_H).toFixed(1);
+      d += ' L' + first[0] + ',' + (PAD_TOP + AREA_H).toFixed(1);
+      d += ' Z';
+      return d;
+    }
+    document.getElementById('chart-area-files').setAttribute('d', areaPath(filesPts));
+    document.getElementById('chart-area-dirs').setAttribute('d', areaPath(dirsPts));
+
+    // Dots
+    var svg = document.getElementById('activity-chart');
+    svg.querySelectorAll('g.chart-dots-group').forEach(function(g) { g.remove(); });
+    var dotsGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    dotsGroup.setAttribute('class', 'chart-dots-group');
+
+    activity.forEach(function(d, i) {
+      // Files dot
+      var dv = d.files || 0;
+      if (dv > 0) {
+        var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        c.setAttribute('cx', x(i).toFixed(1));
+        c.setAttribute('cy', y(dv).toFixed(1));
+        c.setAttribute('r', '4');
+        c.setAttribute('fill', '#4f8fff');
+        c.setAttribute('stroke', '#0a0e14');
+        c.setAttribute('stroke-width', '2');
+        dotsGroup.appendChild(c);
+      }
+      // Dirs dot
+      var dv2 = d.dirs || 0;
+      if (dv2 > 0) {
+        var c2 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        c2.setAttribute('cx', x(i).toFixed(1));
+        c2.setAttribute('cy', y(dv2).toFixed(1));
+        c2.setAttribute('r', '4');
+        c2.setAttribute('fill', '#7c3aed');
+        c2.setAttribute('stroke', '#0a0e14');
+        c2.setAttribute('stroke-width', '2');
+        dotsGroup.appendChild(c2);
+      }
+    });
+    svg.appendChild(dotsGroup);
+
+    // Day labels
+    var labelsGroup = document.getElementById('chart-labels');
+    labelsGroup.innerHTML = '';
+    activity.forEach(function(d, i) {
+      var t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      t.setAttribute('x', x(i).toFixed(1));
+      t.setAttribute('y', (CHART_H - 8).toString());
+      t.setAttribute('fill', '#6e7681');
+      t.setAttribute('font-size', '11');
+      t.setAttribute('text-anchor', 'middle');
+      t.textContent = d.day || '';
+      labelsGroup.appendChild(t);
+    });
+  }
+
+  function renderEvents(events) {
+    var container = document.getElementById('recent-events');
+    if (!events || !events.length) {
+      container.innerHTML =
+        '<div style="color: var(--text-muted); font-size: 13px; padding: 12px; text-align: center;">Нет событий</div>';
+      return;
+    }
+    container.innerHTML = events.slice(0, 8).map(function(e) {
+      var c = typeColors[e.type] || defaultColor;
+      var desc = e.description || e.action || e.type || 'Событие';
+      var time = e.time || e.timestamp || '';
+      return '<div style="display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px;' +
+        'border-radius: var(--radius); background: ' + c.bg + '; font-size: 12px; transition: all var(--transition);"' +
+        ' onmouseover="this.style.transform=\'translateX(4px)\'" onmouseout="this.style.transform=\'\'">' +
+        '<span style="font-size: 15px; flex-shrink: 0;">' + c.emoji + '</span>' +
+        '<div style="flex: 1; min-width: 0;">' +
+          '<div style="color: var(--text-primary); line-height: 1.4; word-break: break-word;">' + desc + '</div>' +
+          (time ? '<div style="color: var(--text-muted); font-size: 11px; margin-top: 2px;">' + time + '</div>' : '') +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function loadDashboard() {
+    fetch('/api/dashboard/stats')
+      .then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function(data) {
+        document.getElementById('stat-files').textContent = data.total_files ?? 0;
+        document.getElementById('stat-dirs').textContent = data.total_dirs ?? 0;
+        document.getElementById('stat-rules').textContent = data.total_rules ?? 0;
+        document.getElementById('stat-materials').textContent = data.total_materials ?? 0;
+        drawChart(data.activity || []);
+        renderEvents(data.recent_events || []);
+      })
+      .catch(function(err) {
+        console.error('Dashboard load error:', err);
+        document.getElementById('recent-events').innerHTML =
+          '<div style="color: var(--danger); font-size: 13px; padding: 12px; text-align: center;">Ошибка загрузки</div>';
+      });
+  }
+
+  loadDashboard();
+  // Refresh every 30 seconds
+  setInterval(loadDashboard, 30000);
+})();
+</script>
+{% endblock %}

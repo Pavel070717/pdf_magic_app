@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% set page = "materials" %}
+{% block content %}
+
+<div class="page-header">
+  <div class="page-header-icon">🗄️</div>
+  <div>
+    <h1>Материалы</h1>
+    <p>База строительных материалов и сертификатов</p>
+  </div>
+</div>
+
+<div style="padding: 24px; max-width: 1000px;">
+  <form id="mat-add" class="glass-card padded" style="margin-bottom: 16px;" onsubmit="return addMaterial(event)">
+    <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 16px;">Добавить материал</h3>
+    <div class="grid-2" style="margin-bottom: 12px;">
+      <div class="field"><label>Наименование документа</label><input type="text" name="doc_name" required></div>
+      <div class="field"><label>Наименование материала</label><input type="text" name="material_name" required></div>
+      <div class="field"><label>Номер</label><input type="text" name="number"></div>
+      <div class="field"><label>Дата</label><input type="text" name="date" placeholder="ДД.ММ.ГГГГ"></div>
+    </div>
+    <div class="field"><label>Производитель</label><input type="text" name="producer"></div>
+    <div style="display: flex; gap: 12px; align-items: flex-end; margin-top: 12px;">
+      <div class="field" style="flex: 1; margin-bottom: 0;"><label>PDF сертификат</label><input type="file" name="file" accept=".pdf" required></div>
+      <button type="submit" class="btn btn-primary" style="margin-bottom: 0;">Добавить</button>
+    </div>
+    <div id="mat-msg" class="text-sm" style="margin-top: 10px;"></div>
+  </form>
+
+  <div class="glass-card" style="overflow: hidden;">
+    <div style="padding: 14px 18px; border-bottom: 1px solid var(--border);">
+      <input type="text" placeholder="Поиск..." id="mat-search"
+        style="max-width: 400px;"
+        oninput="loadMaterials(this.value)">
+    </div>
+    <div id="materials-list" class="padded"><span class="text-muted text-sm">Загрузка...</span></div>
+  </div>
+</div>
+
+<script>
+// =============================================================================
+// Add material (multipart via FormData + fetch)
+// =============================================================================
+function addMaterial(e) {
+  e.preventDefault();
+  var form = document.getElementById('mat-add');
+  var data = new FormData(form);
+  var msg = document.getElementById('mat-msg');
+  msg.innerHTML = '<span class="text-muted">Добавление...</span>';
+
+  fetch('/api/materials/add', { method: 'POST', body: data })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.success) {
+        msg.innerHTML = '<span class="text-success">✅ Материал добавлен</span>';
+        form.reset();
+        loadMaterials(document.getElementById('mat-search').value);
+      } else {
+        msg.innerHTML = '<span class="text-danger">❌ ' + escapeHtml(d.error || 'Ошибка') + '</span>';
+      }
+    })
+    .catch(function(err) {
+      msg.innerHTML = '<span class="text-danger">❌ Ошибка сети: ' + err.message + '</span>';
+    });
+  return false;
+}
+
+// =============================================================================
+// Load materials (with optional search query)
+// =============================================================================
+function loadMaterials(q) {
+  var url = q ? '/api/materials/search?q=' + encodeURIComponent(q) : '/api/materials';
+  fetch(url).then(function(r) { return r.json(); }).then(function(d) {
+    var el = document.getElementById('materials-list');
+    var mats = d.materials || d || [];
+    if (!mats.length) {
+      el.innerHTML = '<span class="text-muted">Материалы не найдены</span>';
+      return;
+    }
+    var html = '<table><thead><tr>' +
+      '<th>Документ</th><th>Материал</th><th>№</th><th>Дата</th><th>Производитель</th><th>Файл</th><th></th>' +
+      '</tr></thead><tbody>';
+    mats.forEach(function(m) {
+      html += '<tr>' +
+        '<td>' + escapeHtml(m.doc_name || '') + '</td>' +
+        '<td>' + escapeHtml(m.material_name || '') + '</td>' +
+        '<td class="text-muted">' + escapeHtml(m.number || '—') + '</td>' +
+        '<td class="text-muted">' + escapeHtml(m.date || '—') + '</td>' +
+        '<td class="text-muted">' + escapeHtml(m.producer || '—') + '</td>' +
+        '<td><a class="text-accent text-xs" href="/api/materials/download/' + encodeURIComponent(m.id || 0) + '">📎</a></td>' +
+        '<td><button class="btn btn-danger btn-sm" onclick="deleteMat(' + (m.id || 0) + ')">🗑️</button></td>' +
+        '</tr>';
+    });
+    html += '</tbody></table>';
+    el.innerHTML = html;
+  }).catch(function() {
+    document.getElementById('materials-list').innerHTML = '<span class="text-danger">Ошибка</span>';
+  });
+}
+
+// =============================================================================
+// Delete material (DELETE via fetch)
+// =============================================================================
+function deleteMat(id) {
+  if (!confirm('Удалить материал?')) return;
+  fetch('/api/materials/' + encodeURIComponent(id), { method: 'DELETE' })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.success) {
+        loadMaterials(document.getElementById('mat-search').value);
+        showToast('Материал удалён', 'success');
+      }
+    });
+}
+
+// =============================================================================
+// Helpers
+// =============================================================================
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  var div = document.createElement('div');
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+
+// =============================================================================
+// Init
+// =============================================================================
+document.addEventListener('DOMContentLoaded', function() { loadMaterials(); });
+</script>
+
+{% endblock %}

@@ -1,0 +1,419 @@
+{% extends "base.html" %}
+{% set page = "aocr" %}
+{% block content %}
+
+<style>
+  /* ── Template-specific: AOCR ── */
+  .header-box {
+    display: flex; align-items: center; gap: 14px;
+    background: linear-gradient(135deg, var(--glass-highlight), transparent);
+    border: 1px solid var(--glass-border); border-radius: 14px;
+    padding: 18px 22px; margin-bottom: 18px;
+  }
+  .header-box .icon-circle {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: rgba(79,143,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; flex-shrink: 0;
+  }
+  .header-box h1 { font-size: 18px; font-weight: 700; color: var(--text-primary); line-height: 1.3; }
+  .header-box .sub { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+  .obj-selector { max-width: 560px; }
+
+  .inline-label {
+    display: flex; align-items: center; gap: 6px;
+    color: var(--text-muted); font-size: 12px; text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 4px; font-weight: 600;
+  }
+  .inline-group {
+    display: flex; gap: 14px; align-items: flex-end; flex-wrap: wrap;
+  }
+  .inline-group .field { flex: 1; min-width: 120px; }
+  .compact-date { display: flex; gap: 14px; }
+  .compact-date .field { min-width: 90px; }
+
+  .submit-area {
+    display: flex; align-items: center; gap: 14px; padding: 8px 0 20px;
+  }
+  .result-success {
+    background: rgba(63,185,80,0.12); border: 1px solid var(--success);
+    border-radius: var(--radius); padding: 14px 18px; color: var(--success);
+  }
+  .result-success a { color: var(--accent); text-decoration: underline; font-weight: 600; }
+  .result-error {
+    background: rgba(248,81,73,0.1); border: 1px solid var(--danger);
+    border-radius: var(--radius); padding: 14px 18px; color: #ff7b72;
+  }
+  .spinner {
+    display: none; align-items: center; gap: 8px;
+    color: var(--text-muted); font-size: 13px;
+  }
+  .spinner.visible { display: flex; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .animate-spin { animation: spin 1s linear infinite; }
+
+  /* Section overrides for AOCR */
+  .section-header .icon { color: var(--accent); font-size: 17px; width: 22px; text-align: center; flex-shrink: 0; }
+  .section-header .title { font-weight: 600; font-size: 14px; color: var(--text-primary); }
+  .section-header .badge {
+    font-size: 11px; background: rgba(79,143,255,0.15); color: var(--accent);
+    padding: 2px 8px; border-radius: 10px; margin-left: 4px;
+  }
+</style>
+
+<div class="padded">
+  <!-- PAGE HEADER -->
+  <div class="header-box">
+    <div class="icon-circle">📋</div>
+    <div>
+      <h1>Акт освидетельствования скрытых работ</h1>
+      <div class="sub">Заполнение и генерация</div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 16px;">
+
+    <!-- OBJECT SELECTOR -->
+    <div class="obj-selector">
+      <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px; color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
+        🏗️ Автозаполнение из реквизитов объекта
+      </div>
+      <select id="obj-select" style="font-size: 15px; padding: 10px 14px; background: var(--bg-deep); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-primary); outline: none; width: 100%; transition: border-color 0.2s;">
+        <option value="">— Выберите объект для автозаполнения —</option>
+      </select>
+    </div>
+
+    <!-- AOCR FORM — pure JS submit, no HTMX -->
+    <form id="aocr-form">
+
+      <!-- SECTION 1: Объект -->
+      <div class="section-card">
+        <div class="section-header open" onclick="toggleSection(this)">
+          <span class="icon">🏗️</span><span class="title">1. Объект строительства</span><span class="s-arrow">▶</span>
+        </div>
+        <div class="section-body open">
+          <div class="field">
+            <label>Наименование объекта капитального строительства</label>
+            <textarea name="object_name" id="fld_object_name" rows="3" placeholder="Например: Жилой дом по ул. Ленина, 5"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: Застройщик -->
+      <div class="section-card">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span class="icon">🏢</span><span class="title">2. Застройщик (Заказчик)</span><span class="s-arrow">▶</span>
+        </div>
+        <div class="section-body">
+          <div class="field"><label>Наименование застройщика</label><input type="text" name="developer_name" id="fld_developer_name" placeholder="ООО «...»"></div>
+          <div class="field"><label>Адрес застройщика</label><input type="text" name="developer_address" id="fld_developer_address" placeholder="Юридический адрес"></div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: Подрядчик -->
+      <div class="section-card">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span class="icon">👷</span><span class="title">3. Подрядчик (Строитель)</span><span class="s-arrow">▶</span>
+        </div>
+        <div class="section-body">
+          <div class="field"><label>Наименование подрядчика</label><input type="text" name="builder_name" id="fld_builder_name" placeholder="ООО «...»"></div>
+          <div class="field"><label>Продолжение (адрес + телефон)</label><input type="text" name="builder_continued" id="fld_builder_continued" placeholder="Адрес и телефон подрядчика"></div>
+          <div class="field"><label>СРО подрядчика</label><input type="text" name="builder_continued2" id="fld_builder_continued2" placeholder="СРО №, наименование, ОГРН, ИНН"></div>
+        </div>
+      </div>
+
+      <!-- SECTION 4: Проектировщик -->
+      <div class="section-card">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span class="icon">📐</span><span class="title">4. Проектировщик</span><span class="s-arrow">▶</span>
+        </div>
+        <div class="section-body">
+          <div class="field"><label>Наименование проектировщика</label><input type="text" name="designer_name" id="fld_designer_name" placeholder="ООО «...»"></div>
+          <div class="field"><label>Адрес проектировщика</label><input type="text" name="designer_address" id="fld_designer_address" placeholder="Юридический адрес"></div>
+          <div class="field"><label>СРО и телефон</label><input type="text" name="designer_continued" id="fld_designer_continued" placeholder="СРО №, наименование, ОГРН, ИНН, телефон"></div>
+        </div>
+      </div>
+
+      <!-- SECTION 5: Акт (inline) -->
+      <div class="section-card">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span class="icon">📝</span><span class="title">5. Данные акта</span><span class="s-arrow">▶</span>
+        </div>
+        <div class="section-body">
+          <div class="inline-group">
+            <div class="field"><label>Номер акта</label><input type="text" name="act_number" id="fld_act_number" placeholder="Например: 1"></div>
+            <div class="field"><label>Дата акта</label><input type="text" name="act_date" id="fld_act_date" placeholder="Например: «15» июля 2025 г."></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 6: Представители (Лист 1) -->
+      <div class="section-card">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span class="icon">👥</span><span class="title">6. Представители</span><span class="badge">Лист 1</span><span class="s-arrow">▶</span>
+        </div>
+        <div class="section-body">
+          <div class="field"><label>Представитель застройщика</label><input type="text" name="rep_developer" id="fld_rep_developer" placeholder="Должность, ФИО, документ"></div>
+          <div class="field"><label>Представитель подрядчика</label><input type="text" name="rep_builder" id="fld_rep_builder" placeholder="Должность, ФИО, документ"></div>
+          <div class="field"><label>Представитель стройконтроля</label><input type="text" name="rep_builder_control" id="fld_rep_builder_control" placeholder="Должность, ФИО, документ"></div>
+          <div class="field"><label>Представитель проектировщика</label><input type="text" name="rep_designer" id="fld_rep_designer" placeholder="Должность, ФИО, документ"></div>
+          <div class="field"><label>Представитель подрядчика (выполнившего работы)</label><input type="text" name="rep_contractor" id="fld_rep_contractor" placeholder="Должность, ФИО, документ"></div>
+          <div class="field"><label>Другие представители</label><input type="text" name="rep_others" id="fld_rep_others" placeholder="Должность, ФИО, документ"></div>
+          <div class="field"><label>Продолжение других представителей</label><input type="text" name="rep_others_continued" id="fld_rep_others_continued" placeholder="Доп. информация"></div>
+        </div>
+      </div>
+
+      <!-- SECTION 7: Лист 2 — Работы -->
+      <div class="section-card">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span class="icon">🔨</span><span class="title">7. Данные о выполненной работе</span><span class="badge">Лист 2</span><span class="s-arrow">▶</span>
+        </div>
+        <div class="section-body">
+          <div class="field"><label>Наименование работы</label><textarea name="s2_work_name" id="fld_s2_work_name" rows="3" placeholder="К освидетельствованию предъявлены следующие работы..."></textarea></div>
+          <div class="field"><label>Проектная документация</label><input type="text" name="s2_project_docs" id="fld_s2_project_docs" placeholder="Работы выполнены по проектной документации..."></div>
+          <div class="field"><label>Применённые материалы</label><input type="text" name="s2_materials_used" id="fld_s2_materials_used" placeholder="При выполнении работ применены..."></div>
+          <div class="field"><label>Предъявленные документы</label><input type="text" name="s2_documents_submitted" id="fld_s2_documents_submitted" placeholder="Предъявлены документы, подтверждающие соответствие работ..."></div>
+        </div>
+      </div>
+
+      <!-- SECTION 8: Лист 2 — Даты (compact inline) -->
+      <div class="section-card">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span class="icon">📅</span><span class="title">8. Сроки выполнения работ</span><span class="badge">Лист 2</span><span class="s-arrow">▶</span>
+        </div>
+        <div class="section-body">
+          <div class="inline-label" style="margin-bottom: 10px;">Дата начала работ:</div>
+          <div class="compact-date" style="margin-bottom: 10px;">
+            <div class="field"><label>Число</label><input type="text" name="s2_start_day" id="fld_s2_start_day" placeholder="01" style="min-width:70px"></div>
+            <div class="field"><label>Месяц</label><input type="text" name="s2_start_month" id="fld_s2_start_month" placeholder="января" style="min-width:110px"></div>
+            <div class="field"><label>Год</label><input type="text" name="s2_start_year" id="fld_s2_start_year" placeholder="2025" style="min-width:80px"></div>
+          </div>
+          <div class="inline-label" style="margin-bottom: 10px;">Дата окончания работ:</div>
+          <div class="compact-date">
+            <div class="field"><label>Число</label><input type="text" name="s2_end_day" id="fld_s2_end_day" placeholder="31" style="min-width:70px"></div>
+            <div class="field"><label>Месяц</label><input type="text" name="s2_end_month" id="fld_s2_end_month" placeholder="декабря" style="min-width:110px"></div>
+            <div class="field"><label>Год</label><input type="text" name="s2_end_year" id="fld_s2_end_year" placeholder="2025" style="min-width:80px"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 9: Лист 2 — Нормативы (5 textareas) -->
+      <div class="section-card">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span class="icon">📚</span><span class="title">9. Нормативные документы</span><span class="badge">Лист 2</span><span class="s-arrow">▶</span>
+        </div>
+        <div class="section-body">
+          <div class="field"><label>Нормативный документ 1</label><textarea name="s2_standards_l1" id="fld_s2_standards_l1" rows="2" placeholder="СП 70.13330.2012 «Несущие и ограждающие конструкции»"></textarea></div>
+          <div class="field"><label>Нормативный документ 2</label><textarea name="s2_standards_l2" id="fld_s2_standards_l2" rows="2" placeholder="СНиП 3.03.01-87"></textarea></div>
+          <div class="field"><label>Нормативный документ 3</label><textarea name="s2_standards_l3" id="fld_s2_standards_l3" rows="2"></textarea></div>
+          <div class="field"><label>Нормативный документ 4</label><textarea name="s2_standards_l4" id="fld_s2_standards_l4" rows="2"></textarea></div>
+          <div class="field"><label>Нормативный документ 5</label><textarea name="s2_standards_l5" id="fld_s2_standards_l5" rows="2"></textarea></div>
+        </div>
+      </div>
+
+      <!-- SECTION 10: Лист 2 — Прочее -->
+      <div class="section-card">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span class="icon">ℹ️</span><span class="title">10. Дополнительные сведения</span><span class="badge">Лист 2</span><span class="s-arrow">▶</span>
+        </div>
+        <div class="section-body">
+          <div class="field"><label>Разрешается производство последующих работ</label><textarea name="s2_next_work" id="fld_s2_next_work" rows="2" placeholder="Наименование последующих работ..."></textarea></div>
+          <div class="field"><label>Дополнительная информация</label><textarea name="s2_additional_info" id="fld_s2_additional_info" rows="2"></textarea></div>
+          <div class="grid-2">
+            <div class="field"><label>Количество экземпляров</label><input type="text" name="s2_copies" id="fld_s2_copies" placeholder="3"></div>
+            <div class="field"><label>Приложения</label><input type="text" name="s2_appendices" id="fld_s2_appendices" placeholder="Исполнительные схемы, паспорта..."></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 11: Лист 2 — Представители -->
+      <div class="section-card">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span class="icon">✍️</span><span class="title">11. Представители</span><span class="badge">Лист 2</span><span class="s-arrow">▶</span>
+        </div>
+        <div class="section-body">
+          <div class="field"><label>Представитель застройщика</label><input type="text" name="s2_rep_developer" id="fld_s2_rep_developer" placeholder="Должность, ФИО, документ"></div>
+          <div class="field"><label>Представитель заказчика (подрядчика)</label><input type="text" name="s2_rep_builder" id="fld_s2_rep_builder" placeholder="Должность, ФИО, документ"></div>
+          <div class="field"><label>Представитель стройконтроля</label><input type="text" name="s2_rep_builder_ctrl" id="fld_s2_rep_builder_ctrl" placeholder="Должность, ФИО, документ"></div>
+          <div class="field"><label>Представитель проектировщика</label><input type="text" name="s2_rep_designer" id="fld_s2_rep_designer" placeholder="Должность, ФИО, документ"></div>
+          <div class="field"><label>Представитель подрядчика (выполнившего работы)</label><input type="text" name="s2_rep_contractor" id="fld_s2_rep_contractor" placeholder="Должность, ФИО, документ"></div>
+          <div class="field"><label>Другие представители</label><input type="text" name="s2_rep_others" id="fld_s2_rep_others" placeholder="Должность, ФИО, документ"></div>
+        </div>
+      </div>
+
+      <!-- SUBMIT -->
+      <div class="submit-area">
+        <button type="submit" class="btn btn-primary" id="aocr-submit-btn">
+          📄 Сформировать акт
+        </button>
+        <div id="aocr-spinner" class="spinner">
+          <svg class="animate-spin" width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="6" stroke="var(--border)" stroke-width="2"/>
+            <path d="M8 2a6 6 0 0 1 5.2 3" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          ⏳ Генерация XLSX/PDF...
+        </div>
+      </div>
+      <div id="aocr-result"></div>
+    </form>
+  </div>
+</div>
+
+<script>
+// =============================================================================
+// Section toggle
+// =============================================================================
+function toggleSection(header) {
+  header.classList.toggle('open');
+  header.nextElementSibling.classList.toggle('open');
+}
+
+// =============================================================================
+// Load objects into selector on page load
+// =============================================================================
+(function loadObjects() {
+  fetch('/api/requisites/objects')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var sel = document.getElementById('obj-select');
+      (data.objects || []).forEach(function(obj) {
+        var opt = document.createElement('option');
+        opt.value = obj.id;
+        opt.textContent = obj.name;
+        sel.appendChild(opt);
+      });
+    })
+    .catch(function() { /* objects unavailable */ });
+})();
+
+// =============================================================================
+// Object selector change → autofill AOCP form
+// =============================================================================
+document.getElementById('obj-select').addEventListener('change', function() {
+  var objectId = this.value;
+  if (!objectId) return;
+
+  fetch('/api/requisites/' + objectId + '/aocr')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data.success) { showToast('Ошибка загрузки реквизитов', 'error'); return; }
+      var fieldMap = {
+        'object_name':              'fld_object_name',
+        'developer_name':          'fld_developer_name',
+        'developer_address':       'fld_developer_address',
+        'builder_name':            'fld_builder_name',
+        'builder_continued':       'fld_builder_continued',
+        'builder_continued2':      'fld_builder_continued2',
+        'designer_name':           'fld_designer_name',
+        'designer_address':        'fld_designer_address',
+        'designer_continued':      'fld_designer_continued',
+        'rep_developer':           'fld_rep_developer',
+        'rep_builder':             'fld_rep_builder',
+        'rep_builder_control':     'fld_rep_builder_control',
+        'rep_designer':            'fld_rep_designer',
+        'rep_contractor':          'fld_rep_contractor',
+        'rep_others':              'fld_rep_others',
+        'rep_others_continued':    'fld_rep_others_continued',
+        's2_work_name':            'fld_s2_work_name',
+        's2_project_docs':         'fld_s2_project_docs',
+        's2_materials_used':       'fld_s2_materials_used',
+        's2_documents_submitted':  'fld_s2_documents_submitted',
+        's2_start_day':            'fld_s2_start_day',
+        's2_start_month':          'fld_s2_start_month',
+        's2_start_year':           'fld_s2_start_year',
+        's2_end_day':              'fld_s2_end_day',
+        's2_end_month':            'fld_s2_end_month',
+        's2_end_year':             'fld_s2_end_year',
+        's2_standards_l1':         'fld_s2_standards_l1',
+        's2_standards_l2':         'fld_s2_standards_l2',
+        's2_standards_l3':         'fld_s2_standards_l3',
+        's2_standards_l4':         'fld_s2_standards_l4',
+        's2_standards_l5':         'fld_s2_standards_l5',
+        's2_next_work':            'fld_s2_next_work',
+        's2_additional_info':      'fld_s2_additional_info',
+        's2_copies':               'fld_s2_copies',
+        's2_appendices':           'fld_s2_appendices',
+        's2_rep_developer':        'fld_s2_rep_developer',
+        's2_rep_builder':          'fld_s2_rep_builder',
+        's2_rep_builder_ctrl':     'fld_s2_rep_builder_ctrl',
+        's2_rep_designer':         'fld_s2_rep_designer',
+        's2_rep_contractor':       'fld_s2_rep_contractor',
+        's2_rep_others':           'fld_s2_rep_others'
+      };
+      for (var key in fieldMap) {
+        var el = document.getElementById(fieldMap[key]);
+        if (el && data[key] !== undefined && data[key] !== null) {
+          el.value = data[key];
+        }
+      }
+      showToast('Реквизиты загружены', 'success');
+    })
+    .catch(function(err) {
+      showToast('Ошибка сети: ' + err.message, 'error');
+    });
+});
+
+// =============================================================================
+// Form submit — pure JS via fetch() (collects FormData → JSON POST)
+// =============================================================================
+document.getElementById('aocr-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  var form = e.target;
+  var btn = document.getElementById('aocr-submit-btn');
+  var spinner = document.getElementById('aocr-spinner');
+  var resultEl = document.getElementById('aocr-result');
+
+  // Collect all named form fields into a JSON object
+  var formData = new FormData(form);
+  var data = {};
+  formData.forEach(function(value, key) {
+    data[key] = value;
+  });
+
+  // Show loading state
+  btn.disabled = true;
+  spinner.classList.add('visible');
+  resultEl.innerHTML = '';
+
+  fetch('/api/aocr/generate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(resp) {
+    btn.disabled = false;
+    spinner.classList.remove('visible');
+
+    if (resp.success) {
+      var html = '<div class="result-success">✅ Акт успешно сформирован!<br><div style="margin-top:6px;display:flex;gap:16px;flex-wrap:wrap;">';
+      if (resp.xlsx_path) html += '<a href="/' + escapeHtml(resp.xlsx_path) + '" download>📥 Скачать XLSX</a>';
+      if (resp.pdf_path)  html += '<a href="/' + escapeHtml(resp.pdf_path) + '" download>📥 Скачать PDF</a>';
+      html += '</div></div>';
+      resultEl.innerHTML = html;
+    } else {
+      resultEl.innerHTML = '<div class="result-error">❌ Ошибка: ' + escapeHtml(resp.error || 'Неизвестная ошибка') + '</div>';
+    }
+  })
+  .catch(function(err) {
+    btn.disabled = false;
+    spinner.classList.remove('visible');
+    resultEl.innerHTML = '<div class="result-error">❌ Ошибка сети: ' + escapeHtml(err.message) + '</div>';
+  });
+});
+
+// =============================================================================
+// Helpers
+// =============================================================================
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  var div = document.createElement('div');
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+</script>
+
+{% endblock %}
