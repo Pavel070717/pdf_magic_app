@@ -24,9 +24,7 @@ def setup_logging() -> logging.Logger:
 
     from logging.handlers import RotatingFileHandler
 
-    file_handler = RotatingFileHandler(
-        LOG_FILE, maxBytes=10 * 1024 * 1024, backupCount=5, encoding="utf-8"
-    )
+    file_handler = RotatingFileHandler(LOG_FILE, maxBytes=10 * 1024 * 1024, backupCount=5, encoding="utf-8")
     file_handler.setLevel(logging.DEBUG)
     file_handler.setFormatter(logging.Formatter(log_format, date_format))
 
@@ -103,7 +101,7 @@ def ensure_app_dirs() -> None:
     from utils.state import load_state, save_state
 
     if not STATE_FILE.exists():
-        initial_state = {
+        initial_state: dict[str, Any] = {
             "version": "1.0",
             "app_dir": str(APP_DIR),
             "files": [],
@@ -142,9 +140,7 @@ def sanitize_folder_name(name: str | None) -> str:
 
 
 # ─── Subfolder / tree helpers ────────────────────────────────────────────────
-def create_subfolders(
-    base_path: Path, tree: list[dict[str, Any]]
-) -> dict[str, list[Any]]:
+def create_subfolders(base_path: Path, tree: list[dict[str, Any]]) -> dict[str, list[Any]]:
     result: dict[str, list[Any]] = {"created": [], "errors": []}
     for node in tree:
         raw_name = node.get("name", "")
@@ -163,9 +159,7 @@ def create_subfolders(
         for cp in child_result["created"]:
             result["created"].append(f"{name}/{cp}")
         for err in child_result["errors"]:
-            result["errors"].append(
-                {"name": f"{name}/{err['name']}", "error": err["error"]}
-            )
+            result["errors"].append({"name": f"{name}/{err['name']}", "error": err["error"]})
     return result
 
 
@@ -186,9 +180,7 @@ def sync_tree_from_fs(entry: dict[str, Any], base_path: str) -> None:
         entry["subfolders_tree"] = build_tree_from_fs(base)
 
 
-def update_tree_paths(
-    tree_nodes: list[dict[str, Any]], old_base: str, new_base: str
-) -> None:
+def update_tree_paths(tree_nodes: list[dict[str, Any]], old_base: str, new_base: str) -> None:
     if not tree_nodes:
         return
     for node in tree_nodes:
@@ -221,9 +213,7 @@ def build_tree_from_created(created_dirs: list[dict[str, Any]]) -> list[dict[str
                 "name": proj.get("project_code", ""),
                 "path": proj_path,
                 "type": "project",
-                "children": tree_from_subfolders(
-                    proj.get("subfolders_tree", []), proj_path
-                ),
+                "children": tree_from_subfolders(proj.get("subfolders_tree", []), proj_path),
             }
             date_entry["children"].append(proj_entry)
         if date_entry["children"]:
@@ -231,9 +221,7 @@ def build_tree_from_created(created_dirs: list[dict[str, Any]]) -> list[dict[str
     return tree
 
 
-def tree_from_subfolders(
-    tree_nodes: list[dict[str, Any]], base_path: str
-) -> list[dict[str, Any]]:
+def tree_from_subfolders(tree_nodes: list[dict[str, Any]], base_path: str) -> list[dict[str, Any]]:
     result: list[dict[str, Any]] = []
     for node in tree_nodes:
         name = node.get("name", "")
@@ -260,9 +248,7 @@ def scan_filesystem_for_dirs() -> list[dict[str, Any]]:
         for item in DESKTOP_PATH.iterdir():
             if not item.is_dir():
                 continue
-            date_match = re.match(r"^\d{2}\.\d{2}\.\d{4}$", item.name) or re.match(
-                r"^\d{4}-\d{2}-\d{2}$", item.name
-            )
+            date_match = re.match(r"^\d{2}\.\d{2}\.\d{4}$", item.name) or re.match(r"^\d{4}-\d{2}-\d{2}$", item.name)
             if not date_match:
                 continue
             date_str = item.name

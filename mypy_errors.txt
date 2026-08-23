@@ -1,0 +1,19 @@
+test (3.11)	Type check with mypy	﻿2026-08-23T17:22:25.8892461Z ##[group]Run mypy --ignore-missing-imports .
+test (3.11)	Type check with mypy	2026-08-23T17:22:25.8892898Z ^[[36;1mmypy --ignore-missing-imports .^[[0m
+test (3.11)	Type check with mypy	2026-08-23T17:22:25.8945615Z shell: /usr/bin/bash -e {0}
+test (3.11)	Type check with mypy	2026-08-23T17:22:25.8946016Z env:
+test (3.11)	Type check with mypy	2026-08-23T17:22:25.8946435Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.16/x64
+test (3.11)	Type check with mypy	2026-08-23T17:22:25.8947147Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.16/x64/lib/pkgconfig
+test (3.11)	Type check with mypy	2026-08-23T17:22:25.8947826Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+test (3.11)	Type check with mypy	2026-08-23T17:22:25.8948435Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+test (3.11)	Type check with mypy	2026-08-23T17:22:25.8949052Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+test (3.11)	Type check with mypy	2026-08-23T17:22:25.8949722Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.16/x64/lib
+test (3.11)	Type check with mypy	2026-08-23T17:22:25.8950264Z ##[endgroup]
+test (3.11)	Type check with mypy	2026-08-23T17:22:28.6464457Z routes/core.py:106: error: Need type annotation for "initial_state"  [var-annotated]
+test (3.11)	Type check with mypy	2026-08-23T17:22:29.4665120Z routes/requisites.py:28: error: Incompatible return value type (got "object", expected "str | None")  [return-value]
+test (3.11)	Type check with mypy	2026-08-23T17:22:29.4666425Z routes/requisites.py:160: error: Unsupported left operand type for + ("object")  [operator]
+test (3.11)	Type check with mypy	2026-08-23T17:22:29.4767021Z routes/magic.py:19: error: Need type annotation for "_jobs" (hint: "_jobs: dict[<type>, <type>] = ...")  [var-annotated]
+test (3.11)	Type check with mypy	2026-08-23T17:22:29.4991458Z routes/converter.py:33: error: Too many arguments for "joinpath" of "Traversable"  [call-arg]
+test (3.11)	Type check with mypy	2026-08-23T17:22:29.4992951Z routes/converter.py:157: error: Item "None" of "IO[Any] | None" has no attribute "__iter__" (not iterable)  [union-attr]
+test (3.11)	Type check with mypy	2026-08-23T17:22:29.5376473Z Found 6 errors in 4 files (checked 21 source files)
+test (3.11)	Type check with mypy	2026-08-23T17:22:29.5520115Z ##[error]Process completed with exit code 1.
