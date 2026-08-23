@@ -127,7 +127,9 @@ def kill_port_5000():
             if ":5000" in line and "LISTENING" in line:
                 parts = line.strip().split()
                 pid = parts[-1]
-                subprocess.run(["taskkill", "/PID", pid, "/F"], capture_output=True, timeout=5)
+                subprocess.run(
+                    ["taskkill", "/PID", pid, "/F"], capture_output=True, timeout=5
+                )
                 print_step(f"Зомби-процесс PID {pid} убит")
                 killed = True
     except Exception:
@@ -164,7 +166,9 @@ def check_flask(force=False):
         print_warn("Flask перезапишет state.json из памяти после сброса.")
         print()
         try:
-            answer = input("  Прибить Flask и продолжить сброс? (д/н): ").strip().lower()
+            answer = (
+                input("  Прибить Flask и продолжить сброс? (д/н): ").strip().lower()
+            )
         except (EOFError, KeyboardInterrupt):
             answer = "н"
         if answer in ("д", "y", "да", "yes"):
@@ -359,8 +363,12 @@ def reset_state_file():
         with open(STATE_FILE, "w", encoding="utf-8") as f:
             json.dump(initial_state, f, indent=2, ensure_ascii=False)
         print_step("state.json создан заново (чистое состояние — factory reset)")
-        print_step(f"  replace_rules: {len(initial_state['replace_rules'])} (заводские)")
-        print_step(f"  accompanying_prefixes: {len(initial_state['accompanying_prefixes'])} (заводские)")
+        print_step(
+            f"  replace_rules: {len(initial_state['replace_rules'])} (заводские)"
+        )
+        print_step(
+            f"  accompanying_prefixes: {len(initial_state['accompanying_prefixes'])} (заводские)"
+        )
         print_step("  registry_data: не задано")
         print_step("  files: пусто")
         print_step("  created_directories: пусто")
@@ -458,7 +466,9 @@ def clean_date_dirs():
         print_skip("Рабочий стол не найден")
         return
 
-    date_dirs = [p for p in desktop.iterdir() if p.is_dir() and DATE_DIR_PATTERN.match(p.name)]
+    date_dirs = [
+        p for p in desktop.iterdir() if p.is_dir() and DATE_DIR_PATTERN.match(p.name)
+    ]
 
     if not date_dirs:
         print_skip("Нет папок с датами")
@@ -750,7 +760,9 @@ def final_check():
     if checks_warn == 0:
         print_step(f"ВСЕ {total} ПРОВЕРОК ПРОЙДЕНЫ — проект чист!")
     else:
-        print_warn(f"Пройдено: {checks_ok}/{total} проверок, предупреждений: {checks_warn}")
+        print_warn(
+            f"Пройдено: {checks_ok}/{total} проверок, предупреждений: {checks_warn}"
+        )
 
 
 # ─── MAIN ───────────────────────────────────────────────────────────────────
@@ -761,7 +773,9 @@ def main():
 
     header("PDF Magic App — Полный сброс проекта")
     print(f"  Проект: {PROJECT_DIR}")
-    print(f"  Время:  {__import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(
+        f"  Время:  {__import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+    )
     if force:
         print("  Режим:  --force (пропуск проверки Flask)")
     print()

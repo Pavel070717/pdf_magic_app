@@ -87,9 +87,15 @@ def test_delete_nonexistent(temp_db):
 
 def test_search_materials(temp_db):
     """Search finds matching materials by doc_name, material_name, number, producer."""
-    add_material("Сертификат А", "Сталь 20", "001", "2025-01-01", "Завод А", "a.pdf", "a.pdf")
-    add_material("Паспорт Б", "Бетон М300", "002", "2025-02-01", "Завод Б", "b.pdf", "b.pdf")
-    add_material("Декларация В", "Сталь 45", "003", "2025-03-01", "Комбинат В", "c.pdf", "c.pdf")
+    add_material(
+        "Сертификат А", "Сталь 20", "001", "2025-01-01", "Завод А", "a.pdf", "a.pdf"
+    )
+    add_material(
+        "Паспорт Б", "Бетон М300", "002", "2025-02-01", "Завод Б", "b.pdf", "b.pdf"
+    )
+    add_material(
+        "Декларация В", "Сталь 45", "003", "2025-03-01", "Комбинат В", "c.pdf", "c.pdf"
+    )
 
     # Search by material_name
     results = search_materials("Сталь")
@@ -124,7 +130,9 @@ def test_add_material_empty_optional_fields(temp_db):
 
 def test_material_has_all_fields(temp_db):
     """Material dict contains all expected fields."""
-    mid = add_material("Doc X", "Mat Y", "N123", "2026-01-01", "Producer Z", "x.pdf", "x_orig.pdf")
+    mid = add_material(
+        "Doc X", "Mat Y", "N123", "2026-01-01", "Producer Z", "x.pdf", "x_orig.pdf"
+    )
     mat = get_material(mid)
     expected_keys = {
         "id",

@@ -42,7 +42,9 @@ def step(msg: str) -> None:
 
 def find_cmd(name: str) -> str | None:
     """Find an executable on PATH (Windows-aware)."""
-    return shutil.which(name) or shutil.which(f"{name}.cmd") or shutil.which(f"{name}.exe")
+    return (
+        shutil.which(name) or shutil.which(f"{name}.cmd") or shutil.which(f"{name}.exe")
+    )
 
 
 # ─── 1. uv ──────────────────────────────────────────────────────────
@@ -52,7 +54,9 @@ def check_uv() -> bool:
     """Ensure uv is installed."""
     step("1/3  Проверка uv")
     if find_cmd("uv"):
-        ver = subprocess.run(["uv", "--version"], capture_output=True, text=True, errors="replace").stdout.strip()
+        ver = subprocess.run(
+            ["uv", "--version"], capture_output=True, text=True, errors="replace"
+        ).stdout.strip()
         ok(f"uv найден: {ver}")
         return True
     fail("uv не найден! Установите uv:")

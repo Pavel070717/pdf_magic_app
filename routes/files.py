@@ -29,7 +29,9 @@ ALLOWED_MIME_PREFIXES = {
     ".jpeg": ["image/jpeg"],
     ".png": ["image/png"],
     ".doc": ["application/msword"],
-    ".docx": ["application/vnd.openxmlformats-officedocument.wordprocessingml.document"],
+    ".docx": [
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ],
     ".xls": ["application/vnd.ms-excel"],
     ".xlsx": ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"],
     ".dwg": ["application/acad", "application/x-autocad", "image/vnd.dwg"],
@@ -65,7 +67,9 @@ def add_files():
     for uploaded_file in uploaded_files:
         filename = uploaded_file.filename
         if not filename or filename == "":
-            rejected.append({"name": filename or "(пусто)", "reason": "Отсутствует имя файла"})
+            rejected.append(
+                {"name": filename or "(пусто)", "reason": "Отсутствует имя файла"}
+            )
             continue
         ext = Path(filename).suffix.lower()
         if ext not in ALLOWED_EXTENSIONS:

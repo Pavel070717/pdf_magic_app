@@ -35,7 +35,9 @@ def save_state(state: dict[str, Any]) -> None:
 
 def _atomic_save(state: dict[str, Any]) -> None:
     STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
-    fd, tmp_path = tempfile.mkstemp(suffix=".json", prefix="state_tmp_", dir=str(STATE_FILE.parent))
+    fd, tmp_path = tempfile.mkstemp(
+        suffix=".json", prefix="state_tmp_", dir=str(STATE_FILE.parent)
+    )
     try:
         with os.fdopen(fd, "w", encoding="utf-8") as f:
             json.dump(state, f, indent=2, ensure_ascii=False)

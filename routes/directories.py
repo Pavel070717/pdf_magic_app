@@ -51,7 +51,9 @@ def create_directory():
         state = load_state()
         if state.get("is_creating", False):
             return (
-                jsonify({"success": False, "error": "Операция создания уже выполняется"}),
+                jsonify(
+                    {"success": False, "error": "Операция создания уже выполняется"}
+                ),
                 429,
             )
         state["is_creating"] = True
@@ -157,7 +159,9 @@ def delete_directory():
 
         state = load_state()
         created = state.get("created_directories", [])
-        state["created_directories"] = [d for d in created if d.get("path") != full_path]
+        state["created_directories"] = [
+            d for d in created if d.get("path") != full_path
+        ]
         save_state(state)
 
         tree = build_tree_from_created(state["created_directories"])
@@ -255,7 +259,9 @@ def rename_directory():
         save_state(state)
 
         tree = build_tree_from_created(state["created_directories"])
-        return jsonify({"success": True, "old_path": old_str, "new_path": new_str, "tree": tree})
+        return jsonify(
+            {"success": True, "old_path": old_str, "new_path": new_str, "tree": tree}
+        )
     except Exception as e:
         logger.exception("Ошибка переименования")
         return jsonify({"success": False, "error": str(e)}), 500
@@ -308,7 +314,11 @@ def scan_directories():
         scan_filesystem_for_dirs()
         state = load_state()
         created = state.get("created_directories", [])
-        existing_dirs = [d for d in created if Path(d if isinstance(d, str) else d.get("path", "")).exists()]
+        existing_dirs = [
+            d
+            for d in created
+            if Path(d if isinstance(d, str) else d.get("path", "")).exists()
+        ]
         if len(existing_dirs) != len(created):
             state["created_directories"] = existing_dirs
             save_state(state)
@@ -344,7 +354,11 @@ def list_directories():
         scan_filesystem_for_dirs()
         state = load_state()
         created = state.get("created_directories", [])
-        existing_dirs = [d for d in created if Path(d if isinstance(d, str) else d.get("path", "")).exists()]
+        existing_dirs = [
+            d
+            for d in created
+            if Path(d if isinstance(d, str) else d.get("path", "")).exists()
+        ]
         if len(existing_dirs) != len(created):
             state["created_directories"] = existing_dirs
             save_state(state)

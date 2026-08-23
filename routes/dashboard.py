@@ -21,7 +21,11 @@ def get_dashboard_stats():
         state = load_state()
         total_files = len(state.get("files", []))
         created_dirs = state.get("created_directories", [])
-        total_dirs = sum(1 for d in created_dirs if Path(d if isinstance(d, str) else d.get("path", "")).exists())
+        total_dirs = sum(
+            1
+            for d in created_dirs
+            if Path(d if isinstance(d, str) else d.get("path", "")).exists()
+        )
         total_materials = len(get_all_materials())
         total_rules = len(state.get("replace_rules", []))
 
@@ -48,10 +52,14 @@ def get_dashboard_stats():
 
         if last_magic and last_magic.get("timestamp"):
             try:
-                dt = datetime.fromisoformat(last_magic["timestamp"].replace("Z", "+00:00"))
+                dt = datetime.fromisoformat(
+                    last_magic["timestamp"].replace("Z", "+00:00")
+                )
                 day_key = dt.strftime("%d.%m")
                 if day_key in activity_by_day:
-                    activity_by_day[day_key]["files"] += last_magic.get("files_copied", 0)
+                    activity_by_day[day_key]["files"] += last_magic.get(
+                        "files_copied", 0
+                    )
             except (ValueError, TypeError):
                 pass
 

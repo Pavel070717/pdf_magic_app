@@ -135,7 +135,9 @@ def _kill_port_5000():
                 # Validate PID is numeric only
                 if not pid.isdigit():
                     continue
-                subprocess.run(["taskkill", "/PID", pid, "/F"], capture_output=True, timeout=5)
+                subprocess.run(
+                    ["taskkill", "/PID", pid, "/F"], capture_output=True, timeout=5
+                )
                 logger.info(f"Зомби-процесс убит: PID {pid}")
     except Exception:
         pass

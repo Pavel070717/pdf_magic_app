@@ -49,13 +49,23 @@ def save_registry_data():
         registry_data["org_name"] = sanitize_text(data.get("org_name", ""))
         registry_data["object_name"] = sanitize_text(data.get("object_name", ""))
         registry_data["customer"] = sanitize_text(data.get("customer", ""))
-        registry_data["sk_representative"] = sanitize_text(data.get("sk_representative", ""))
-        registry_data["general_contractor"] = sanitize_text(data.get("general_contractor", ""))
+        registry_data["sk_representative"] = sanitize_text(
+            data.get("sk_representative", "")
+        )
+        registry_data["general_contractor"] = sanitize_text(
+            data.get("general_contractor", "")
+        )
         registry_data["work_executor"] = sanitize_text(data.get("work_executor", ""))
-        registry_data["registry_number"] = sanitize_text(data.get("registry_number", ""))
+        registry_data["registry_number"] = sanitize_text(
+            data.get("registry_number", "")
+        )
         registry_data["signature_sdal"] = sanitize_text(data.get("signature_sdal", ""))
-        registry_data["signature_proveril"] = sanitize_text(data.get("signature_proveril", ""))
-        registry_data["signature_prinyal"] = sanitize_text(data.get("signature_prinyal", ""))
+        registry_data["signature_proveril"] = sanitize_text(
+            data.get("signature_proveril", "")
+        )
+        registry_data["signature_prinyal"] = sanitize_text(
+            data.get("signature_prinyal", "")
+        )
         state["registry_data"] = registry_data
 
         registry_dicts = state.get("registry_dicts", {})

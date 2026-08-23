@@ -201,7 +201,11 @@ def generate_aocr():
     act_number = sanitize_text(str(data.get("act_number", "")))
     act_date = sanitize_text(str(data.get("act_date", "")))
     act_date_clean = act_date.replace("«", "").replace("»", "").replace('"', "").strip()
-    file_stem = f"АОСР_{act_number}_{act_date_clean}" if act_number else f"АОСР_{datetime.now():%Y%m%d_%H%M%S}"
+    file_stem = (
+        f"АОСР_{act_number}_{act_date_clean}"
+        if act_number
+        else f"АОСР_{datetime.now():%Y%m%d_%H%M%S}"
+    )
     file_stem = "".join(c for c in file_stem if c.isalnum() or c in "._- ") or "АОСР"
 
     output_dir = _get_output_dir()

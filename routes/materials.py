@@ -63,7 +63,9 @@ def add_material_endpoint():
             return jsonify({"success": False, "error": "Загрузите PDF-файл"}), 400
         if file.content_type and not file.content_type.startswith("application/pdf"):
             return (
-                jsonify({"success": False, "error": "Можно загружать только PDF-файлы"}),
+                jsonify(
+                    {"success": False, "error": "Можно загружать только PDF-файлы"}
+                ),
                 400,
             )
 

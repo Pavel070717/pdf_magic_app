@@ -358,7 +358,11 @@ def read_aosr_cell_from_xlsx(xlsx_path: Path) -> str:
 # ==========================================================
 def collect_files(folder_path: Path, filter_names: set | None = None):
     files = natsorted(
-        [f for f in os.listdir(folder_path) if f.lower().endswith(ALLOWED_EXTS) and not f.startswith("00.Реестр")]
+        [
+            f
+            for f in os.listdir(folder_path)
+            if f.lower().endswith(ALLOWED_EXTS) and not f.startswith("00.Реестр")
+        ]
     )
     if filter_names is not None:
         files = [f for f in files if f in filter_names]
@@ -441,7 +445,9 @@ def fill_rows(ws, rows, folder_path):
             set_cell(ws, f"{col}{row}", val, font, align, THIN_BORDER, fill)
         cell = ws[f"G{row}"]
         cell.hyperlink = str(folder_path / item["filename"])
-        cell.font = Font(name="Times New Roman", size=12, color="8E487F", italic=True, bold=highlight)
+        cell.font = Font(
+            name="Times New Roman", size=12, color="8E487F", italic=True, bold=highlight
+        )
         cell.alignment = ALIGN_L
     return start + len(rows) - 1
 
@@ -537,7 +543,9 @@ def fix_page_margins_in_xlsx(xlsx_path):
         if worksheet_path.exists():
             tree = ElementTree.parse(worksheet_path)  # заменено ET на ElementTree
             root = tree.getroot()
-            for elem in root.iter("{http://schemas.openxmlformats.org/spreadsheetml/2006/main}pageMargins"):
+            for elem in root.iter(
+                "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}pageMargins"
+            ):
                 elem.set("left", margins["left"])
                 elem.set("right", margins["right"])
                 elem.set("top", margins["top"])
@@ -545,14 +553,18 @@ def fix_page_margins_in_xlsx(xlsx_path):
                 elem.set("header", str(MARGIN_HEADER_CM * CM_TO_INCHES))
                 elem.set("footer", str(MARGIN_FOOTER_CM * CM_TO_INCHES))
                 logger.info(f"Обновлены поля страницы: {elem.attrib}")
-            for elem in root.iter("{http://schemas.openxmlformats.org/spreadsheetml/2006/main}pageSetup"):
+            for elem in root.iter(
+                "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}pageSetup"
+            ):
                 elem.set("scale", str(PRINT_SCALE))
                 logger.info("Установлен масштаб 67%")
                 for attr in ["fitToPage", "fitToHeight", "fitToWidth"]:
                     if attr in elem.attrib:
                         del elem.attrib[attr]
             tree.write(worksheet_path, encoding="utf-8", xml_declaration=True)
-        fd, tmp_xlsx = tempfile.mkstemp(suffix=".xlsx", prefix="registry_", dir=str(xlsx_path.parent))
+        fd, tmp_xlsx = tempfile.mkstemp(
+            suffix=".xlsx", prefix="registry_", dir=str(xlsx_path.parent)
+        )
         os.close(fd)
         try:
             with zipfile.ZipFile(tmp_xlsx, "w", zipfile.ZIP_DEFLATED) as zipf:
