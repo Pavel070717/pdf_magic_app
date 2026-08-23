@@ -156,7 +156,11 @@ def get_aocr_data(object_id: int):
                 parts.append(", ".join(tail))
             return ", ".join(parts) if parts else ""
 
-        builder_continued = (str(reqs.get("builder_address", "")) + " " + str(reqs.get("builder_phone", ""))).strip()
+        builder_continued = (
+            str(reqs.get("builder_address", ""))
+            + " "
+            + str(reqs.get("builder_phone", ""))
+        ).strip()
         builder_continued2 = _fmt_sro(reqs, "builder")
         designer_continued = _fmt_sro(reqs, "designer")
 
