@@ -34,7 +34,7 @@ DEFAULT_REPLACE_RULES: list[dict[str, Any]] = [
 
 def get_replace_rules() -> list[dict[str, Any]]:
     state = load_state()
-    return state.get("replace_rules", [])
+    return state.get("replace_rules", [])  # type: ignore
 
 
 def save_replace_rules(rules: list[dict[str, Any]]) -> None:
@@ -45,7 +45,7 @@ def save_replace_rules(rules: list[dict[str, Any]]) -> None:
 
 def get_accompanying_prefixes() -> list[str]:
     state = load_state()
-    return state.get("accompanying_prefixes", [])
+    return state.get("accompanying_prefixes", [])  # type: ignore
 
 
 def save_accompanying_prefixes(prefixes: list[str]) -> None:
