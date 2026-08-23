@@ -25,7 +25,7 @@ def _get_object_name(object_id: int) -> str | None:
     objects = get_objects()
     for obj in objects:
         if obj["id"] == object_id:
-            return obj["name"]
+            return str(obj["name"])  # явное приведение к str
     return None
 
 
@@ -138,10 +138,10 @@ def get_aocr_data(object_id: int):
 
         # Computed fields — собираем СРО в читаемый текст как в акте
         def _fmt_sro(r: dict, prefix: str) -> str:
-            num = r.get(f"{prefix}_sro_number", "").strip()
-            name = r.get(f"{prefix}_sro_name", "").strip()
-            ogrn = r.get(f"{prefix}_sro_ogrn", "").strip()
-            inn = r.get(f"{prefix}_sro_inn", "").strip()
+            num = str(r.get(f"{prefix}_sro_number", "")).strip()
+            name = str(r.get(f"{prefix}_sro_name", "")).strip()
+            ogrn = str(r.get(f"{prefix}_sro_ogrn", "")).strip()
+            inn = str(r.get(f"{prefix}_sro_inn", "")).strip()
             parts = []
             if num:
                 parts.append(num)
@@ -156,17 +156,15 @@ def get_aocr_data(object_id: int):
                 parts.append(", ".join(tail))
             return ", ".join(parts) if parts else ""
 
-        builder_continued = (
-            reqs.get("builder_address", "") + " " + reqs.get("builder_phone", "")
-        ).strip()
+        builder_continued = (str(reqs.get("builder_address", "")) + " " + str(reqs.get("builder_phone", ""))).strip()
         builder_continued2 = _fmt_sro(reqs, "builder")
         designer_continued = _fmt_sro(reqs, "designer")
 
         # Компоновка представителей: должность, ФИО, документ → одна строка
         def _fmt_rep(r: dict, prefix: str, default: str = "-") -> str:
-            pos = r.get(f"{prefix}_position", "").strip()
-            name = r.get(f"{prefix}_name", "").strip()
-            doc = r.get(f"{prefix}_doc", "").strip()
+            pos = str(r.get(f"{prefix}_position", "")).strip()
+            name = str(r.get(f"{prefix}_name", "")).strip()
+            doc = str(r.get(f"{prefix}_doc", "")).strip()
             parts = [p for p in [pos, name, doc] if p]
             return ", ".join(parts) if parts else default
 
@@ -174,13 +172,13 @@ def get_aocr_data(object_id: int):
         result = {
             "success": True,
             "object_name": object_name,
-            "developer_name": reqs.get("developer_name", ""),
-            "developer_address": reqs.get("developer_address", ""),
-            "builder_name": reqs.get("builder_name", ""),
+            "developer_name": str(reqs.get("developer_name", "")),
+            "developer_address": str(reqs.get("developer_address", "")),
+            "builder_name": str(reqs.get("builder_name", "")),
             "builder_continued": builder_continued,
             "builder_continued2": builder_continued2,
-            "designer_name": reqs.get("designer_name", ""),
-            "designer_address": reqs.get("designer_address", ""),
+            "designer_name": str(reqs.get("designer_name", "")),
+            "designer_address": str(reqs.get("designer_address", "")),
             "designer_continued": designer_continued,
             "rep_developer": _fmt_rep(reqs, "rep_developer"),
             "rep_builder": _fmt_rep(reqs, "rep_builder"),
@@ -188,7 +186,7 @@ def get_aocr_data(object_id: int):
             "rep_designer": _fmt_rep(reqs, "rep_designer"),
             "rep_contractor": _fmt_rep(reqs, "rep_contractor"),
             "rep_others": _fmt_rep(reqs, "rep_others"),
-            "rep_others_continued": reqs.get("rep_others_continued", ""),
+            "rep_others_continued": str(reqs.get("rep_others_continued", "")),
         }
 
         # Sheet 2 fields (all pass-through from requisites, default empty)
@@ -220,7 +218,7 @@ def get_aocr_data(object_id: int):
             "s2_rep_others",
         ]
         for field in s2_fields:
-            result[field] = reqs.get(field, "")
+            result[field] = str(reqs.get(field, ""))
 
         return jsonify(result)
     except Exception as e:
