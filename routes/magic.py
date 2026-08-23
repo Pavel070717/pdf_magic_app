@@ -39,11 +39,15 @@ def start_magic():
     else:
         app_dir = Path(get_app_dir())
         if target_dir and not Path(target_dir).exists():
-            logger.warning(f"target_dir не существует: {target_dir}, fallback на {app_dir}")
+            logger.warning(
+                f"target_dir не существует: {target_dir}, fallback на {app_dir}"
+            )
 
     if not app_dir.exists():
         return (
-            jsonify({"success": False, "error": f"Директория не существует: {app_dir}"}),
+            jsonify(
+                {"success": False, "error": f"Директория не существует: {app_dir}"}
+            ),
             400,
         )
 
@@ -63,7 +67,10 @@ def start_magic():
 
     # Check this directory doesn't already have numbered files
     existing = [
-        f for f in app_dir.iterdir() if f.is_file() and f.name.split(".")[0].split(";")[0].strip().lstrip("0").isdigit()
+        f
+        for f in app_dir.iterdir()
+        if f.is_file()
+        and f.name.split(".")[0].split(";")[0].strip().lstrip("0").isdigit()
     ]
     if existing:
         return (
@@ -171,7 +178,9 @@ def copy_files_worker(files, app_dir):
                 name_no_ext = apply_symbol_rules(name_no_ext)
 
                 # Generate numbered filename
-                numbered_name = generate_numbered_filename(start_number, name_no_ext, ext)
+                numbered_name = generate_numbered_filename(
+                    start_number, name_no_ext, ext
+                )
 
                 dest_path = app_dir / numbered_name
 
@@ -188,7 +197,9 @@ def copy_files_worker(files, app_dir):
 
             with _magic_lock:
                 magic_progress["done"] += 1
-                magic_progress["percent"] = int((magic_progress["done"] / magic_progress["total"]) * 100)
+                magic_progress["percent"] = int(
+                    (magic_progress["done"] / magic_progress["total"]) * 100
+                )
 
         # Generate Excel registry (only with copied files)
         try:
@@ -196,14 +207,18 @@ def copy_files_worker(files, app_dir):
             registry_data = state.get("registry_data", {})
             saved_dicts = state.get("registry_dicts", {})
 
-            logger.info(f"Копирование завершено: {copied} файлов, пропущено: {len(skipped)}")
+            logger.info(
+                f"Копирование завершено: {copied} файлов, пропущено: {len(skipped)}"
+            )
             logger.info("Генерация Excel реестра...")
 
             with _magic_lock:
                 magic_progress["current_file"] = "Генерация Excel реестра..."
                 magic_progress["percent"] = 95
 
-            registry_path = generate_excel_registry(app_dir, registry_data, saved_dicts, set(copied_names))
+            registry_path = generate_excel_registry(
+                app_dir, registry_data, saved_dicts, set(copied_names)
+            )
             logger.info(f"Excel-реестр создан: {registry_path}")
 
             state = load_state()
@@ -216,7 +231,8 @@ def copy_files_worker(files, app_dir):
             # Update directory in created_directories
             app_dir_str = str(app_dir)
             existing_paths = [
-                d if isinstance(d, str) else d.get("path", "") for d in state.get("created_directories", [])
+                d if isinstance(d, str) else d.get("path", "")
+                for d in state.get("created_directories", [])
             ]
             if app_dir_str not in existing_paths:
                 state["created_directories"].append(
