@@ -12,7 +12,7 @@ from pathlib import Path
 
 from flask import Blueprint, jsonify, request, send_file
 
-from routes.core import APP_DIR, logger  # импорт APP_DIR перенесён сюда
+from routes.core import APP_DIR, logger
 
 converter_bp = Blueprint("converter", __name__)
 
@@ -30,9 +30,8 @@ def _find_jar() -> Path:
     """Locate the bundled ODL JAR inside the installed package."""
     import importlib.resources as resources
 
-    jar_ref = resources.files("opendataloader_pdf").joinpath(
-        "jar", "opendataloader-pdf-cli.jar"
-    )
+    # Исправлено: использование оператора / вместо joinpath с несколькими аргументами
+    jar_ref = resources.files("opendataloader_pdf") / "jar" / "opendataloader-pdf-cli.jar"
     return Path(str(jar_ref))
 
 
@@ -50,17 +49,12 @@ def convert_pdf():
     output_format = request.form.get("format", "markdown")
     if output_format not in ALLOWED_FORMATS:
         return (
-            jsonify(
-                {"success": False, "error": f"Недопустимый формат: {output_format}"}
-            ),
+            jsonify({"success": False, "error": f"Недопустимый формат: {output_format}"}),
             400,
         )
 
     job_id = str(uuid.uuid4())[:8]
-    safe_name = (
-        "".join(c for c in Path(uploaded.filename).stem if c.isalnum() or c in "._- ()")
-        or "doc"
-    )
+    safe_name = "".join(c for c in Path(uploaded.filename).stem if c.isalnum() or c in "._- ()") or "doc"
     dest = CONVERTER_OUTPUT / f"{safe_name}.pdf"
     counter = 1
     while dest.exists():
@@ -100,9 +94,7 @@ def convert_pdf():
     conv_id = add_conversion(uploaded.filename, output_format, str(dest))
     job["db_id"] = conv_id
 
-    thread = threading.Thread(
-        target=_run_conversion, args=(job_id, dest, output_format)
-    )
+    thread = threading.Thread(target=_run_conversion, args=(job_id, dest, output_format))
     thread.daemon = True
     thread.start()
 
@@ -151,6 +143,10 @@ def _run_conversion(job_id: str, pdf_path: Path, fmt: str) -> None:
             errors="replace",
         )
 
+        # Проверяем, что stdout не None
+        if proc.stdout is None:
+            raise RuntimeError("No stdout from process")
+
         total_pages = 0
         output_written = False
 
@@ -171,9 +167,7 @@ def _run_conversion(job_id: str, pdf_path: Path, fmt: str) -> None:
 
             # Parse processing start
             if "Processing" in line_s and "pages" in line_s:
-                _update_job(
-                    job_id, progress=25, stage=f"Обработка {total_pages} стр...."
-                )
+                _update_job(job_id, progress=25, stage=f"Обработка {total_pages} стр....")
                 continue
 
             # Detect output file creation → near done
@@ -229,9 +223,7 @@ def _run_conversion(job_id: str, pdf_path: Path, fmt: str) -> None:
             result_text = None
             if fmt in ("markdown", "text", "json", "html"):
                 try:
-                    result_text = result_file.read_text(
-                        encoding="utf-8", errors="replace"
-                    )[:50000]
+                    result_text = result_file.read_text(encoding="utf-8", errors="replace")[:50000]
                 except Exception:
                     pass
             _update_job(
@@ -265,9 +257,7 @@ def _run_conversion(job_id: str, pdf_path: Path, fmt: str) -> None:
 
     except subprocess.CalledProcessError as e:
         logger.error(f"ODL exit code {e.returncode}")
-        _update_job(
-            job_id, status="error", error=f"Ошибка конвертации (код {e.returncode})"
-        )
+        _update_job(job_id, status="error", error=f"Ошибка конвертации (код {e.returncode})")
 
     except Exception as e:
         logger.exception(f"Ошибка конвертации {job_id}")
