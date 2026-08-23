@@ -9,7 +9,7 @@ import os
 import re
 import shutil
 import tempfile
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ElementTree  # изменено с ET на ElementTree
 import zipfile
 from datetime import datetime
 from pathlib import Path
@@ -42,7 +42,18 @@ ALIGN_CN = Alignment(horizontal="center", vertical="center", wrap_text=False)
 ALIGN_L = Alignment(horizontal="left", vertical="center", wrap_text=True)
 ALIGN_LN = Alignment(horizontal="left", vertical="center", wrap_text=False)
 ALIGN_R = Alignment(horizontal="right", vertical="center", wrap_text=True)
-ALLOWED_EXTS = (".pdf", ".jpg", ".jpeg", ".png", ".doc", ".docx", ".xls", ".xlsx", ".dwg", ".dxf")
+ALLOWED_EXTS = (
+    ".pdf",
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".doc",
+    ".docx",
+    ".xls",
+    ".xlsx",
+    ".dwg",
+    ".dxf",
+)
 
 # ==========================================================
 # КОНСТАНТЫ РАЗМЕТКИ
@@ -107,36 +118,116 @@ def safe_filename(text: str) -> str:
 # ==========================================================
 def build_info_block(ws, registry_data):
     for col in ("B", "C", "D", "E", "F"):
-        set_cell(ws, f"{col}2", registry_data.get("org_name", "") if col == "B" else "", FONT12, ALIGN_CC, BOTTOM_BORDER)
-    set_cell(ws, f"C{ROW_ORG_SUBTITLE}", "(наименование строительной организации)", FONT10, ALIGN_CN, NO_BORDER)
+        set_cell(
+            ws,
+            f"{col}2",
+            registry_data.get("org_name", "") if col == "B" else "",
+            FONT12,
+            ALIGN_CC,
+            BOTTOM_BORDER,
+        )
+    set_cell(
+        ws,
+        f"C{ROW_ORG_SUBTITLE}",
+        "(наименование строительной организации)",
+        FONT10,
+        ALIGN_CN,
+        NO_BORDER,
+    )
     for col in ("B", "C", "D", "E", "F"):
-        set_cell(ws, f"{col}5", registry_data.get("object_name", "") if col == "B" else "", FONT12, ALIGN_CC, BOTTOM_BORDER)
-    set_cell(ws, f"C{ROW_OBJECT_SUBTITLE}", "(наименование объекта, шифр проекта)", FONT10, ALIGN_CN, NO_BORDER)
+        set_cell(
+            ws,
+            f"{col}5",
+            registry_data.get("object_name", "") if col == "B" else "",
+            FONT12,
+            ALIGN_CC,
+            BOTTOM_BORDER,
+        )
+    set_cell(
+        ws,
+        f"C{ROW_OBJECT_SUBTITLE}",
+        "(наименование объекта, шифр проекта)",
+        FONT10,
+        ALIGN_CN,
+        NO_BORDER,
+    )
 
     headers = [
         (ROW_CUSTOMER - 1, "Застройщик или технический заказчик:"),
-        (ROW_SK_REPRESENTATIVE - 1, "Представитель службы строительного контроля технического заказчика:"),
+        (
+            ROW_SK_REPRESENTATIVE - 1,
+            "Представитель службы строительного контроля технического заказчика:",
+        ),
         (ROW_GENERAL_CONTRACTOR - 1, "Генподрядчик:"),
         (ROW_WORK_EXECUTOR - 1, "Исполнитель работ:"),
     ]
     for row, text in headers:
         set_cell(ws, f"A{row}", text, FONT12B, ALIGN_LN)
     for col in ("B", "C", "D", "E", "F"):
-        set_cell(ws, f"{col}9", registry_data.get("customer", "") if col == "B" else "", FONT12, ALIGN_CC, BOTTOM_BORDER)
-    set_cell(ws, f"C{ROW_CUSTOMER_SUBTITLE}", "(наименование организации)", FONT10, ALIGN_CN, NO_BORDER)
+        set_cell(
+            ws,
+            f"{col}9",
+            registry_data.get("customer", "") if col == "B" else "",
+            FONT12,
+            ALIGN_CC,
+            BOTTOM_BORDER,
+        )
+    set_cell(
+        ws,
+        f"C{ROW_CUSTOMER_SUBTITLE}",
+        "(наименование организации)",
+        FONT10,
+        ALIGN_CN,
+        NO_BORDER,
+    )
     for col in ("B", "C", "D", "E", "F"):
-        set_cell(ws, f"{col}13", registry_data.get("sk_representative", "") if col == "B" else "", FONT12, ALIGN_CC, BOTTOM_BORDER)
+        set_cell(
+            ws,
+            f"{col}13",
+            registry_data.get("sk_representative", "") if col == "B" else "",
+            FONT12,
+            ALIGN_CC,
+            BOTTOM_BORDER,
+        )
     set_cell(ws, "C14", "(наименование организации)", FONT10, ALIGN_CN, NO_BORDER)
     for cell_ref in (f"B{ROW_SK_REPRESENTATIVE + 1}", f"B{ROW_SK_REPRESENTATIVE + 2}"):
         ws[cell_ref].border = NO_BORDER
     for col in ("B", "C", "D", "E", "F"):
-        set_cell(ws, f"{col}17", registry_data.get("general_contractor", "") if col == "B" else "", FONT12, ALIGN_CC, BOTTOM_BORDER)
-    set_cell(ws, f"C{ROW_GC_SUBTITLE}", "(наименование организации)", FONT10, ALIGN_CN, NO_BORDER)
+        set_cell(
+            ws,
+            f"{col}17",
+            registry_data.get("general_contractor", "") if col == "B" else "",
+            FONT12,
+            ALIGN_CC,
+            BOTTOM_BORDER,
+        )
+    set_cell(
+        ws,
+        f"C{ROW_GC_SUBTITLE}",
+        "(наименование организации)",
+        FONT10,
+        ALIGN_CN,
+        NO_BORDER,
+    )
     for cell_ref in (f"B{ROW_GC_SUBTITLE}",):
         ws[cell_ref].border = NO_BORDER
     for col in ("B", "C", "D", "E", "F"):
-        set_cell(ws, f"{col}21", registry_data.get("work_executor", "") if col == "B" else "", FONT12, ALIGN_CC, BOTTOM_BORDER)
-    set_cell(ws, f"C{ROW_WE_SUBTITLE}", "(наименование организации)", FONT10, ALIGN_CN, NO_BORDER)
+        set_cell(
+            ws,
+            f"{col}21",
+            registry_data.get("work_executor", "") if col == "B" else "",
+            FONT12,
+            ALIGN_CC,
+            BOTTOM_BORDER,
+        )
+    set_cell(
+        ws,
+        f"C{ROW_WE_SUBTITLE}",
+        "(наименование организации)",
+        FONT10,
+        ALIGN_CN,
+        NO_BORDER,
+    )
     for cell_ref in (f"B{ROW_WE_SUBTITLE}",):
         ws[cell_ref].border = NO_BORDER
 
@@ -154,7 +245,14 @@ def build_info_block(ws, registry_data):
 # ТАБЛИЦА
 # ==========================================================
 def build_header(ws):
-    set_cell(ws, f"G{ROW_TABLE_NOTE}", "Данный столбец не входит в бумажный носитель", FONT12_BLUE, ALIGN_C, THIN_BORDER)
+    set_cell(
+        ws,
+        f"G{ROW_TABLE_NOTE}",
+        "Данный столбец не входит в бумажный носитель",
+        FONT12_BLUE,
+        ALIGN_C,
+        THIN_BORDER,
+    )
     headers = {
         f"A{ROW_TABLE_HEADER}": "№ п/п",
         f"B{ROW_TABLE_HEADER}": "Наименование документа",
@@ -172,7 +270,17 @@ def build_header(ws):
     for i in range(1, 9):
         col = get_column_letter(i)
         font = FONT12_BLUE if col in ("G", "H") else FONT12B
-        set_cell(ws, f"{col}{ROW_TABLE_SUBHEADER}", str(i), font, ALIGN_C, THIN_BORDER, AQUA_FILL)
+        set_cell(
+            ws,
+            f"{col}{ROW_TABLE_SUBHEADER}",
+            str(i),
+            font,
+            ALIGN_C,
+            THIN_BORDER,
+            AQUA_FILL,
+        )
+
+
 # ==========================================================
 # ПАРСИНГ ИМЁН ФАЙЛОВ
 # ==========================================================
@@ -185,7 +293,14 @@ def parse_filename(filename: str) -> dict:
         m = re.search(r"(\d{2})[.\-](\d{2})[.\-](\d{4})", filename)
         if m:
             date = f"{m.group(1)}.{m.group(2)}.{m.group(3)}"
-        return {"name": name, "number": "-", "date": date, "pages": None, "page_num": None, "filename": filename}
+        return {
+            "name": name,
+            "number": "-",
+            "date": date,
+            "pages": None,
+            "page_num": None,
+            "filename": filename,
+        }
     parts = stem.split(";")
     raw_name = parts[0].strip()
     name = normalize_name(re.sub(r"^(?:\d+\.\s*)+", "", raw_name).strip())
@@ -278,14 +393,16 @@ def collect_files(folder_path: Path, filter_names: set | None = None):
             if cell_text:
                 name = f"АОСР. {cell_text}"
                 logger.info(f"АОСР: заменили наименование на: {name}")
-        rows.append({
-            "name": name,
-            "number": parsed["number"],
-            "date": parsed["date"],
-            "pages": pages if pages else "—",
-            "page_num": page_num,
-            "filename": f,
-        })
+        rows.append(
+            {
+                "name": name,
+                "number": parsed["number"],
+                "date": parsed["date"],
+                "pages": pages if pages else "—",
+                "page_num": page_num,
+                "filename": f,
+            }
+        )
     return rows
 
 
@@ -336,22 +453,54 @@ def build_signatures(ws, registry_data, last_row):
     start = last_row + SIGNATURES_GAP
     data = [
         (start, "Сдал:", "signature_sdal", "Подрядчика"),
-        (start + SIGNATURE_BLOCK_HEIGHT, "Проверил:", "signature_proveril", "Технадзора"),
-        (start + SIGNATURE_BLOCK_HEIGHT * 2, "Принял:", "signature_prinyal", "Заказчика"),
+        (
+            start + SIGNATURE_BLOCK_HEIGHT,
+            "Проверил:",
+            "signature_proveril",
+            "Технадзора",
+        ),
+        (
+            start + SIGNATURE_BLOCK_HEIGHT * 2,
+            "Принял:",
+            "signature_prinyal",
+            "Заказчика",
+        ),
     ]
     for row, title, key, org in data:
         set_cell(ws, f"A{row}", title, FONT12B, ALIGN_LN)
         set_cell(ws, f"A{row + 1}", "Представитель", FONT12, ALIGN_LN)
         set_cell(ws, f"A{row + 2}", org, FONT12, ALIGN_LN)
-        set_cell(ws, f"C{row + 1}", registry_data.get(key, ""), FONT12, ALIGN_C, BOTTOM_BORDER)
+        set_cell(
+            ws,
+            f"C{row + 1}",
+            registry_data.get(key, ""),
+            FONT12,
+            ALIGN_C,
+            BOTTOM_BORDER,
+        )
         set_cell(ws, f"E{row + 2}", "(подпись)", FONT12, ALIGN_C, BOTTOM_BORDER)
         set_cell(ws, f"F{row + 2}", "(дата)", FONT12, ALIGN_C, BOTTOM_BORDER)
     top_border = Border(top=THIN)
-    for block_row in (start + 2, start + SIGNATURE_BLOCK_HEIGHT + 2, start + SIGNATURE_BLOCK_HEIGHT * 2 + 2):
+    for block_row in (
+        start + 2,
+        start + SIGNATURE_BLOCK_HEIGHT + 2,
+        start + SIGNATURE_BLOCK_HEIGHT * 2 + 2,
+    ):
         set_cell(ws, f"E{block_row}", "(подпись)", FONT10, ALIGN_C, top_border)
         set_cell(ws, f"F{block_row}", "(дата)", FONT10, ALIGN_C, top_border)
-    for block_row in (start + 2, start + SIGNATURE_BLOCK_HEIGHT + 2, start + SIGNATURE_BLOCK_HEIGHT * 2 + 2):
-        set_cell(ws, f"C{block_row}", "(должность, фамилия, инициалы) М. П.", FONT10, ALIGN_C, NO_BORDER)
+    for block_row in (
+        start + 2,
+        start + SIGNATURE_BLOCK_HEIGHT + 2,
+        start + SIGNATURE_BLOCK_HEIGHT * 2 + 2,
+    ):
+        set_cell(
+            ws,
+            f"C{block_row}",
+            "(должность, фамилия, инициалы) М. П.",
+            FONT10,
+            ALIGN_C,
+            NO_BORDER,
+        )
     return start
 
 
@@ -386,7 +535,7 @@ def fix_page_margins_in_xlsx(xlsx_path):
             zip_ref.extractall(temp_dir)
         worksheet_path = Path(temp_dir) / "xl" / "worksheets" / "sheet1.xml"
         if worksheet_path.exists():
-            tree = ET.parse(worksheet_path)
+            tree = ElementTree.parse(worksheet_path)  # заменено ET на ElementTree
             root = tree.getroot()
             for elem in root.iter("{http://schemas.openxmlformats.org/spreadsheetml/2006/main}pageMargins"):
                 elem.set("left", margins["left"])
@@ -431,7 +580,12 @@ def fix_page_margins_in_xlsx(xlsx_path):
 # ==========================================================
 # ОСНОВНАЯ ФУНКЦИЯ
 # ==========================================================
-def generate_excel_registry(folder_path: Path, registry_data: dict, saved_dicts: dict, filter_names: set | None = None) -> Path:
+def generate_excel_registry(
+    folder_path: Path,
+    registry_data: dict,
+    saved_dicts: dict,
+    filter_names: set | None = None,
+) -> Path:
     logger.info(f"Генерация Excel реестра: {folder_path}")
     wb = Workbook()
     ws = wb.active

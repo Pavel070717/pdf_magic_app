@@ -3,6 +3,7 @@ Blueprint: /api/aocr/* — Генерация формы АОСР (Акт осв
 Использует шаблон templates/AOCR_template.xlsx, заполняет через openpyxl,
 сохраняет .xlsx и (опционально) .pdf через win32com.
 """
+
 import shutil
 import traceback
 from datetime import datetime
@@ -11,7 +12,7 @@ from typing import Any
 
 from flask import Blueprint, jsonify, request
 
-from routes.core import PROJECT_DIR, logger, sanitize_text
+from routes.core import logger, sanitize_text
 
 aocr_bp = Blueprint("aocr", __name__)
 
@@ -19,57 +20,58 @@ TEMPLATE = Path(__file__).parent.parent / "templates" / "AOCR_template.xlsx"
 
 # ─── Ячейки листа "1" ────────────────────────────────────────────────────────
 SHEET1_MAP: dict[str, str] = {
-    "object_name":           "A6",
-    "developer_name":        "D9",
-    "developer_address":     "A10",
-    "builder_name":          "A13",
-    "builder_continued":     "A15",
-    "builder_continued2":    "A16",
-    "designer_name":         "A19",
-    "designer_address":      "A21",
-    "designer_continued":    "A23",
-    "act_number":            "C29",
-    "act_date":              "V29",
-    "rep_developer":         "A33",
-    "rep_builder":           "A36",
-    "rep_builder_control":   "A40",
-    "rep_designer":          "A45",
-    "rep_contractor":        "A50",
-    "rep_others":            "A53",
-    "rep_others_continued":  "A54",
+    "object_name": "A6",
+    "developer_name": "D9",
+    "developer_address": "A10",
+    "builder_name": "A13",
+    "builder_continued": "A15",
+    "builder_continued2": "A16",
+    "designer_name": "A19",
+    "designer_address": "A21",
+    "designer_continued": "A23",
+    "act_number": "C29",
+    "act_date": "V29",
+    "rep_developer": "A33",
+    "rep_builder": "A36",
+    "rep_builder_control": "A40",
+    "rep_designer": "A45",
+    "rep_contractor": "A50",
+    "rep_others": "A53",
+    "rep_others_continued": "A54",
 }
 
 # ─── Ячейки листа «2» ──────────────────────────────────────────────────────
 SHEET2_MAP: dict[str, str] = {
-    "s2_work_name":        "A5",
-    "s2_project_docs":     "A9",
-    "s2_materials_used":   "A13",
+    "s2_work_name": "A5",
+    "s2_project_docs": "A9",
+    "s2_materials_used": "A13",
     "s2_documents_submitted": "A17",
-    "s2_start_day":        "N20",
-    "s2_start_month":      "P20",
-    "s2_start_year":       "U20",
-    "s2_end_day":          "N21",
-    "s2_end_month":        "P21",
-    "s2_end_year":         "U21",
-    "s2_standards_l1":     "L23",
-    "s2_standards_l2":     "A24",
-    "s2_standards_l3":     "A25",
-    "s2_standards_l4":     "A26",
-    "s2_standards_l5":     "A27",
-    "s2_next_work":        "A31",
-    "s2_additional_info":  "I34",
-    "s2_copies":           "F36",
-    "s2_appendices":       "A39",
-    "s2_rep_developer":    "A44",
-    "s2_rep_builder":      "A48",
+    "s2_start_day": "N20",
+    "s2_start_month": "P20",
+    "s2_start_year": "U20",
+    "s2_end_day": "N21",
+    "s2_end_month": "P21",
+    "s2_end_year": "U21",
+    "s2_standards_l1": "L23",
+    "s2_standards_l2": "A24",
+    "s2_standards_l3": "A25",
+    "s2_standards_l4": "A26",
+    "s2_standards_l5": "A27",
+    "s2_next_work": "A31",
+    "s2_additional_info": "I34",
+    "s2_copies": "F36",
+    "s2_appendices": "A39",
+    "s2_rep_developer": "A44",
+    "s2_rep_builder": "A48",
     "s2_rep_builder_ctrl": "A53",
-    "s2_rep_designer":     "A59",
-    "s2_rep_contractor":   "A65",
-    "s2_rep_others":       "A69",
+    "s2_rep_designer": "A59",
+    "s2_rep_contractor": "A65",
+    "s2_rep_others": "A69",
 }
 
 
 # ─── Вспомогательные функции ─────────────────────────────────────────────────
+
 
 def _get_output_dir() -> Path:
     """Возвращает директорию для сохранения из current_directory в state.json."""
@@ -132,6 +134,7 @@ def _export_pdf(xlsx_path: Path) -> Path | None:
 
     try:
         import pythoncom
+
         pythoncom.CoInitialize()
     except ImportError:
         pass
@@ -162,12 +165,14 @@ def _export_pdf(xlsx_path: Path) -> Path | None:
                 pass
         try:
             import pythoncom
+
             pythoncom.CoUninitialize()
         except Exception:
             pass
 
 
 # ─── Эндпоинты ────────────────────────────────────────────────────────────────
+
 
 @aocr_bp.route("/api/aocr/generate", methods=["POST"])
 def generate_aocr():
@@ -179,12 +184,18 @@ def generate_aocr():
 
     data = request.get_json(silent=True)
     if not data:
-        return jsonify({"success": False, "error": "Тело запроса должно быть JSON"}), 400
+        return (
+            jsonify({"success": False, "error": "Тело запроса должно быть JSON"}),
+            400,
+        )
 
     # ── Проверка шаблона ─────────────────────────────────────────────────
     if not TEMPLATE.exists():
         logger.error(f"Шаблон не найден: {TEMPLATE}")
-        return jsonify({"success": False, "error": f"Шаблон не найден: {TEMPLATE}"}), 500
+        return (
+            jsonify({"success": False, "error": f"Шаблон не найден: {TEMPLATE}"}),
+            500,
+        )
 
     # ── Определение имени и пути ─────────────────────────────────────────
     act_number = sanitize_text(str(data.get("act_number", "")))
@@ -223,7 +234,7 @@ def generate_aocr():
         wb.save(str(xlsx_path))
         logger.info(f"XLSX сохранён: {xlsx_path}")
     except Exception as e:
-        logger.exception(f"Ошибка заполнения шаблона")
+        logger.exception("Ошибка заполнения шаблона")
         try:
             wb.close()
         except Exception:
@@ -238,9 +249,11 @@ def generate_aocr():
     # ── Экспорт в PDF ────────────────────────────────────────────────────
     pdf_path = _export_pdf(xlsx_path)
 
-    return jsonify({
-        "success": True,
-        "xlsx_path": str(xlsx_path),
-        "pdf_path": str(pdf_path) if pdf_path else None,
-        "pdf_generated": pdf_path is not None,
-    })
+    return jsonify(
+        {
+            "success": True,
+            "xlsx_path": str(xlsx_path),
+            "pdf_path": str(pdf_path) if pdf_path else None,
+            "pdf_generated": pdf_path is not None,
+        }
+    )

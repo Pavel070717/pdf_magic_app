@@ -5,7 +5,6 @@ Real progress tracking through Java CLI stdout parsing + pypdf page count.
 
 import re
 import subprocess
-import sys
 import threading
 import time
 import uuid
@@ -13,11 +12,9 @@ from pathlib import Path
 
 from flask import Blueprint, jsonify, request, send_file
 
-from routes.core import logger
+from routes.core import APP_DIR, logger  # импорт APP_DIR перенесён сюда
 
 converter_bp = Blueprint("converter", __name__)
-
-from routes.core import APP_DIR
 
 CONVERTER_OUTPUT = APP_DIR / "Конвертор пдф"
 CONVERTER_OUTPUT.mkdir(parents=True, exist_ok=True)
@@ -50,7 +47,10 @@ def convert_pdf():
 
     output_format = request.form.get("format", "markdown")
     if output_format not in ALLOWED_FORMATS:
-        return jsonify({"success": False, "error": f"Недопустимый формат: {output_format}"}), 400
+        return (
+            jsonify({"success": False, "error": f"Недопустимый формат: {output_format}"}),
+            400,
+        )
 
     job_id = str(uuid.uuid4())[:8]
     safe_name = "".join(c for c in Path(uploaded.filename).stem if c.isalnum() or c in "._- ()") or "doc"
@@ -125,8 +125,10 @@ def _run_conversion(job_id: str, pdf_path: Path, fmt: str) -> None:
             "-jar",
             str(jar),
             str(pdf_path),
-            "-o", str(CONVERTER_OUTPUT),
-            "-f", fmt_flag,
+            "-o",
+            str(CONVERTER_OUTPUT),
+            "-f",
+            fmt_flag,
         ]
 
         _update_job(job_id, progress=10, stage="Запуск обработчика...")
@@ -141,7 +143,6 @@ def _run_conversion(job_id: str, pdf_path: Path, fmt: str) -> None:
         )
 
         total_pages = 0
-        processed_pages = 0
         output_written = False
 
         for line in proc.stdout:

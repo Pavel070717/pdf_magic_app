@@ -53,7 +53,15 @@ def add_material(
         cursor = conn.execute(
             """INSERT INTO materials (doc_name, material_name, number, date, producer, filename, original_filename)
                VALUES (?, ?, ?, ?, ?, ?, ?)""",
-            (doc_name, material_name, number or "", date or "", producer or "", filename, original_filename),
+            (
+                doc_name,
+                material_name,
+                number or "",
+                date or "",
+                producer or "",
+                filename,
+                original_filename,
+            ),
         )
         conn.commit()
         return cursor.lastrowid or 0
@@ -146,9 +154,7 @@ def add_conversion(filename: str, fmt: str, source_path: str) -> int:
 def get_conversions() -> list[dict[str, object]]:
     conn = get_db()
     try:
-        cursor = conn.execute(
-            "SELECT * FROM conversions ORDER BY created_at DESC LIMIT 50"
-        )
+        cursor = conn.execute("SELECT * FROM conversions ORDER BY created_at DESC LIMIT 50")
         return [dict(row) for row in cursor.fetchall()]
     finally:
         conn.close()
@@ -280,9 +286,7 @@ def delete_object(obj_id: int) -> bool:
 def get_requisites(obj_id: int) -> dict[str, object] | None:
     conn = get_db()
     try:
-        cursor = conn.execute(
-            "SELECT * FROM requisites WHERE object_id = ?", (obj_id,)
-        )
+        cursor = conn.execute("SELECT * FROM requisites WHERE object_id = ?", (obj_id,))
         row = cursor.fetchone()
         return dict(row) if row else None
     finally:
@@ -292,24 +296,59 @@ def get_requisites(obj_id: int) -> dict[str, object] | None:
 def save_requisites(obj_id: int, data: dict[str, str]) -> None:
     conn = get_db()
     try:
-        existing = conn.execute(
-            "SELECT id FROM requisites WHERE object_id = ?", (obj_id,)
-        ).fetchone()
+        existing = conn.execute("SELECT id FROM requisites WHERE object_id = ?", (obj_id,)).fetchone()
         fields = [
-            "developer_name","developer_ogrn","developer_inn","developer_address","developer_phone",
-            "builder_name","builder_ogrn","builder_inn","builder_address","builder_phone",
-            "builder_sro_number","builder_sro_name","builder_sro_ogrn","builder_sro_inn",
-            "designer_name","designer_ogrn","designer_inn",
-            "designer_sro_number","designer_sro_name","designer_sro_ogrn","designer_sro_inn",
-            "designer_address","designer_phone",
-            "control_name","control_ogrn","control_inn","control_address","control_phone",
-            "control_sro_number","control_sro_name","control_sro_ogrn","control_sro_inn",
-            "rep_developer_position","rep_developer_name","rep_developer_doc",
-            "rep_builder_position","rep_builder_name","rep_builder_doc",
-            "rep_builder_ctrl_position","rep_builder_ctrl_name","rep_builder_ctrl_doc",
-            "rep_designer_position","rep_designer_name","rep_designer_doc",
-            "rep_contractor_position","rep_contractor_name","rep_contractor_doc",
-            "rep_others_org","rep_others_position","rep_others_name","rep_others_doc",
+            "developer_name",
+            "developer_ogrn",
+            "developer_inn",
+            "developer_address",
+            "developer_phone",
+            "builder_name",
+            "builder_ogrn",
+            "builder_inn",
+            "builder_address",
+            "builder_phone",
+            "builder_sro_number",
+            "builder_sro_name",
+            "builder_sro_ogrn",
+            "builder_sro_inn",
+            "designer_name",
+            "designer_ogrn",
+            "designer_inn",
+            "designer_sro_number",
+            "designer_sro_name",
+            "designer_sro_ogrn",
+            "designer_sro_inn",
+            "designer_address",
+            "designer_phone",
+            "control_name",
+            "control_ogrn",
+            "control_inn",
+            "control_address",
+            "control_phone",
+            "control_sro_number",
+            "control_sro_name",
+            "control_sro_ogrn",
+            "control_sro_inn",
+            "rep_developer_position",
+            "rep_developer_name",
+            "rep_developer_doc",
+            "rep_builder_position",
+            "rep_builder_name",
+            "rep_builder_doc",
+            "rep_builder_ctrl_position",
+            "rep_builder_ctrl_name",
+            "rep_builder_ctrl_doc",
+            "rep_designer_position",
+            "rep_designer_name",
+            "rep_designer_doc",
+            "rep_contractor_position",
+            "rep_contractor_name",
+            "rep_contractor_doc",
+            "rep_others_org",
+            "rep_others_position",
+            "rep_others_name",
+            "rep_others_doc",
             "rep_others_continued",
         ]
         values = [data.get(f, "") for f in fields]

@@ -11,7 +11,18 @@ from routes.core import PROJECT_DIR, logger
 
 files_bp = Blueprint("files", __name__)
 
-ALLOWED_EXTENSIONS = {".pdf", ".jpg", ".jpeg", ".png", ".doc", ".docx", ".xls", ".xlsx", ".dwg", ".dxf"}
+ALLOWED_EXTENSIONS = {
+    ".pdf",
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".doc",
+    ".docx",
+    ".xls",
+    ".xlsx",
+    ".dwg",
+    ".dxf",
+}
 ALLOWED_MIME_PREFIXES = {
     ".pdf": ["application/pdf"],
     ".jpg": ["image/jpeg"],
@@ -58,17 +69,24 @@ def add_files():
             continue
         ext = Path(filename).suffix.lower()
         if ext not in ALLOWED_EXTENSIONS:
-            rejected.append({"name": filename, "reason": f"Недопустимое расширение: {ext or '(нет)'}"})
+            rejected.append(
+                {
+                    "name": filename,
+                    "reason": f"Недопустимое расширение: {ext or '(нет)'}",
+                }
+            )
             continue
 
         # Validate MIME type if available
         allowed_mimes = ALLOWED_MIME_PREFIXES.get(ext, [])
         if allowed_mimes and getattr(uploaded_file, "content_type", None):
             if uploaded_file.content_type not in allowed_mimes:
-                rejected.append({
-                    "name": filename,
-                    "reason": f"Недопустимый тип файла: {uploaded_file.content_type}",
-                })
+                rejected.append(
+                    {
+                        "name": filename,
+                        "reason": f"Недопустимый тип файла: {uploaded_file.content_type}",
+                    }
+                )
                 continue
 
         safe_name = "".join(c for c in filename if c.isalnum() or c in "._- ();№")
@@ -95,21 +113,28 @@ def add_files():
         )
 
     if not valid_paths:
-        return jsonify({
-            "success": False,
-            "error": "Нет допустимых файлов для загрузки",
-            "rejected": rejected,
-        }), 400
+        return (
+            jsonify(
+                {
+                    "success": False,
+                    "error": "Нет допустимых файлов для загрузки",
+                    "rejected": rejected,
+                }
+            ),
+            400,
+        )
 
     state = load_state()
     state["files"].extend(valid_paths)
     save_state(state)
 
-    return jsonify({
-        "success": True,
-        "files": state["files"],
-        "rejected": rejected,
-    })
+    return jsonify(
+        {
+            "success": True,
+            "files": state["files"],
+            "rejected": rejected,
+        }
+    )
 
 
 @files_bp.route("/api/files/remove", methods=["POST"])

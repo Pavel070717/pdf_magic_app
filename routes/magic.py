@@ -2,7 +2,6 @@
 Blueprint: /api/magic/* — file copy, numbering, and Excel registry generation.
 """
 
-import json
 import os
 import shutil
 import threading
@@ -43,19 +42,39 @@ def start_magic():
             logger.warning(f"target_dir не существует: {target_dir}, fallback на {app_dir}")
 
     if not app_dir.exists():
-        return jsonify({"success": False, "error": f"Директория не существует: {app_dir}"}), 400
+        return (
+            jsonify({"success": False, "error": f"Директория не существует: {app_dir}"}),
+            400,
+        )
 
     state = load_state()
     files = state.get("files", [])
 
     if not files:
-        return jsonify({"success": False, "error": "Нет файлов для обработки. Загрузите файлы."}), 400
+        return (
+            jsonify(
+                {
+                    "success": False,
+                    "error": "Нет файлов для обработки. Загрузите файлы.",
+                }
+            ),
+            400,
+        )
 
     # Check this directory doesn't already have numbered files
-    existing = [f for f in app_dir.iterdir()
-                if f.is_file() and f.name.split('.')[0].split(';')[0].strip().lstrip('0').isdigit()]
+    existing = [
+        f for f in app_dir.iterdir() if f.is_file() and f.name.split(".")[0].split(";")[0].strip().lstrip("0").isdigit()
+    ]
     if existing:
-        return jsonify({"success": False, "error": "В директории уже есть пронумерованные файлы. Удалите их или выберите другую папку."}), 400
+        return (
+            jsonify(
+                {
+                    "success": False,
+                    "error": "В директории уже есть пронумерованные файлы. Удалите их или выберите другую папку.",
+                }
+            ),
+            400,
+        )
 
     state["is_creating"] = False
     save_state(state)
@@ -69,13 +88,17 @@ def start_magic():
     )
     thread.start()
 
-    return jsonify({"success": True, "message": "Магия запущена. Копирование и нумерация файлов..."})
+    return jsonify(
+        {
+            "success": True,
+            "message": "Магия запущена. Копирование и нумерация файлов...",
+        }
+    )
 
 
 @magic_bp.route("/api/magic/cancel", methods=["POST"])
 def cancel_magic():
     """Cancel running magic job."""
-    job_id = _get_job_id()
     with _magic_lock:
         magic_progress["cancelled"] = True
         magic_progress["status"] = "cancelled"
@@ -95,19 +118,19 @@ def get_magic_progress():
 def get_magic_result():
     """Get magic result after completion."""
     state = load_state()
-    return jsonify({
-        "success": True,
-        "last_magic_run": state.get("last_magic_run"),
-        "files": state.get("files", []),
-        "created_directories": state.get("created_directories", []),
-    })
+    return jsonify(
+        {
+            "success": True,
+            "last_magic_run": state.get("last_magic_run"),
+            "files": state.get("files", []),
+            "created_directories": state.get("created_directories", []),
+        }
+    )
 
 
 def copy_files_worker(files, app_dir):
     """Background worker: copy and number files, generate Excel registry."""
     from utils.rules import apply_rules_to_name, apply_symbol_rules
-
-    job_id = _get_job_id()
 
     with _magic_lock:
         magic_progress["status"] = "running"
@@ -192,9 +215,17 @@ def copy_files_worker(files, app_dir):
             }
             # Update directory in created_directories
             app_dir_str = str(app_dir)
-            existing_paths = [d if isinstance(d, str) else d.get("path", "") for d in state.get("created_directories", [])]
+            existing_paths = [
+                d if isinstance(d, str) else d.get("path", "") for d in state.get("created_directories", [])
+            ]
             if app_dir_str not in existing_paths:
-                state["created_directories"].append({"path": app_dir_str, "project_code": app_dir.name, "date": time.strftime("%d.%m.%Y")})
+                state["created_directories"].append(
+                    {
+                        "path": app_dir_str,
+                        "project_code": app_dir.name,
+                        "date": time.strftime("%d.%m.%Y"),
+                    }
+                )
             save_state(state)
         except Exception as e:
             logger.exception("Ошибка при генерации реестра")

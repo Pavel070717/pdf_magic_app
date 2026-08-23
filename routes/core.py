@@ -29,7 +29,10 @@ def setup_logging() -> logging.Logger:
     file_handler.setFormatter(logging.Formatter(log_format, date_format))
 
     error_handler = RotatingFileHandler(
-        LOG_DIR / "errors.log", maxBytes=5 * 1024 * 1024, backupCount=3, encoding="utf-8"
+        LOG_DIR / "errors.log",
+        maxBytes=5 * 1024 * 1024,
+        backupCount=3,
+        encoding="utf-8",
     )
     error_handler.setLevel(logging.ERROR)
     error_handler.setFormatter(logging.Formatter(log_format, date_format))
@@ -198,7 +201,12 @@ def build_tree_from_created(created_dirs: list[dict[str, Any]]) -> list[dict[str
 
     tree: list[dict[str, Any]] = []
     for date in sorted(by_date.keys(), reverse=True):
-        date_entry: dict[str, Any] = {"name": date, "path": "", "type": "date", "children": []}
+        date_entry: dict[str, Any] = {
+            "name": date,
+            "path": "",
+            "type": "date",
+            "children": [],
+        }
         for proj in sorted(by_date[date], key=lambda x: str(x.get("project_code", ""))):
             proj_path = proj.get("path", "")
             proj_entry: dict[str, Any] = {

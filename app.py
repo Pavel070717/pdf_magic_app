@@ -21,7 +21,6 @@ from routes import register_blueprints
 from routes.core import (
     APP_DIR,
     MATERIALS_DIR,
-    REACT_DIST,
     ensure_app_dirs,
     logger,
 )
@@ -70,25 +69,31 @@ def log_request_end(response):
 def index():
     return render_template("dashboard.html", page="dashboard")
 
+
 @app.route("/directories/create")
 def directories_page():
     return render_template("directories.html", page="directories")
+
 
 @app.route("/converter")
 def converter_page():
     return render_template("converter.html", page="converter")
 
+
 @app.route("/aocr")
 def aocr_page():
     return render_template("aocr.html", page="aocr")
+
 
 @app.route("/requisites")
 def requisites_page():
     return render_template("requisites.html", page="requisites")
 
+
 @app.route("/rules")
 def rules_page():
     return render_template("rules.html", page="rules")
+
 
 @app.route("/materials")
 def materials_page():
@@ -116,7 +121,13 @@ def _kill_port_5000():
     import subprocess
 
     try:
-        result = subprocess.run(["netstat", "-ano"], capture_output=True, text=True, timeout=5, errors="replace")
+        result = subprocess.run(
+            ["netstat", "-ano"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+            errors="replace",
+        )
         for line in result.stdout.splitlines():
             if ":5000" in line and "LISTENING" in line:
                 parts = line.strip().split()
@@ -194,6 +205,7 @@ def main() -> None:
     except ImportError:
         logger.info("Waitress не найден, запуск dev-сервера Flask")
         app.run(host="127.0.0.1", port=5000, debug=False)
+
 
 if __name__ == "__main__":
     main()

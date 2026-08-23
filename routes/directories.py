@@ -3,10 +3,10 @@ Blueprint: /api/directory/* + /api/directories/* — directory CRUD and listing.
 """
 
 import shutil
-import send2trash
 from datetime import datetime, timezone
 from pathlib import Path
 
+import send2trash
 from flask import Blueprint, jsonify, request
 
 from routes.core import (
@@ -39,7 +39,10 @@ def create_directory():
             return jsonify({"success": False, "error": "Не указан шифр проекта"}), 400
         project_code = sanitize_folder_name(project_code)
         if project_code == "unnamed_folder":
-            return jsonify({"success": False, "error": "Некорректный шифр проекта"}), 400
+            return (
+                jsonify({"success": False, "error": "Некорректный шифр проекта"}),
+                400,
+            )
 
         subfolders_tree = data.get("subfolders_tree", [])
         if not isinstance(subfolders_tree, list):
@@ -47,7 +50,10 @@ def create_directory():
 
         state = load_state()
         if state.get("is_creating", False):
-            return jsonify({"success": False, "error": "Операция создания уже выполняется"}), 429
+            return (
+                jsonify({"success": False, "error": "Операция создания уже выполняется"}),
+                429,
+            )
         state["is_creating"] = True
         save_state(state)
 
@@ -133,7 +139,15 @@ def delete_directory():
             dir_path_resolved = dir_path.resolve()
             desktop_resolved = DESKTOP_PATH.resolve()
             if not str(dir_path_resolved).startswith(str(desktop_resolved)):
-                return jsonify({"success": False, "error": "Можно удалять только на рабочем столе"}), 400
+                return (
+                    jsonify(
+                        {
+                            "success": False,
+                            "error": "Можно удалять только на рабочем столе",
+                        }
+                    ),
+                    400,
+                )
         except Exception:
             return jsonify({"success": False, "error": "Некорректный путь"}), 400
 
@@ -173,7 +187,10 @@ def add_subfolder():
         parent_dir = Path(parent_path)
         new_folder = parent_dir / folder_name
         if not parent_dir.exists():
-            return jsonify({"success": False, "error": "Родительская папка не найдена"}), 404
+            return (
+                jsonify({"success": False, "error": "Родительская папка не найдена"}),
+                404,
+            )
         if new_folder.exists():
             return jsonify({"success": False, "error": "Папка уже существует"}), 409
 
@@ -309,7 +326,14 @@ def get_current_directory():
     current_dir = get_app_dir()
     state = load_state()
     dir_info = state.get("current_directory", {})
-    return jsonify({"success": True, "current_dir": str(current_dir), "exists": current_dir.exists(), "info": dir_info})
+    return jsonify(
+        {
+            "success": True,
+            "current_dir": str(current_dir),
+            "exists": current_dir.exists(),
+            "info": dir_info,
+        }
+    )
 
 
 @dir_bp.route("/api/directories/list", methods=["GET"])

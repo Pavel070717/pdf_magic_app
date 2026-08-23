@@ -50,13 +50,22 @@ def add_material_endpoint():
         file = request.files.get("file")
 
         if not doc_name:
-            return jsonify({"success": False, "error": "Введите наименование документа"}), 400
+            return (
+                jsonify({"success": False, "error": "Введите наименование документа"}),
+                400,
+            )
         if not material_name:
-            return jsonify({"success": False, "error": "Введите наименование материала"}), 400
+            return (
+                jsonify({"success": False, "error": "Введите наименование материала"}),
+                400,
+            )
         if not file or file.filename == "":
             return jsonify({"success": False, "error": "Загрузите PDF-файл"}), 400
         if file.content_type and not file.content_type.startswith("application/pdf"):
-            return jsonify({"success": False, "error": "Можно загружать только PDF-файлы"}), 400
+            return (
+                jsonify({"success": False, "error": "Можно загружать только PDF-файлы"}),
+                400,
+            )
 
         materials_dir = MATERIALS_DIR
         materials_dir.mkdir(parents=True, exist_ok=True)
@@ -90,7 +99,14 @@ def add_material_endpoint():
             original_filename=file.filename or "unknown.pdf",
         )
 
-        return jsonify({"success": True, "material_id": material_id, "filename": new_filename, "path": str(filepath)})
+        return jsonify(
+            {
+                "success": True,
+                "material_id": material_id,
+                "filename": new_filename,
+                "path": str(filepath),
+            }
+        )
     except Exception as e:
         logger.exception("Ошибка добавления материала")
         return jsonify({"success": False, "error": str(e)}), 500

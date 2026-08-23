@@ -47,6 +47,7 @@ def find_cmd(name: str) -> str | None:
 
 # ─── 1. uv ──────────────────────────────────────────────────────────
 
+
 def check_uv() -> bool:
     """Ensure uv is installed."""
     step("1/3  Проверка uv")
@@ -56,11 +57,12 @@ def check_uv() -> bool:
         return True
     fail("uv не найден! Установите uv:")
     print(f"       {BOLD}winget install astral-sh.uv{RESET}")
-    print(f"       или: https://docs.astral.sh/uv/getting-started/installation/")
+    print("       или: https://docs.astral.sh/uv/getting-started/installation/")
     return False
 
 
 # ─── 2. Python deps ────────────────────────────────────────────────
+
 
 def install_python_deps() -> bool:
     """Install project Python dependencies via uv (idempotent)."""
@@ -71,7 +73,8 @@ def install_python_deps() -> bool:
 
     result = subprocess.run(
         ["uv", "pip", "install", "-r", str(REQUIREMENTS), "--python", sys.executable],
-        capture_output=True, text=True,
+        capture_output=True,
+        text=True,
     )
     if result.returncode == 0:
         ok("Зависимости установлены")
@@ -81,6 +84,7 @@ def install_python_deps() -> bool:
 
 
 # ─── 3. Java check (optional, for converter) ──────────────────────
+
 
 def check_java() -> None:
     """Check Java for ODL converter (non-blocking). Auto-detect common locations."""
@@ -108,13 +112,19 @@ def check_java() -> None:
 
     if java:
         try:
-            ver = subprocess.run(
-                [java, "-version"],
-                capture_output=True, text=True,
-                stderr=subprocess.STDOUT,
-                encoding="utf-8", errors="replace",
-            ).stdout or ""
-            ver_line = [l for l in ver.splitlines() if "version" in l.lower()]
+            ver = (
+                subprocess.run(
+                    [java, "-version"],
+                    capture_output=True,
+                    text=True,
+                    stderr=subprocess.STDOUT,
+                    encoding="utf-8",
+                    errors="replace",
+                ).stdout
+                or ""
+            )
+            # Исправлено: переменная цикла переименована с 'l' на 'line'
+            ver_line = [line for line in ver.splitlines() if "version" in line.lower()]
             ok(f"Java найдена: {ver_line[0][:60] if ver_line else 'OK'}")
             # Add to PATH for this session so ODL can find it
             java_bin = str(Path(java).parent)
@@ -129,19 +139,22 @@ def check_java() -> None:
 
 # ─── Launch ────────────────────────────────────────────────────────
 
+
 def launch() -> None:
-    """Import and run app.main() directly — no subprocess needed."""
+    """Import and run app.main() directly — no subprocess barrier."""
     print(f"\n{CYAN}{'=' * 60}{RESET}")
     print(f"  {BOLD}Запуск PDF Magic App{RESET}")
-    print(f"  http://localhost:5000")
+    print("  http://localhost:5000")
     print(f"{CYAN}{'=' * 60}{RESET}\n")
 
     # PATH changes made by check_java() are inherited — no subprocess barrier
     import app
+
     app.main()
 
 
 # ─── Main ──────────────────────────────────────────────────────────
+
 
 def main() -> None:
     print(f"{BOLD}{CYAN}PDF Magic App — Лаунчер{RESET}\n")

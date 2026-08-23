@@ -116,7 +116,13 @@ def kill_port_5000():
 
     killed = False
     try:
-        result = subprocess.run(["netstat", "-ano"], capture_output=True, text=True, timeout=5, errors="replace")
+        result = subprocess.run(
+            ["netstat", "-ano"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+            errors="replace",
+        )
         for line in result.stdout.splitlines():
             if ":5000" in line and "LISTENING" in line:
                 parts = line.strip().split()
@@ -544,6 +550,7 @@ def clean_tool_caches():
             if cache_dir.exists():
                 try:
                     import send2trash
+
                     send2trash.send2trash(str(cache_dir))
                     print_step(f"{name}/ отправлен в корзину")
                     cleaned += 1
@@ -670,10 +677,14 @@ def final_check():
             req_count = cursor.fetchone()[0]
             conn.close()
             if mat_count == 0 and conv_count == 0 and obj_count == 0 and req_count == 0:
-                print_step(f"materials.db: materials={mat_count}, conv={conv_count}, objects={obj_count}, req={req_count} (пустая)")
+                print_step(
+                    f"materials.db: materials={mat_count}, conv={conv_count}, objects={obj_count}, req={req_count} (пустая)"
+                )
                 checks_ok += 1
             else:
-                print_warn(f"materials.db: materials={mat_count}, conv={conv_count}, objects={obj_count}, req={req_count} (не пустая!)")
+                print_warn(
+                    f"materials.db: materials={mat_count}, conv={conv_count}, objects={obj_count}, req={req_count} (не пустая!)"
+                )
                 checks_warn += 1
         except Exception as e:
             print_error(f"materials.db повреждена: {e}")

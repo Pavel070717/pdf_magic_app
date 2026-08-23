@@ -56,7 +56,12 @@ class TestReplaceRules:
         """Rule is skipped if the target text is already present."""
         save_replace_rules(
             [
-                {"id": "1", "type": "text", "from": "серт.", "to": "Сертификат соответствия"},
+                {
+                    "id": "1",
+                    "type": "text",
+                    "from": "серт.",
+                    "to": "Сертификат соответствия",
+                },
             ]
         )
         # "Сертификат" is already in the name → rule should skip

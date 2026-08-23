@@ -7,10 +7,9 @@ from flask import Blueprint, jsonify, request
 
 from routes.core import logger
 from utils.database import (
-    init_requisites_db,
-    get_objects,
     add_object,
     delete_object,
+    get_objects,
     get_requisites,
     save_requisites,
 )
@@ -19,6 +18,7 @@ requisites_bp = Blueprint("requisites", __name__)
 
 
 # ─── Helpers ──────────────────────────────────────────────────────────────────
+
 
 def _get_object_name(object_id: int) -> str | None:
     """Return the name of an object by its id, or None if not found."""
@@ -30,6 +30,7 @@ def _get_object_name(object_id: int) -> str | None:
 
 
 # ─── Objects CRUD ─────────────────────────────────────────────────────────────
+
 
 @requisites_bp.route("/api/requisites/objects", methods=["GET"])
 def list_objects():
@@ -77,6 +78,7 @@ def remove_object(obj_id: int):
 
 # ─── Requisites CRUD ──────────────────────────────────────────────────────────
 
+
 @requisites_bp.route("/api/requisites/<int:object_id>", methods=["GET"])
 def read_requisites(object_id: int):
     """GET /api/requisites/<object_id> — get requisites for an object."""
@@ -99,7 +101,10 @@ def write_requisites(object_id: int):
     try:
         data = request.get_json(silent=True)
         if not data:
-            return jsonify({"success": False, "error": "Тело запроса должно быть JSON"}), 400
+            return (
+                jsonify({"success": False, "error": "Тело запроса должно быть JSON"}),
+                400,
+            )
 
         save_requisites(object_id, data)
         logger.info(f"Реквизиты сохранены для object_id={object_id}")
@@ -110,6 +115,7 @@ def write_requisites(object_id: int):
 
 
 # ─── AOCR autofill endpoint ───────────────────────────────────────────────────
+
 
 @requisites_bp.route("/api/requisites/<int:object_id>/aocr", methods=["GET"])
 def get_aocr_data(object_id: int):
@@ -137,18 +143,20 @@ def get_aocr_data(object_id: int):
             ogrn = r.get(f"{prefix}_sro_ogrn", "").strip()
             inn = r.get(f"{prefix}_sro_inn", "").strip()
             parts = []
-            if num: parts.append(num)
-            if name: parts.append(name)
+            if num:
+                parts.append(num)
+            if name:
+                parts.append(name)
             if ogrn or inn:
                 tail = []
-                if ogrn: tail.append(f"ОГРН {ogrn}")
-                if inn: tail.append(f"ИНН {inn}")
+                if ogrn:
+                    tail.append(f"ОГРН {ogrn}")
+                if inn:
+                    tail.append(f"ИНН {inn}")
                 parts.append(", ".join(tail))
             return ", ".join(parts) if parts else ""
 
-        builder_continued = (
-            reqs.get("builder_address", "") + " " + reqs.get("builder_phone", "")
-        ).strip()
+        builder_continued = (reqs.get("builder_address", "") + " " + reqs.get("builder_phone", "")).strip()
         builder_continued2 = _fmt_sro(reqs, "builder")
         designer_continued = _fmt_sro(reqs, "designer")
 
