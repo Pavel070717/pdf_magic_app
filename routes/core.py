@@ -57,7 +57,7 @@ _APP_DIR_OVERRIDE: Path | None = None
 
 
 def get_app_dir() -> Path:
-    global _APP_DIR_OVERRIDE
+    # Убрано global _APP_DIR_OVERRIDE – здесь только чтение, не присвоение
     if _APP_DIR_OVERRIDE is not None:
         return _APP_DIR_OVERRIDE
     return APP_DIR
@@ -187,7 +187,7 @@ def update_tree_paths(tree_nodes: list[dict[str, Any]], old_base: str, new_base:
         # Update path references in this node
         node_path = node.get("path", "")
         if node_path and node_path.startswith(old_base):
-            node["path"] = new_base + node_path[len(old_base):]
+            node["path"] = new_base + node_path[len(old_base) :]
 
 
 def build_tree_from_created(created_dirs: list[dict[str, Any]]) -> list[dict[str, Any]]:
