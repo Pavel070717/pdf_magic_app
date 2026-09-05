@@ -29,7 +29,14 @@ def clean_state(temp_state_file):
     """Return a clean default state, saved to temp file."""
     from utils.state import save_state
 
-    state = {"version": "1.0", "files": [], "last_magic_run": None}
+    state = {
+        "version": "1.0",
+        "files": [],
+        "last_magic_run": None,
+        "created_directories": [],
+        "replace_rules": [],
+        "accompanying_prefixes": [],
+    }
     save_state(state)
     return state
 
