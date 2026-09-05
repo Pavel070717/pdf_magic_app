@@ -88,7 +88,14 @@ def test_conversion_has_all_fields(temp_db):
     init_converter_db()
     add_conversion("doc.pdf", "html", "/some/path")
     convs = get_conversions()
-    expected_keys = {"id", "filename", "output_format", "source_path", "status", "created_at"}
+    expected_keys = {
+        "id",
+        "filename",
+        "output_format",
+        "source_path",
+        "status",
+        "created_at",
+    }
     assert expected_keys.issubset(convs[0].keys())
 
 

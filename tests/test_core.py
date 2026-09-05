@@ -15,7 +15,6 @@ from routes.core import (
     update_tree_paths,
 )
 
-
 # ─── sanitize_text ───────────────────────────────────────────────
 
 
@@ -141,9 +140,7 @@ class TestCreateSubfolders:
                 "children": [
                     {
                         "name": "b",
-                        "children": [
-                            {"name": "c"}
-                        ],
+                        "children": [{"name": "c"}],
                     }
                 ],
             }
@@ -270,7 +267,13 @@ class TestUpdateTreePaths:
         assert nodes[0]["path"] == "/other/sub"
 
     def test_nested_paths_updated(self):
-        nodes = [{"name": "a", "path": "/old/a", "children": [{"name": "b", "path": "/old/a/b"}]}]
+        nodes = [
+            {
+                "name": "a",
+                "path": "/old/a",
+                "children": [{"name": "b", "path": "/old/a/b"}],
+            }
+        ]
         update_tree_paths(nodes, "/old", "/new")
         assert nodes[0]["children"][0]["path"] == "/new/a/b"
 

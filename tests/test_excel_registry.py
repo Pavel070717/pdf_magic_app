@@ -17,7 +17,6 @@ from utils.excel_registry import (
     set_cell,
 )
 
-
 # ─── safe_filename ──────────────────────────────────────────────
 
 
@@ -127,24 +126,28 @@ class TestSetCell:
     def test_sets_font(self):
         ws = self._ws()
         from utils.excel_registry import FONT14B
+
         set_cell(ws, "A1", "Bold", FONT14B)
         assert ws["A1"].font.bold is True
 
     def test_sets_alignment(self):
         ws = self._ws()
         from utils.excel_registry import ALIGN_L
+
         set_cell(ws, "A1", "Left", align=ALIGN_L)
         assert ws["A1"].alignment.horizontal == "left"
 
     def test_sets_border(self):
         ws = self._ws()
         from utils.excel_registry import THIN_BORDER
+
         set_cell(ws, "A1", "Border", border=THIN_BORDER)
         assert ws["A1"].border.left.style == "thin"
 
     def test_sets_fill(self):
         ws = self._ws()
         from utils.excel_registry import AQUA_FILL
+
         set_cell(ws, "A1", "Fill", fill=AQUA_FILL)
         assert ws["A1"].fill.start_color.rgb == "00C2F8FC"
 
@@ -175,6 +178,7 @@ class TestMergeSet:
     def test_applies_font(self):
         ws = self._ws()
         from utils.excel_registry import FONT12B
+
         merge_set(ws, "A1:B1", "Bold", FONT12B)
         assert ws["A1"].font.bold is True
 
@@ -234,7 +238,11 @@ class TestBuildHeader:
     def test_sets_all_headers(self):
         ws = self._ws()
         build_header(ws)
-        expected = ["№ п/п", "Наименование документа", "№ чертежа, акта, разрешения, журнала и др."]
+        expected = [
+            "№ п/п",
+            "Наименование документа",
+            "№ чертежа, акта, разрешения, журнала и др.",
+        ]
         for exp in expected:
             found = False
             for row in range(26, 29):
@@ -295,7 +303,14 @@ class TestFillRows:
     def test_returns_last_row(self):
         ws = self._ws()
         rows = [
-            {"name": "Doc1", "number": "N1", "date": "01.01.2024", "pages": 2, "page_num": "1-2", "filename": "f1.pdf"},
+            {
+                "name": "Doc1",
+                "number": "N1",
+                "date": "01.01.2024",
+                "pages": 2,
+                "page_num": "1-2",
+                "filename": "f1.pdf",
+            },
         ]
         result = fill_rows(ws, rows, Path("/tmp"))
         assert result >= 29
@@ -308,7 +323,14 @@ class TestFillRows:
     def test_sets_cell_values(self):
         ws = self._ws()
         rows = [
-            {"name": "Акт", "number": "№1", "date": "05.02.2024", "pages": 1, "page_num": "1", "filename": "act.pdf"},
+            {
+                "name": "Акт",
+                "number": "№1",
+                "date": "05.02.2024",
+                "pages": 1,
+                "page_num": "1",
+                "filename": "act.pdf",
+            },
         ]
         fill_rows(ws, rows, Path("/tmp"))
         assert ws["B29"].value == "Акт"
@@ -318,7 +340,14 @@ class TestFillRows:
     def test_aosr_highlight(self):
         ws = self._ws()
         rows = [
-            {"name": "АОСР. Стены", "number": "N1", "date": "01.01", "pages": 1, "page_num": "1", "filename": "a.xlsx"},
+            {
+                "name": "АОСР. Стены",
+                "number": "N1",
+                "date": "01.01",
+                "pages": 1,
+                "page_num": "1",
+                "filename": "a.xlsx",
+            },
         ]
         fill_rows(ws, rows, Path("/tmp"))
         assert ws["A29"].value.startswith("=COUNTIF")
@@ -326,7 +355,14 @@ class TestFillRows:
     def test_multiple_rows(self):
         ws = self._ws()
         rows = [
-            {"name": f"Doc{i}", "number": f"N{i}", "date": "01.01", "pages": 1, "page_num": str(i), "filename": f"f{i}.pdf"}
+            {
+                "name": f"Doc{i}",
+                "number": f"N{i}",
+                "date": "01.01",
+                "pages": 1,
+                "page_num": str(i),
+                "filename": f"f{i}.pdf",
+            }
             for i in range(5)
         ]
         result = fill_rows(ws, rows, Path("/tmp"))

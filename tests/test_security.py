@@ -7,7 +7,6 @@ from pathlib import Path
 
 from routes.core import sanitize_folder_name, sanitize_text
 
-
 # ─── Path Traversal ─────────────────────────────────────────────
 
 
@@ -41,7 +40,7 @@ class TestHtmlInjection:
         assert "bold" in result
 
     def test_sanitize_strips_event_handlers(self):
-        result = sanitize_text('<img src=x onerror=alert(1)>')
+        result = sanitize_text("<img src=x onerror=alert(1)>")
         assert "onerror" not in result
 
     def test_sanitize_strips_script_tags(self):
@@ -132,5 +131,6 @@ class TestLargePayload:
         ]
         save_replace_rules(rules)
         from utils.rules import get_replace_rules
+
         loaded = get_replace_rules()
         assert len(loaded) == 200
