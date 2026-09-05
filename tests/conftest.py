@@ -6,6 +6,7 @@ import shutil
 import sys
 import tempfile
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
@@ -44,3 +45,39 @@ def temp_db(monkeypatch):
     utils.database.init_db()
     yield tmp_db
     shutil.rmtree(tmp_dir, ignore_errors=True)
+
+
+@pytest.fixture
+def temp_db_all(monkeypatch):
+    """Mock DB_PATH to a temporary database with all tables initialized."""
+    import utils.database
+
+    tmp_dir = Path(tempfile.mkdtemp())
+    tmp_db = tmp_dir / "test_all.db"
+    monkeypatch.setattr(utils.database, "DB_PATH", tmp_db)
+    utils.database.init_db()
+    utils.database.init_converter_db()
+    utils.database.init_requisites_db()
+    yield tmp_db
+    shutil.rmtree(tmp_dir, ignore_errors=True)
+
+
+@pytest.fixture
+def temp_dir():
+    """Provide a temporary directory, cleaned up after test."""
+    tmp_dir = Path(tempfile.mkdtemp())
+    yield tmp_dir
+    shutil.rmtree(tmp_dir, ignore_errors=True)
+
+
+@pytest.fixture
+def app_client(temp_state_file, temp_db_all, monkeypatch):
+    """Flask test client with isolated state and database."""
+    monkeypatch.setattr("routes.core._APP_DIR_OVERRIDE", None)
+
+    from app import app
+
+    app.config["TESTING"] = True
+    app.config["SERVER_NAME"] = "localhost"
+    with app.test_client() as client:
+        yield client
