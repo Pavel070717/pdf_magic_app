@@ -3,10 +3,13 @@ Tests for routes/magic.py — file copy/numbering/registry endpoints.
 """
 
 import json
-from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-from routes.magic import generate_numbered_filename
+from routes.magic import (
+    can_share_number,
+    generate_numbered_filename,
+    strip_leading_number,
+)
 
 
 class TestGenerateNumberedFilename:
@@ -25,6 +28,46 @@ class TestGenerateNumberedFilename:
     def test_zero_padded(self):
         result = generate_numbered_filename(5, "name", ".ext")
         assert result == "05.name.ext"
+
+
+class TestStripLeadingNumber:
+    def test_single_prefix(self):
+        assert strip_leading_number("01.Акт.pdf") == "Акт.pdf"
+
+    def test_double_prefix(self):
+        assert strip_leading_number("01.01.Акт.pdf") == "Акт.pdf"
+
+    def test_multi_part_prefix(self):
+        assert strip_leading_number("12.3.Акт") == "Акт"
+
+    def test_year_not_stripped(self):
+        assert strip_leading_number("2024.Отчет.pdf") == "2024.Отчет.pdf"
+
+    def test_no_prefix(self):
+        assert strip_leading_number("Акт") == "Акт"
+
+    def test_prefix_with_space(self):
+        assert strip_leading_number("02. Акт") == "Акт"
+
+
+class TestCanShareNumber:
+    def test_pdf_xlsx(self):
+        assert can_share_number(".pdf", ".xlsx") is True
+
+    def test_xlsx_pdf(self):
+        assert can_share_number(".xlsx", ".pdf") is True
+
+    def test_pdf_xlsm(self):
+        assert can_share_number(".pdf", ".xlsm") is True
+
+    def test_case_insensitive(self):
+        assert can_share_number(".PDF", ".XLSX") is True
+
+    def test_not_shared(self):
+        assert can_share_number(".pdf", ".docx") is False
+
+    def test_pdf_pdf_not_shared(self):
+        assert can_share_number(".pdf", ".pdf") is False
 
 
 class TestStartMagic:

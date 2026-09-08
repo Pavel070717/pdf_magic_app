@@ -2,9 +2,7 @@
 Tests for routes/dashboard.py — dashboard statistics.
 """
 
-import json
 from datetime import datetime, timezone
-from unittest.mock import patch
 
 
 class TestDashboardStats:

@@ -43,6 +43,8 @@
 </div>
 
 <script>
+var currentDirPath = '';
+
 // Create
 function createDir(e) {
   e.preventDefault();
@@ -112,6 +114,7 @@ function loadDirs() {
 
 // Open directory detail
 function openDir(path, name) {
+  currentDirPath = path || '';
   document.getElementById('current-dir-label').textContent = 'Директория: ' + (name||path);
   var detail = document.getElementById('dir-detail');
   detail.innerHTML = '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 18px;">'+
@@ -125,6 +128,11 @@ function openDir(path, name) {
     '<h3 style="font-size: 14px; font-weight: 700; margin-bottom: 10px;">📎 Загрузить файлы</h3>'+
     '<input type="file" id="file-input" multiple onchange=\'uploadFilesAuto(event,'+JSON.stringify(path)+')\' style="width: 100%;">'+
     '<div id="upload-msg" style="margin-top: 10px; font-size: 13px;"></div>'+
+    '<div style="margin-top: 12px; display: flex; gap: 6px;">'+
+    '<input type="text" id="folder-path-input" placeholder="Путь к папке (импорт целиком)" style="flex: 1; min-width: 0; padding: 7px 10px; border: 1px solid var(--border); border-radius: 8px; background: transparent; color: var(--text-primary); font-size: 13px;">'+
+    '<button class="btn btn-secondary" style="white-space: nowrap;" onclick="importFolder()">📁 Импортировать</button>'+
+    '</div>'+
+    '<div id="import-folder-msg" style="margin-top: 6px; font-size: 12px;"></div>'+
     '</div>'+
 
     // Files + subfolders list
@@ -163,6 +171,54 @@ function uploadFilesAuto(e, dirPath) {
   }).catch(e => { msg.innerHTML = '<span class="text-danger">❌ '+e.message+'</span>'; });
 }
 
+// Import whole folder (server-side scan)
+function importFolder() {
+  var input = document.getElementById('folder-path-input');
+  var msg = document.getElementById('import-folder-msg');
+  var folderPath = (input && input.value || '').trim();
+  if (!folderPath) { msg.innerHTML = '<span class="text-danger">Укажите путь к папке</span>'; return; }
+  msg.innerHTML = '<span class="text-muted">Импорт папки...</span>';
+  fetch('/api/files/add-from-dir', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({path: folderPath})
+  }).then(r => r.json()).then(d => {
+    if (d.success) {
+      var rejectedCount = (d.rejected||[]).length;
+      var note = rejectedCount ? ', пропущено: ' + rejectedCount : '';
+      msg.innerHTML = '<span class="text-success">✅ Импортировано: ' + (d.added||0) + ' файл(ов)' + note + '</span>';
+      if (input) input.value = '';
+      listDirContents(currentDirPath);
+    } else {
+      var reason = (d.error||'Ошибка');
+      if ((d.rejected||[]).length) reason += ' (' + d.rejected.length + ' файлов пропущено)';
+      msg.innerHTML = '<span class="text-danger">❌ ' + esc(reason) + '</span>';
+    }
+  }).catch(e => { msg.innerHTML = '<span class="text-danger">❌ '+e.message+'</span>'; });
+}
+
+// Delete single uploaded file
+function deleteFile(id) {
+  if (!id) return;
+  if (!confirm('Удалить файл из списка?')) return;
+  fetch('/api/files/remove', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({id: id})
+  }).then(r => r.json()).then(d => {
+    if (d.success) listDirContents(currentDirPath);
+  }).catch(function() {});
+}
+
+// Clear all uploaded files
+function clearFiles() {
+  if (!confirm('Очистить весь список загруженных файлов?')) return;
+  fetch('/api/files/clear', { method: 'POST' })
+    .then(r => r.json()).then(d => {
+      if (d.success) listDirContents(currentDirPath);
+    }).catch(function() {});
+}
+
 // Magic
 function startMagic(dirPath) {
   var msg = document.getElementById('magic-msg');
@@ -199,13 +255,18 @@ function listDirContents(path) {
     return fetch('/api/files').then(r => r.json()).then(function(fd) {
       var files = fd.files || [];
       if (files.length) {
-        html += '<div style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px; margin-top: 12px; text-transform: uppercase;">📄 Загруженные файлы ('+files.length+')</div>';
+        html += '<div style="display: flex; align-items: center; gap: 8px; margin-top: 12px; margin-bottom: 6px;">'+
+          '<div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">📄 Загруженные файлы ('+files.length+')</div>'+
+          '<button style="margin-left: auto; font-size: 11px; padding: 3px 12px; background: none; border: 1px solid var(--danger); color: var(--danger); border-radius: 8px; cursor: pointer;" onclick="clearFiles()">🗑 Очистить список</button>'+
+          '</div>';
         files.forEach(function(f, idx) {
           var order = f.display_order || (idx + 1);
           var num = String(order).padStart(2, '0');
           html += '<div style="display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 13px;">'+
-            '<span class="text-accent" style="font-weight: 700; width: 24px;">'+num+'.</span>'+
-            '<span style="color: var(--text-primary);">'+esc(f.name||f.filename||'')+'</span></div>';
+            '<span style="color: var(--accent); font-weight: 700; width: 24px;">'+num+'.</span>'+
+            '<span style="color: var(--text-primary); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">'+esc(f.name||f.filename||'')+'</span>'+
+            '<button class="btn-icon" style="color: var(--danger); font-size: 14px;" title="Удалить файл" onclick="deleteFile(\''+esc(f.id||'')+'\')">🗑️</button>'+
+            '</div>';
         });
       }
       if (!html) html = '<span class="text-muted text-sm">Пусто</span>';

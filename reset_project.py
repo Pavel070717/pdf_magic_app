@@ -13,7 +13,7 @@
   7. Удаляет все папки с датами (DD.MM.YYYY) с рабочего стола
   8. Очищает лог-файлы (logs/)
   9. Удаляет все __pycache__ рекурсивно
-  10. Очищает кеши инструментов (.mypy_cache, .pytest_cache, .ruff_cache)
+  10. Очищает кеши инструментов (.mypy_cache, .pytest_cache, .ruff_cache, .coverage, htmlcov)
   11. Очищает папку «Конвертор пдф»
   12. Финальная проверка всех компонентов
 
@@ -211,55 +211,15 @@ def reset_database():
             except Exception as e:
                 print_warn(f"Не удалось удалить {db_file.name}: {e}")
 
-    # Пересоздаём чистую БД
+    # Пересоздаём чистую БД с той же схемой, которую использует приложение
+    # (utils.database) — чтобы после сброса все модули работали корректно
     try:
         DATA_DIR.mkdir(parents=True, exist_ok=True)
-        conn = sqlite3.connect(str(DB_PATH))
-        conn.execute("""
-            CREATE TABLE IF NOT EXISTS materials (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                doc_name TEXT NOT NULL,
-                material_name TEXT NOT NULL,
-                number TEXT DEFAULT '',
-                date TEXT DEFAULT '',
-                producer TEXT DEFAULT '',
-                filename TEXT NOT NULL,
-                original_filename TEXT NOT NULL,
-                created_at TEXT NOT NULL DEFAULT (datetime('now'))
-            )
-        """)
-        conn.execute("""
-            CREATE TABLE IF NOT EXISTS conversions (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                filename TEXT NOT NULL,
-                output_format TEXT NOT NULL DEFAULT 'markdown',
-                source_path TEXT NOT NULL,
-                status TEXT NOT NULL DEFAULT 'pending',
-                created_at TEXT NOT NULL DEFAULT (datetime('now'))
-            )
-        """)
-        conn.execute("""
-            CREATE TABLE IF NOT EXISTS objects (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT UNIQUE NOT NULL,
-                created_at TEXT NOT NULL DEFAULT (datetime('now'))
-            )
-        """)
-        conn.execute("""
-            CREATE TABLE IF NOT EXISTS requisites (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                object_id INTEGER UNIQUE NOT NULL,
-                developer_name TEXT DEFAULT '',
-                builder_name TEXT DEFAULT '',
-                designer_name TEXT DEFAULT '',
-                FOREIGN KEY (object_id) REFERENCES objects(id) ON DELETE CASCADE
-            )
-        """)
-        conn.execute("DELETE FROM conversions")
-        conn.execute("DELETE FROM requisites")
-        conn.execute("DELETE FROM objects")
-        conn.commit()
-        conn.close()
+        from utils.database import init_converter_db, init_db, init_requisites_db
+
+        init_db()
+        init_converter_db()
+        init_requisites_db()
         print_step("БД materials.db создана заново (пустая, все таблицы)")
     except Exception as e:
         print_error(f"Ошибка при создании БД: {e}")
@@ -545,16 +505,25 @@ def clean_pycache():
 
 
 def clean_tool_caches():
-    section("10. Кеши инструментов (.mypy_cache, .pytest_cache, .ruff_cache)")
+    section("10. Кеши инструментов (.mypy_cache, .pytest_cache, .ruff_cache, покрытие)")
 
-    cache_names = [".mypy_cache", ".pytest_cache", ".ruff_cache"]
+    cache_names = [
+        ".mypy_cache",
+        ".pytest_cache",
+        ".ruff_cache",
+        ".coverage",
+        "htmlcov",
+    ]
     cleaned = 0
     for name in cache_names:
         cache_dir = PROJECT_DIR / name
         if cache_dir.exists():
             # Try rmtree first, fallback to send2trash, then force-delete files
             try:
-                shutil.rmtree(cache_dir, ignore_errors=True)
+                if cache_dir.is_dir():
+                    shutil.rmtree(cache_dir, ignore_errors=True)
+                else:
+                    cache_dir.unlink(missing_ok=True)
             except Exception:
                 pass
             if cache_dir.exists():
@@ -754,6 +723,25 @@ def final_check():
         print_step("__pycache__: 0 папок (все удалены)")
         checks_ok += 1
 
+    # .coverage / htmlcov / кеши инструментов
+    stray_caches = [
+        name
+        for name in (
+            ".mypy_cache",
+            ".pytest_cache",
+            ".ruff_cache",
+            ".coverage",
+            "htmlcov",
+        )
+        if (PROJECT_DIR / name).exists()
+    ]
+    if stray_caches:
+        print_warn(f"Остаточные кеши: {stray_caches}")
+        checks_warn += 1
+    else:
+        print_step("Кеши инструментов: 0 (все удалены)")
+        checks_ok += 1
+
     # Итого
     print()
     total = checks_ok + checks_warn
@@ -816,6 +804,7 @@ def main():
     print("  - Конвертор пдф/: удалена полностью")
     print("  - __pycache__: удалены рекурсивно")
     print("  - .mypy_cache, .pytest_cache, .ruff_cache: удалены")
+    print("  - .coverage, htmlcov/: удалены")
     print("  - .agents/: не тронута")
     print()
     print(f"  {BOLD}Для запуска: python run.py{RESET}")

@@ -3,8 +3,6 @@ Tests for routes/materials.py — materials CRUD with PDF storage.
 """
 
 import io
-import json
-from pathlib import Path
 from unittest.mock import patch
 
 

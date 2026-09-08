@@ -2,7 +2,6 @@
 Tests for routes/core.py — sanitization, tree builders, subfolder creation.
 """
 
-import shutil
 from pathlib import Path
 
 from routes.core import (

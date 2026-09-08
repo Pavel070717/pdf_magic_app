@@ -3,6 +3,7 @@ Blueprint: /api/magic/* — file copy, numbering, and Excel registry generation.
 """
 
 import os
+import re
 import shutil
 import threading
 import time
@@ -18,6 +19,9 @@ magic_bp = Blueprint("magic", __name__)
 
 _jobs: dict[str, dict] = {}  # аннотация типа добавлена
 
+EXCEL_EXTS = {".xls", ".xlsx", ".xlsm"}
+PDF_EXT = ".pdf"
+
 
 def _get_job_id():
     return threading.current_thread().ident
@@ -27,6 +31,21 @@ def generate_numbered_filename(start_number: int, name: str, ext: str) -> str:
     """Сквозная нумерация: '01.Имя.ext'"""
     num = str(start_number).zfill(2)
     return f"{num}.{name}{ext}"
+
+
+def strip_leading_number(name: str) -> str:
+    """Убирает старый порядковый номер 'NN.' в начале имени файла.
+
+    '01.Акт.pdf' → 'Акт.pdf', '01.01.Акт.pdf' → 'Акт.pdf',
+    чтобы на выходе оставался только новый сквозной номер.
+    """
+    return re.sub(r"^(?:\d{1,3}\.\s*)+", "", name)
+
+
+def can_share_number(ext1: str, ext2: str) -> bool:
+    """PDF и Excel (АОСР) с одинаковым наименованием получают один номер."""
+    e1, e2 = ext1.lower(), ext2.lower()
+    return (e1 in EXCEL_EXTS and e2 == PDF_EXT) or (e2 in EXCEL_EXTS and e1 == PDF_EXT)
 
 
 @magic_bp.route("/api/magic/start", methods=["POST"])
@@ -152,6 +171,7 @@ def copy_files_worker(files, app_dir):
         copied = 0
         skipped = []
         copied_names = []
+        numbered_base: dict[str, tuple[int, str]] = {}
 
         for i, file_info in enumerate(files):
             with _magic_lock:
@@ -169,6 +189,10 @@ def copy_files_worker(files, app_dir):
                 filename = src_path.name
                 name_no_ext, ext = os.path.splitext(filename)
 
+                # Убираем старый порядковый номер (01.Имя → Имя), чтобы
+                # в итоговом имени оставался только новый сквозной номер
+                name_no_ext = strip_leading_number(name_no_ext)
+
                 # Apply replace rules
                 new_name = apply_rules_to_name(name_no_ext)
                 if new_name:
@@ -177,10 +201,18 @@ def copy_files_worker(files, app_dir):
                 # Apply symbol rules
                 name_no_ext = apply_symbol_rules(name_no_ext)
 
+                # Номер для текущего файла. PDF АОСР и Excel АОСР с одинаковым
+                # наименованием получают один и тот же порядковый номер.
+                number = start_number
+                prev = numbered_base.get(name_no_ext)
+                if prev is not None and can_share_number(ext, prev[1]):
+                    number = prev[0]
+                if number == start_number:
+                    numbered_base.setdefault(name_no_ext, (start_number, ext))
+                    start_number += 1
+
                 # Generate numbered filename
-                numbered_name = generate_numbered_filename(
-                    start_number, name_no_ext, ext
-                )
+                numbered_name = generate_numbered_filename(number, name_no_ext, ext)
 
                 dest_path = app_dir / numbered_name
 
@@ -191,7 +223,6 @@ def copy_files_worker(files, app_dir):
                 logger.info(f"Скопирован: {src_path.name} → {numbered_name}")
                 copied += 1
                 copied_names.append(numbered_name)
-                start_number += 1
             except Exception as e:
                 skipped.append(f"{src_path.name} ({e})")
 

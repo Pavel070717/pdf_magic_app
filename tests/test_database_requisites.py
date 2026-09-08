@@ -61,7 +61,7 @@ class TestObjects:
     def test_object_has_id_and_name(self, temp_db):
         """Object dict contains expected fields."""
         init_requisites_db()
-        oid = add_object("Объект")
+        add_object("Объект")
         objs = get_objects()
         assert "id" in objs[0]
         assert "name" in objs[0]

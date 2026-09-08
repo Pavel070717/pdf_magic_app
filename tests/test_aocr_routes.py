@@ -34,7 +34,6 @@ class TestGenerateAOCR:
             assert resp.status_code == 500
 
     def test_valid_generation(self, app_client, temp_dir):
-        import shutil
 
         src = Path(__file__).parent.parent / "templates" / "AOCR_template.xlsx"
         if not src.exists():
@@ -89,7 +88,7 @@ class TestHelperFunctions:
         assert result == temp_dir / "file_3.xlsx"
 
     def test_fill_sheet1(self):
-        from routes.aocr import SHEET1_MAP, _fill_sheet1
+        from routes.aocr import _fill_sheet1
 
         mock_ws = MagicMock()
         data = {"object_name": "Test Object", "developer_name": "Dev LLC"}

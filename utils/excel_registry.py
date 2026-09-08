@@ -58,14 +58,11 @@ ALLOWED_EXTS = (
 # ==========================================================
 # КОНСТАНТЫ РАЗМЕТКИ
 # ==========================================================
-ROW_ORG_NAME = 2
 ROW_ORG_SUBTITLE = 3
-ROW_OBJECT_NAME = 5
 ROW_OBJECT_SUBTITLE = 6
 ROW_CUSTOMER = 9
 ROW_CUSTOMER_SUBTITLE = 10
 ROW_SK_REPRESENTATIVE = 13
-ROW_SK_REPRESENTATIVE_SUBTITLE = 14
 ROW_GENERAL_CONTRACTOR = 17
 ROW_GC_SUBTITLE = 18
 ROW_WORK_EXECUTOR = 21

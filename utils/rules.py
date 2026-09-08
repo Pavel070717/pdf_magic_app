@@ -10,27 +10,6 @@ from utils.state import load_state, save_state
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_ACCOMPANYING_PREFIXES: list[str] = [
-    "Сертификат",
-    "Серт.",
-    "Паспорт",
-    "Декларация",
-    "Декл.",
-    "Свидетельство",
-    "Свид.",
-    "Исх. письмо",
-    "Исх. письм",
-    "Сертификат соответствия",
-    "Паспорт качества",
-    "Декларация о соответствии",
-    "Свидетельство о государственной регистрации",
-    "Исполнительная схема",
-]
-
-DEFAULT_REPLACE_RULES: list[dict[str, Any]] = [
-    {"type": "symbol", "from": "_", "to": "/"},
-]
-
 
 def get_replace_rules() -> list[dict[str, Any]]:
     state = load_state()

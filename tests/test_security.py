@@ -3,7 +3,6 @@ Security-focused tests — path traversal, injection, validation.
 """
 
 import json
-from pathlib import Path
 
 from routes.core import sanitize_folder_name, sanitize_text
 

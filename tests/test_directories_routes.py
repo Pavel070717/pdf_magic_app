@@ -3,7 +3,6 @@ Tests for routes/directories.py — directory CRUD endpoints.
 """
 
 import json
-from pathlib import Path
 from unittest.mock import patch
 
 

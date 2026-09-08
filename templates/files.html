@@ -26,8 +26,24 @@
     <div id="upload-msg" class="mt-2 text-sm"></div>
   </form>
 
+  <form id="import-folder-form" class="bg-bg-secondary border border-border rounded-xl p-6 mb-6" onsubmit="return importFolder(event)">
+    <h3 class="text-sm font-semibold mb-3">📁 Импортировать всю папку</h3>
+    <div class="flex gap-3">
+      <input type="text" id="folder-path-input" placeholder="Путь к папке, например: C:\Users\User\Desktop\исходники"
+        class="flex-1 bg-transparent border border-border rounded-lg px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent">
+      <button type="submit" class="px-4 py-2.5 rounded-xl bg-accent text-white text-sm font-medium hover:bg-accent-dim transition-all duration-200">
+        Импортировать
+      </button>
+    </div>
+    <p class="text-[11px] text-text-muted mt-2">Файлы из папки и всех подпапок будут скопированы и добавлены в список в порядке имён (01., 02., …). Исходные файлы не изменяются.</p>
+    <div id="import-msg" class="mt-2 text-sm"></div>
+  </form>
+
   <div class="bg-bg-secondary border border-border rounded-xl p-6">
-    <h3 class="text-sm font-semibold mb-4">Список файлов</h3>
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-sm font-semibold">Список файлов</h3>
+      <button type="button" id="clear-files-btn" class="text-xs px-3 py-1.5 rounded-lg border border-red-500/40 text-red-400 hover:bg-red-500/10" onclick="clearFiles()">🗑 Очистить список</button>
+    </div>
     <div id="file-list"><span class="text-text-muted text-sm">Загрузка...</span></div>
   </div>
 </div>
@@ -57,6 +73,42 @@ function uploadFiles(e) {
     .catch(function(err) {
       msg.innerHTML = '<span class="text-red-400">❌ Ошибка сети: ' + err.message + '</span>';
     });
+  return false;
+}
+
+// =============================================================================
+// Import whole folder (server-side scan)
+// =============================================================================
+function importFolder(e) {
+  e.preventDefault();
+  var pathInput = document.getElementById('folder-path-input');
+  var msg = document.getElementById('import-msg');
+  var folderPath = pathInput.value.trim();
+  if (!folderPath) {
+    msg.innerHTML = '<span class="text-red-400">Укажите путь к папке</span>';
+    return false;
+  }
+  msg.innerHTML = '<span class="text-text-muted">Импорт папки...</span>';
+  fetch('/api/files/add-from-dir', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ path: folderPath })
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.success) {
+      var rejectedCount = (d.rejected || []).length;
+      var note = '';
+      if (rejectedCount) note = ', пропущено: ' + rejectedCount;
+      msg.innerHTML = '<span class="text-green-400">✅ Импортировано: ' + (d.added || 0) + ' файл(ов)' + note + '</span>';
+      pathInput.value = '';
+      loadFiles();
+    } else {
+      var reason = (d.error || 'Ошибка');
+      if ((d.rejected || []).length) reason += ' (' + d.rejected.length + ' файлов пропущено)';
+      msg.innerHTML = '<span class="text-red-400">❌ ' + escapeHtml(reason) + '</span>';
+    }
+  }).catch(function(err) {
+    msg.innerHTML = '<span class="text-red-400">❌ Ошибка сети: ' + err.message + '</span>';
+  });
   return false;
 }
 
@@ -98,6 +150,18 @@ function deleteFile(id) {
   }).then(function(r) { return r.json(); }).then(function(d) {
     if (d.success) loadFiles();
   });
+}
+
+// =============================================================================
+// Clear all files
+// =============================================================================
+function clearFiles() {
+  if (!confirm('Очистить весь список загруженных файлов?')) return;
+  fetch('/api/files/clear', { method: 'POST' })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.success) loadFiles();
+    });
 }
 
 // =============================================================================

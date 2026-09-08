@@ -3,7 +3,6 @@ Tests for routes/converter.py — PDF conversion endpoints.
 """
 
 import io
-import json
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
