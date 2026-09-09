@@ -427,6 +427,10 @@ def fill_rows(ws, rows, folder_path):
             num_value = f'=COUNTIF(B${start}:B{row},"АОСР*")'
         else:
             num_value = f"=ROW()-{row_offset}"
+        rel_path = os.path.relpath(
+            str(folder_path / item["filename"]), str(folder_path)
+        )
+        hyperlink_formula = f'=HYPERLINK("{rel_path}","{item["filename"]}")'
         vals = {
             "A": num_value,
             "B": item["name"],
@@ -434,14 +438,13 @@ def fill_rows(ws, rows, folder_path):
             "D": item["date"],
             "E": item["pages"],
             "F": page_formula,
-            "G": item["filename"],
+            "G": hyperlink_formula,
             "H": "",
         }
         for col, val in vals.items():
             align = ALIGN_L if col == "B" else ALIGN_C
             set_cell(ws, f"{col}{row}", val, font, align, THIN_BORDER, fill)
         cell = ws[f"G{row}"]
-        cell.hyperlink = str(folder_path / item["filename"])
         cell.font = Font(
             name="Times New Roman", size=12, color="8E487F", italic=True, bold=highlight
         )

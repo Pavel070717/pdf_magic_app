@@ -336,6 +336,23 @@ class TestFillRows:
         assert ws["B29"].value == "Акт"
         assert ws["C29"].value == "№1"
         assert ws["D29"].value == "05.02.2024"
+        assert ws["G29"].value == '=HYPERLINK("act.pdf","act.pdf")'
+
+    def test_hyperlink_formula_relative(self):
+        ws = self._ws()
+        rows = [
+            {
+                "name": "Документ",
+                "number": "N",
+                "date": "01.01",
+                "pages": 1,
+                "page_num": "1",
+                "filename": "имя файла.pdf",
+            },
+        ]
+        fill_rows(ws, rows, Path("/tmp"))
+        assert ws["G29"].value == '=HYPERLINK("имя файла.pdf","имя файла.pdf")'
+        assert ws["G29"].hyperlink is None
 
     def test_aosr_highlight(self):
         ws = self._ws()
