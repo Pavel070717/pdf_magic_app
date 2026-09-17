@@ -185,7 +185,12 @@ def copy_files_worker(files, app_dir):
                 continue
 
             try:
-                filename = src_path.name
+                # Используем ИСХОДНОЕ имя файла (file_info["name"]), а не имя
+                # temp-копии: при повторной загрузке того же документа временный
+                # файл получает суффикс "_1"/"_2" (routes/files.py), который не
+                # должен попадать в итоговую папку и реестр — одинаковые
+                # документы там и так различаются порядковым номером (01., 02.).
+                filename = file_info.get("name") or src_path.name
                 name_no_ext, ext = os.path.splitext(filename)
 
                 # Убираем старый порядковый номер (01.Имя → Имя), чтобы

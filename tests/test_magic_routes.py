@@ -294,6 +294,54 @@ class TestCopyWorker:
         )
         wb.close()
 
+    def test_no_upload_dedup_suffix_in_output(self, app_client, clean_state, temp_dir):
+        """Одинаковые документы в итоговой папке различаются номером (01/02),
+        а не суффиксом '_1', добавленным при дубле в temp_uploads."""
+        from openpyxl import load_workbook
+
+        from utils.state import load_state, save_state
+
+        src_dir = temp_dir / "src"
+        src_dir.mkdir()
+        first = src_dir / "Сертификат 22.05.2025.pdf"
+        second = src_dir / "Сертификат 22.05.2025_1.pdf"
+        first.write_bytes(b"%PDF-1.4\nplaceholder\n%%EOF")
+        second.write_bytes(b"%PDF-1.4\nplaceholder\n%%EOF")
+
+        state = load_state()
+        state["files"] = [
+            {
+                "id": "f1",
+                "name": "Сертификат 22.05.2025.pdf",
+                "path": str(first),
+                "original_path": str(first),
+            },
+            {
+                "id": "f2",
+                "name": "Сертификат 22.05.2025.pdf",
+                "path": str(second),
+                "original_path": str(second),
+            },
+        ]
+        save_state(state)
+
+        target = temp_dir / "out"
+        target.mkdir()
+        copy_files_worker(state["files"], target)
+
+        names = sorted(p.name for p in target.iterdir())
+        assert "01.Сертификат 22.05.2025.pdf" in names, names
+        assert "02.Сертификат 22.05.2025.pdf" in names, names
+        assert not any("_1" in n or "_2" in n for n in names), names
+
+        registry_files = list(target.glob("00.Реестр*.xlsx"))
+        assert registry_files, names
+        wb = load_workbook(registry_files[0], read_only=True)
+        ws = wb[wb.sheetnames[0]]
+        assert ws["B29"].value == "Сертификат 22.05.2025"
+        assert ws["B30"].value == "Сертификат 22.05.2025"
+        wb.close()
+
 
 class TestCancelMagic:
     def test_cancel(self, app_client):
