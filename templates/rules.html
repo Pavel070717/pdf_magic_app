@@ -46,7 +46,7 @@ function addRule(e) {
   var msg = document.getElementById('rule-msg');
   msg.innerHTML = '<span class="text-muted">Добавление...</span>';
 
-  fetch('/api/replace-rules/add', {
+  fetch('/api/replace-rules', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
