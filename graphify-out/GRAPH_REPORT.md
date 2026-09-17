@@ -1,16 +1,16 @@
 # Graph Report - pdf_magic_app  (2026-09-17)
 
 ## Corpus Check
-- 81 files · ~56,822 words
+- 81 files · ~57,021 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1254 nodes · 2391 edges · 87 communities (62 shown, 19 thin omitted)
+- 1255 nodes · 2393 edges · 76 communities (58 shown, 12 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 22 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `7acd3319`
+- Built from commit: `24bce21e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -23,11 +23,11 @@
 - database.py
 - sanitize_text
 - test_routes.py
-- test_core.py
+- build_tree_from_created
 - generate_aocr
-- core.py
-- reset_project.py
 - load_state
+- reset_project.py
+- save_state
 - What You Must Do When Invoked
 - app.py
 - TestPageRoutes
@@ -36,16 +36,15 @@
 - conftest.py
 - test_magic_routes.py
 - test_files_routes.py
-- Flask
+- core.py
 - get_requisites
 - test_directories_routes.py
 - TestRegistryData
 - TestAddFiles
 - init_converter_db
-- parse_filename
+- registry.py
 - files.py
-- excel_registry.py
-- create_subfolders
+- TestStartMagic
 - Архитектура PDF Magic App
 - utils/database.py — SQLite хранилище
 - Ключевые функции
@@ -81,25 +80,15 @@
 - graphify reference: transcribe video and audio
 - AGENTS.md
 - extraction-spec.md
-- strip_leading_number
 - TestAddSubfolder
 - TestAddFilesFromDir
 - TestRenameDirectory
 - TestDeleteDirectory
-- TestCreateDirectory
-- magic.py
 - init_db
-- build_info_block
-- build_tree_from_fs
-- safe_filename
-- generate_numbered_filename
-- test_excel_registry.py
-- build_signatures
-- merge_set
 
 ## God Nodes (most connected - your core abstractions)
-1. `load_state()` - 67 edges
-2. `save_state()` - 57 edges
+1. `load_state()` - 68 edges
+2. `save_state()` - 58 edges
 3. `sanitize_text()` - 32 edges
 4. `ne()` - 28 edges
 5. `se()` - 27 edges
@@ -107,7 +96,7 @@
 7. `De()` - 27 edges
 8. `sanitize_folder_name()` - 25 edges
 9. `e()` - 25 edges
-10. `ee()` - 19 edges
+10. `save_replace_rules()` - 21 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `main()` --calls--> `ensure_app_dirs()`  [EXTRACTED]
@@ -124,19 +113,19 @@
 ## Import Cycles
 - None detected.
 
-## Communities (87 total, 19 thin omitted)
+## Communities (76 total, 12 thin omitted)
 
 ### Community 0 - "htmx.min.js"
 Cohesion: 0.08
 Nodes (100): A(), ae(), an(), at(), B(), be(), bn(), bt() (+92 more)
 
 ### Community 1 - "._ws"
-Cohesion: 0.25
-Nodes (4): TestFillRows, TestSetCell, fill_rows(), set_cell()
+Cohesion: 0.06
+Nodes (26): Tests for utils/excel_registry.py — pure functions and workbook helpers., TestBuildHeader, TestBuildInfoBlock, TestBuildSignatures, TestFillRows, TestMergeSet, TestParseFilename, TestSafeFilename (+18 more)
 
 ### Community 2 - "save_replace_rules"
 Cohesion: 0.06
-Nodes (44): api_add_replace_rule(), api_clear_replace_rules(), api_delete_replace_rule(), api_get_accompanying_prefixes(), api_get_replace_rules(), api_save_accompanying_prefixes(), route, Blueprint: /api/replace-rules/* + /api/accompanying-prefixes/* (+36 more)
+Nodes (45): api_add_replace_rule(), api_clear_replace_rules(), api_delete_replace_rule(), api_get_accompanying_prefixes(), api_get_replace_rules(), api_save_accompanying_prefixes(), route, Blueprint: /api/replace-rules/* + /api/accompanying-prefixes/* (+37 more)
 
 ### Community 3 - "init_requisites_db"
 Cohesion: 0.17
@@ -158,25 +147,25 @@ Nodes (11): sanitize_folder_name(), sanitize_text(), TestSanitizeFolderName, Tes
 Cohesion: 0.04
 Nodes (12): Integration tests for Flask routes via test_client., TestConverterRoutes, TestDashboardRoutes, TestDirectoriesRoutes, TestFilesRoutes, TestHealthCheck, TestMaterialsRoutes, TestPageRoutes (+4 more)
 
-### Community 8 - "test_core.py"
-Cohesion: 0.21
-Nodes (5): tree_from_subfolders(), update_tree_paths(), Tests for routes/core.py — sanitization, tree builders, subfolder creation., TestTreeFromSubfolders, TestUpdateTreePaths
+### Community 8 - "build_tree_from_created"
+Cohesion: 0.08
+Nodes (11): build_tree_from_created(), build_tree_from_fs(), create_subfolders(), tree_from_subfolders(), update_tree_paths(), Tests for routes/core.py — sanitization, tree builders, subfolder creation., TestBuildTreeFromCreated, TestBuildTreeFromFs (+3 more)
 
 ### Community 9 - "generate_aocr"
 Cohesion: 0.09
 Nodes (19): _export_pdf(), _fill_sheet1(), _fill_sheet2(), generate_aocr(), _get_output_dir(), Any, Path, route (+11 more)
 
-### Community 10 - "core.py"
-Cohesion: 0.14
-Nodes (21): Logger, build_tree_from_created(), get_app_dir(), Any, Path, Shared state, utilities, and helpers — with type hints for mypy., scan_filesystem_for_dirs(), set_app_dir() (+13 more)
+### Community 10 - "load_state"
+Cohesion: 0.28
+Nodes (16): Any, Path, scan_filesystem_for_dirs(), set_app_dir(), sync_tree_from_fs(), add_subfolder(), create_directory(), delete_directory() (+8 more)
 
 ### Community 11 - "reset_project.py"
 Cohesion: 0.26
 Nodes (27): check_flask(), clean_converter_output(), clean_date_dirs(), clean_logs(), clean_materials_base(), clean_materials_folders(), clean_pycache(), clean_temp_uploads() (+19 more)
 
-### Community 12 - "load_state"
-Cohesion: 0.08
-Nodes (26): ensure_app_dirs(), clear_state(), route, Tests for routes/dashboard.py — dashboard statistics., TestDashboardStats, TestReorderFiles, patch, TestStartMagic (+18 more)
+### Community 12 - "save_state"
+Cohesion: 0.09
+Nodes (22): ensure_app_dirs(), clear_state(), route, Tests for routes/dashboard.py — dashboard statistics., TestDashboardStats, Tests for utils/state.py — thread-safe atomic state.json persistence., When state.json doesn't exist, load_state returns a default dict., Save state and load it back — round-trip integrity. (+14 more)
 
 ### Community 13 - "What You Must Do When Invoked"
 Cohesion: 0.08
@@ -203,24 +192,24 @@ Cohesion: 0.18
 Nodes (14): fixture, app_client(), clean_state(), Fixtures for pdf_magic_app tests., Mock STATE_FILE to a temporary path, isolated per test., Return a clean default state, saved to temp file., Mock DB_PATH to a temporary database, isolated per test., Mock DB_PATH to a temporary database with all tables initialized. (+6 more)
 
 ### Community 19 - "test_magic_routes.py"
-Cohesion: 0.15
-Nodes (9): copy_files_worker(), Background worker: copy and number files, generate Excel registry., Start file copy/numbering worker in background thread., start_magic(), Tests for routes/magic.py — file copy/numbering/registry endpoints., TestCancelMagic, TestCopyWorker, TestMagicProgress (+1 more)
+Cohesion: 0.10
+Nodes (13): copy_files_worker(), generate_numbered_filename(), Background worker: copy and number files, generate Excel registry., Сквозная нумерация: '01.Имя.ext, Убирает старый порядковый номер 'NN.' в начале имени файла. '01.Акт.pdf' →…, strip_leading_number(), Tests for routes/magic.py — file copy/numbering/registry endpoints., TestCancelMagic (+5 more)
 
 ### Community 20 - "test_files_routes.py"
-Cohesion: 0.15
-Nodes (4): Tests for routes/files.py — file upload, list, reorder, delete., TestClearFiles, TestGetFiles, TestRemoveFile
+Cohesion: 0.11
+Nodes (5): Tests for routes/files.py — file upload, list, reorder, delete., TestClearFiles, TestGetFiles, TestRemoveFile, TestReorderFiles
 
-### Community 21 - "Flask"
-Cohesion: 0.15
-Nodes (14): Flask, Blueprint: /api/aocr/* — Генерация формы АОСР (Акт освидетельствования скрытых…, get_dashboard_stats(), route, Blueprint: /api/dashboard/stats, Routes package — registers all blueprints on a Flask app., register_blueprints(), get_registry_data() (+6 more)
+### Community 21 - "core.py"
+Cohesion: 0.11
+Nodes (21): Flask, Logger, Blueprint: /api/aocr/* — Генерация формы АОСР (Акт освидетельствования скрытых…, get_app_dir(), Shared state, utilities, and helpers — with type hints for mypy., setup_logging(), get_dashboard_stats(), route (+13 more)
 
 ### Community 22 - "get_requisites"
 Cohesion: 0.21
 Nodes (11): Saving requisites for existing object updates (upsert)., Saving with partial data preserves defaults for missing fields., Saving with empty data uses all defaults., Requisites dict contains all expected fields., Deleting an object cascades to requisites., Save and verify all 51 fields round-trip correctly., Save requisites and retrieve them., Non-existent object returns None. (+3 more)
 
 ### Community 23 - "test_directories_routes.py"
-Cohesion: 0.15
-Nodes (5): Tests for routes/directories.py — directory CRUD endpoints., TestGetCurrentDirectory, TestListDirectories, TestRecreateDirectory, TestScanDirectories
+Cohesion: 0.10
+Nodes (6): Tests for routes/directories.py — directory CRUD endpoints., TestCreateDirectory, TestGetCurrentDirectory, TestListDirectories, TestRecreateDirectory, TestScanDirectories
 
 ### Community 24 - "TestRegistryData"
 Cohesion: 0.18
@@ -230,13 +219,13 @@ Nodes (3): Tests for routes/registry.py — registry data CRUD., TestRegistryDat
 Cohesion: 0.05
 Nodes (46): convert_pdf(), delete_history_entry(), download_result(), _find_jar(), get_history(), get_progress(), Path, route (+38 more)
 
+### Community 28 - "registry.py"
+Cohesion: 0.38
+Nodes (6): get_registry_data(), get_registry_form(), route, Blueprint: /api/registry/* — registry data CRUD., Return HTML form for the registry modal., save_registry_data()
+
 ### Community 29 - "files.py"
 Cohesion: 0.23
 Nodes (15): Очищает имя загружаемого файла от недопустимых в Windows символов. Сохраняет…, sanitize_upload_name(), add_files(), add_files_from_dir(), clear_files(), _collect_dir_files(), get_files(), Path (+7 more)
-
-### Community 30 - "excel_registry.py"
-Cohesion: 0.29
-Nodes (9): aosr_name_from_cell(), collect_files(), fix_page_margins_in_xlsx(), generate_excel_registry(), Path, Модуль генерации Excel-реестра исполнительной документации. Использует openpyxl…, Формирует имя строки АОСР: 'АОСР. <текст из ячейки>'. Если в ячейке уже есть…, read_aosr_cell_from_xlsx() (+1 more)
 
 ### Community 35 - "Архитектура PDF Magic App"
 Cohesion: 0.15
@@ -354,45 +343,29 @@ Nodes (3): For git commit hook, For native CLAUDE.md integration, graphify refer
 Cohesion: 0.50
 Nodes (3): For --cluster-only, For --update (incremental re-extraction), graphify reference: incremental update and cluster-only
 
-### Community 72 - "strip_leading_number"
-Cohesion: 0.36
-Nodes (3): Убирает старый порядковый номер 'NN.' в начале имени файла. '01.Акт.pdf' →…, strip_leading_number(), TestStripLeadingNumber
-
-### Community 78 - "magic.py"
-Cohesion: 0.24
-Nodes (8): cancel_magic(), get_magic_progress(), get_magic_result(), route, Blueprint: /api/magic/* — file copy, numbering, and Excel registry generation., Cancel running magic job., Get magic result after completion., apply_symbol_rules()
-
 ### Community 79 - "init_db"
 Cohesion: 0.40
 Nodes (5): init_db() creates the materials table without errors., Calling init_db multiple times is safe., test_init_db_creates_table(), test_init_db_is_idempotent(), init_db()
 
-### Community 83 - "generate_numbered_filename"
-Cohesion: 0.43
-Nodes (3): generate_numbered_filename(), Сквозная нумерация: '01.Имя.ext, TestGenerateNumberedFilename
-
-### Community 84 - "test_excel_registry.py"
-Cohesion: 0.38
-Nodes (3): Tests for utils/excel_registry.py — pure functions and workbook helpers., TestBuildHeader, build_header()
-
 ## Knowledge Gaps
 - **197 isolated node(s):** `$schema`, `plugin`, `Usage`, `What graphify is for`, `Step 0 - GitHub repos and multi-path merge (only if a URL or several paths)` (+192 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 541 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **19 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **12 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `load_state()` connect `load_state` to `save_replace_rules`, `generate_aocr`, `core.py`, `magic.py`, `test_magic_routes.py`, `test_files_routes.py`, `Flask`, `test_directories_routes.py`, `files.py`?**
-  _High betweenness centrality (0.092) - this node is a cross-community bridge._
-- **Why does `save_state()` connect `load_state` to `save_replace_rules`, `core.py`, `magic.py`, `conftest.py`, `test_magic_routes.py`, `test_files_routes.py`, `Flask`, `test_directories_routes.py`, `files.py`?**
-  _High betweenness centrality (0.086) - this node is a cross-community bridge._
+- **Why does `load_state()` connect `load_state` to `save_replace_rules`, `generate_aocr`, `save_state`, `test_magic_routes.py`, `test_files_routes.py`, `core.py`, `test_directories_routes.py`, `registry.py`, `files.py`, `TestStartMagic`?**
+  _High betweenness centrality (0.096) - this node is a cross-community bridge._
+- **Why does `save_state()` connect `save_state` to `save_replace_rules`, `load_state`, `conftest.py`, `test_magic_routes.py`, `test_files_routes.py`, `core.py`, `test_directories_routes.py`, `registry.py`, `files.py`, `TestStartMagic`?**
+  _High betweenness centrality (0.085) - this node is a cross-community bridge._
 - **Why does `add_material()` connect `database.py` to `TestAddMaterial`?**
-  _High betweenness centrality (0.038) - this node is a cross-community bridge._
+  _High betweenness centrality (0.032) - this node is a cross-community bridge._
 - **What connects `$schema`, `plugin`, `Usage` to the rest of the system?**
   _197 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `htmx.min.js` be split into smaller, more focused modules?**
   _Cohesion score 0.07823002240477969 - nodes in this community are weakly interconnected._
+- **Should `._ws` be split into smaller, more focused modules?**
+  _Cohesion score 0.05727848101265823 - nodes in this community are weakly interconnected._
 - **Should `save_replace_rules` be split into smaller, more focused modules?**
-  _Cohesion score 0.056189640035118525 - nodes in this community are weakly interconnected._
-- **Should `TestAddMaterial` be split into smaller, more focused modules?**
-  _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.056265984654731455 - nodes in this community are weakly interconnected._

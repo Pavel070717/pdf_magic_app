@@ -156,8 +156,6 @@ def get_magic_result():
 
 def copy_files_worker(files, app_dir):
     """Background worker: copy and number files, generate Excel registry."""
-    from utils.rules import apply_rules_to_name, apply_symbol_rules
-
     with _magic_lock:
         magic_progress["status"] = "running"
         magic_progress["total"] = len(files)
@@ -194,13 +192,10 @@ def copy_files_worker(files, app_dir):
                 # в итоговом имени оставался только новый сквозной номер
                 name_no_ext = strip_leading_number(name_no_ext)
 
-                # Apply replace rules
-                new_name = apply_rules_to_name(name_no_ext)
-                if new_name:
-                    name_no_ext = new_name
-
-                # Apply symbol rules
-                name_no_ext = apply_symbol_rules(name_no_ext)
+                # Правила замены к физическому имени файла НЕ применяются:
+                # файлы в итоговой папке сохраняют исходные (сокращённые)
+                # имена, а правила раскрываются только в самом реестре
+                # (см. normalize_name в utils/excel_registry.parse_filename).
 
                 # АОСР Excel (.xlsx) в итоговую папку НЕ копируется — он нужен
                 # только чтобы считать наименование из ячейки A77 для реестра.

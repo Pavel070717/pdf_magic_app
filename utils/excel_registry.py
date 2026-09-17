@@ -285,7 +285,9 @@ def parse_filename(filename: str) -> dict:
     stem = Path(filename).stem
     if ";" not in stem:
         stem_no_num = re.sub(r"^(?:\d+\.\s*)+", "", stem)
-        name = normalize_name(stem_no_num)
+        # Правила замены работают ТОЛЬКО в реестре (физические файлы
+        # не переименовываются) — см. routes/magic.copy_files_worker
+        name = apply_symbol_rules(normalize_name(stem_no_num))
         date = "-"
         m = re.search(r"(\d{2})[.\-](\d{2})[.\-](\d{4})", filename)
         if m:

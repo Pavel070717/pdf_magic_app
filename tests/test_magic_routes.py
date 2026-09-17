@@ -239,6 +239,61 @@ class TestCopyWorker:
         assert aosr_b_cells == ["АОСР. Бетонирование плиты"]
         wb.close()
 
+    def test_rules_apply_only_in_registry_not_to_filename(
+        self, app_client, clean_state, temp_dir
+    ):
+        from openpyxl import load_workbook
+
+        from utils.rules import save_replace_rules
+        from utils.state import load_state, save_state
+
+        save_replace_rules(
+            [
+                {
+                    "id": "r1",
+                    "type": "text",
+                    "from": "МСх.",
+                    "to": "Монтажная схема",
+                    "is_default": False,
+                }
+            ]
+        )
+
+        src_dir = temp_dir / "src"
+        src_dir.mkdir()
+        src = src_dir / "МСх._КЖ1_05.05.2025.pdf"
+        src.write_bytes(b"%PDF-1.4\nplaceholder\n%%EOF")
+
+        state = load_state()
+        state["files"] = [
+            {
+                "id": "f1",
+                "path": str(src),
+                "name": src.name,
+                "original_path": str(src),
+            }
+        ]
+        save_state(state)
+
+        target = temp_dir / "out"
+        target.mkdir()
+        copy_files_worker(state["files"], target)
+
+        names = {p.name for p in target.iterdir()}
+        assert "01.МСх._КЖ1_05.05.2025.pdf" in names, names
+        assert "01.Монтажная схема_КЖ1_05.05.2025.pdf" not in names, names
+
+        registry_files = list(target.glob("00.Реестр*.xlsx"))
+        assert registry_files, names
+        wb = load_workbook(registry_files[0], read_only=True)
+        ws = wb[wb.sheetnames[0]]
+        assert ws["B29"].value == "Монтажная схема_КЖ1_05.05.2025"
+        assert (
+            ws["G29"].value
+            == '=HYPERLINK("01.МСх._КЖ1_05.05.2025.pdf","01.МСх._КЖ1_05.05.2025.pdf")'
+        )
+        wb.close()
+
 
 class TestCancelMagic:
     def test_cancel(self, app_client):
