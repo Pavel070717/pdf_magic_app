@@ -1,6 +1,6 @@
 # utils/excel_registry.py — Генерация Excel-реестра
 
-**Путь**: `utils/excel_registry.py` (628 строк)
+**Путь**: `utils/excel_registry.py` (650 строк)
 
 ## Что делает
 
@@ -48,12 +48,14 @@
 
 ## Ключевые функции
 
-- `generate_excel_registry(folder_path, registry_data, saved_dicts, filter_names)` → Path — главная функция
-- `collect_files(folder_path, filter_names)` → list — сбор файлов с natsort
+- `generate_excel_registry(folder_path, registry_data, saved_dicts, filter_names, aosr_names=None)` → Path — главная функция
+- `collect_files(folder_path, filter_names, aosr_names=None)` → list — сбор файлов с natsort
 - `parse_filename(filename)` → dict — парсинг `Название;Номер;Дата;Описание.ext`
 - `fill_rows(ws, rows, folder_path)` → int — заполнение строк
 - `build_signatures(ws, registry_data, last_row)` → int — блоки подписей
 - `fix_page_margins_in_xlsx(xlsx_path)` — исправление полей через zipfile
+- `read_aosr_cell_from_xlsx(xlsx_path)` → str — чтение наименования АОСР из ячейки **A77** первого листа (менять ТОЛЬКО здесь!)
+- `aosr_name_from_cell(cell_text)` → str — `АОСР. <текст>`, не дублирует префикс если он уже есть
 
 ## Формат имени файла
 
@@ -62,6 +64,14 @@
 ```
 
 Пример: `Сертификат;БТ-001;15.03.2024;Описание.pdf`
+
+## АОСР
+
+- АОСР генерируются парой файлов с одним stem: `АОСР_№1_22.05.2025.xlsx` + `.pdf` (routes/aocr.py), и `can_share_number` (routes/magic.py) даёт им один сквозной номер.
+- Исходный АОСР `.xlsx` в итоговую папку **НЕ копируется** (`copy_files_worker` пропускает файлы `АОСР*.xlsx`): он нужен только чтобы прочитать наименование из ячейки A77. Наименование попадает в строку АОСР-PDF реестра через карту `aosr_names` (ключ = имя файла без номера в lowercase) → `collect_files`.
+- Подсветка строк АОСР остаётся (заливка `#C2F8FC`), фон дороже контента не ставится.
+- Если АОСР `.xlsx` всё же лежит в итоговой папке (прямая генерация без копирования) — имя читается напрямую из него, строка попадает в реестр.
+- Нумерация столбца А: **простая последовательная** `=ROW()-(номер первой строки-1)` для ВСЕХ строк, включая АОСР (раньше для АОСР была отдельная формула `=COUNTIF(...)` — из-за неё при смешанном порядке дублировались номера и терялась последовательность).
 
 ## Зависимости
 

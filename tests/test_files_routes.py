@@ -110,6 +110,32 @@ class TestAddFiles:
         )
         assert resp.status_code == 200
 
+    def test_add_file_keeps_comma_in_name(self, app_client, clean_state):
+        data = {"files": (io.BytesIO(b"pdf"), "Акт 15,1 м.pdf")}
+        resp = app_client.post(
+            "/api/files/add",
+            data=data,
+            content_type="multipart/form-data",
+        )
+        assert resp.status_code == 200
+        entry = resp.get_json()["files"][0]
+        assert entry["name"] == "Акт 15,1 м.pdf"
+        assert Path(entry["path"]).name == "Акт 15,1 м.pdf"
+        assert Path(entry["path"]).exists()
+
+    def test_add_file_replaces_forbidden_chars(self, app_client, clean_state):
+        data = {"files": (io.BytesIO(b"pdf"), "Акт:1|2.pdf")}
+        resp = app_client.post(
+            "/api/files/add",
+            data=data,
+            content_type="multipart/form-data",
+        )
+        assert resp.status_code == 200
+        entry = resp.get_json()["files"][0]
+        assert entry["name"] == "Акт:1|2.pdf"
+        assert Path(entry["path"]).name == "Акт_1_2.pdf"
+        assert Path(entry["path"]).exists()
+
 
 class TestAddFilesFromDir:
     def test_missing_path(self, app_client):
@@ -209,6 +235,25 @@ class TestAddFilesFromDir:
         )
         assert resp.status_code == 400
         assert "Нет допустимых файлов" in resp.get_json()["error"]
+
+    def test_import_name_with_comma_preserved(self, app_client, clean_state, temp_dir):
+        (temp_dir / "15,1 м.pdf").write_bytes(b"pdf")
+        (temp_dir / "02.pdf").write_bytes(b"pdf")
+
+        resp = app_client.post(
+            "/api/files/add-from-dir",
+            data=json.dumps({"path": str(temp_dir)}),
+            content_type="application/json",
+        )
+        assert resp.status_code == 200
+        data = resp.get_json()
+        assert data["success"] is True
+        assert data["added"] == 2
+        names = {f["name"] for f in data["files"]}
+        assert "15,1 м.pdf" in names
+        entry = next(f for f in data["files"] if f["name"] == "15,1 м.pdf")
+        assert Path(entry["path"]).name == "15,1 м.pdf"
+        assert Path(entry["path"]).exists()
 
 
 class TestRemoveFile:

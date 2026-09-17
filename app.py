@@ -95,6 +95,11 @@ def rules_page():
     return render_template("rules.html", page="rules")
 
 
+@app.route("/prefixes")
+def prefixes_page():
+    return render_template("prefixes.html", page="prefixes")
+
+
 @app.route("/materials")
 def materials_page():
     return render_template("materials.html", page="materials")

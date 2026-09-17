@@ -10,6 +10,7 @@ from utils.excel_registry import (
     build_header,
     build_info_block,
     build_signatures,
+    collect_files,
     fill_rows,
     merge_set,
     parse_filename,
@@ -367,7 +368,26 @@ class TestFillRows:
             },
         ]
         fill_rows(ws, rows, Path("/tmp"))
-        assert ws["A29"].value.startswith("=COUNTIF")
+        assert ws["A29"].value.startswith("=ROW()-")
+
+    def test_collect_aosr_pdf_uses_aosr_names(self, tmp_path):
+        (tmp_path / "01.АОСР_№1_22.05.2025.pdf").write_bytes(
+            b"%PDF-1.4\nplaceholder\n%%EOF"
+        )
+        rows = collect_files(
+            tmp_path, aosr_names={"аоср_№1_22.05.2025": "Бетонирование плиты"}
+        )
+        assert rows[0]["name"] == "АОСР. Бетонирование плиты"
+
+    def test_aosr_name_from_cell_no_double_prefix(self):
+        from utils.excel_registry import aosr_name_from_cell
+
+        assert aosr_name_from_cell("Бетонирование плиты") == "АОСР. Бетонирование плиты"
+        assert (
+            aosr_name_from_cell("АОСР. Бетонирование плиты")
+            == "АОСР. Бетонирование плиты"
+        )
+        assert aosr_name_from_cell(" АОСР (бетон)") == "АОСР (бетон)"
 
     def test_multiple_rows(self):
         ws = self._ws()

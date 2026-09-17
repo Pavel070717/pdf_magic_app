@@ -12,7 +12,7 @@ from pathlib import Path
 from flask import Blueprint, jsonify, request
 
 from routes.core import _magic_lock, get_app_dir, logger, magic_progress
-from utils.excel_registry import generate_excel_registry
+from utils.excel_registry import generate_excel_registry, read_aosr_cell_from_xlsx
 from utils.state import load_state, save_state
 
 magic_bp = Blueprint("magic", __name__)
@@ -172,6 +172,7 @@ def copy_files_worker(files, app_dir):
         skipped = []
         copied_names = []
         numbered_base: dict[str, tuple[int, str]] = {}
+        aosr_names: dict[str, str] = {}
 
         for i, file_info in enumerate(files):
             with _magic_lock:
@@ -200,6 +201,22 @@ def copy_files_worker(files, app_dir):
 
                 # Apply symbol rules
                 name_no_ext = apply_symbol_rules(name_no_ext)
+
+                # АОСР Excel (.xlsx) в итоговую папку НЕ копируется — он нужен
+                # только чтобы считать наименование из ячейки A77 для реестра.
+                if name_no_ext.lower().startswith("аоср") and ext in EXCEL_EXTS:
+                    cell_text = read_aosr_cell_from_xlsx(src_path)
+                    if cell_text:
+                        aosr_names[name_no_ext.strip().lower()] = cell_text
+                        logger.info(
+                            f"АОСР .xlsx {filename}: наименование из A77: {cell_text}"
+                        )
+                    with _magic_lock:
+                        magic_progress["done"] += 1
+                        magic_progress["percent"] = int(
+                            (magic_progress["done"] / magic_progress["total"]) * 100
+                        )
+                    continue
 
                 # Номер для текущего файла. PDF АОСР и Excel АОСР с одинаковым
                 # наименованием получают один и тот же порядковый номер.
@@ -248,7 +265,7 @@ def copy_files_worker(files, app_dir):
                 magic_progress["percent"] = 95
 
             registry_path = generate_excel_registry(
-                app_dir, registry_data, saved_dicts, set(copied_names)
+                app_dir, registry_data, saved_dicts, set(copied_names), aosr_names
             )
             logger.info(f"Excel-реестр создан: {registry_path}")
 

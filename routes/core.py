@@ -141,6 +141,18 @@ def sanitize_folder_name(name: str | None) -> str:
     return name
 
 
+def sanitize_upload_name(name: str | None) -> str:
+    """Очищает имя загружаемого файла от недопустимых в Windows символов.
+
+    Сохраняет все допустимые символы (запятые, точки с запятой, № и т.д.),
+    заменяя на подчёркивание только запрещённые: <>:"/\\|?* и управляющие.
+    """
+    if not name or not isinstance(name, str):
+        return ""
+    cleaned = re.sub(r'[<>:"/\\|?*\x00-\x1f]', "_", name)
+    return cleaned.rstrip(". ")
+
+
 # ─── Subfolder / tree helpers ────────────────────────────────────────────────
 def create_subfolders(
     base_path: Path, tree: list[dict[str, Any]]

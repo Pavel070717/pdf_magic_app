@@ -336,11 +336,15 @@ def read_aosr_cell_from_xlsx(xlsx_path: Path) -> str:
         wb = load_workbook(str(xlsx_path), read_only=True, data_only=True)
         if len(wb.sheetnames) >= 1:
             ws = wb[wb.sheetnames[0]]
-            val = ws["A81"].value
+            # ═══════════════════════════════════════════════════════════════
+            # АОСР: ЯЧЕЙКА С НАИМЕНОВАНИЕМ ДОКУМЕНТА — менять ТОЛЬКО здесь
+            # Сейчас считывается A77 (раньше была A81). Правь строку ниже.
+            # ═══════════════════════════════════════════════════════════════
+            val = ws["A77"].value
             if val is not None:
                 return str(val).strip()
     except Exception as e:
-        logger.warning(f"Ошибка чтения A81 из {xlsx_path}: {e}")
+        logger.warning(f"Ошибка чтения A77 из {xlsx_path}: {e}")
     finally:
         if wb is not None:
             try:
@@ -350,10 +354,25 @@ def read_aosr_cell_from_xlsx(xlsx_path: Path) -> str:
     return ""
 
 
+def aosr_name_from_cell(cell_text: str) -> str:
+    """Формирует имя строки АОСР: 'АОСР. <текст из ячейки>'.
+
+    Если в ячейке уже есть префикс 'АОСР...' — не дублируем его.
+    """
+    text = cell_text.strip()
+    if text.upper().startswith("АОСР"):
+        return text
+    return f"АОСР. {text}"
+
+
 # ==========================================================
 # СБОР ФАЙЛОВ
 # ==========================================================
-def collect_files(folder_path: Path, filter_names: set | None = None):
+def collect_files(
+    folder_path: Path,
+    filter_names: set | None = None,
+    aosr_names: dict | None = None,
+):
     files = natsorted(
         [
             f
@@ -392,7 +411,15 @@ def collect_files(folder_path: Path, filter_names: set | None = None):
         if name.upper().startswith("АОСР") and ext == ".xlsx":
             cell_text = read_aosr_cell_from_xlsx(path)
             if cell_text:
-                name = f"АОСР. {cell_text}"
+                name = aosr_name_from_cell(cell_text)
+                logger.info(f"АОСР: заменили наименование на: {name}")
+        elif aosr_names and name.upper().startswith("АОСР"):
+            # Имя АОСР считано из исходного .xlsx ещё на этапе копирования
+            # (сам xlsx в итоговую папку не попадает)
+            key = re.sub(r"^(?:\d+\.\s*)+", "", Path(f).stem).strip().lower()
+            cell_text = (aosr_names or {}).get(key) or ""
+            if cell_text:
+                name = aosr_name_from_cell(cell_text)
                 logger.info(f"АОСР: заменили наименование на: {name}")
         rows.append(
             {
@@ -423,10 +450,7 @@ def fill_rows(ws, rows, folder_path):
             f"SUM($E$29:E{row}),"
             f'SUM($E$29:E{row})-E{row}+1&"-"&SUM($E$29:E{row}))'
         )
-        if highlight:
-            num_value = f'=COUNTIF(B${start}:B{row},"АОСР*")'
-        else:
-            num_value = f"=ROW()-{row_offset}"
+        num_value = f"=ROW()-{row_offset}"
         rel_path = os.path.relpath(
             str(folder_path / item["filename"]), str(folder_path)
         )
@@ -597,6 +621,7 @@ def generate_excel_registry(
     registry_data: dict,
     saved_dicts: dict,
     filter_names: set | None = None,
+    aosr_names: dict | None = None,
 ) -> Path:
     logger.info(f"Генерация Excel реестра: {folder_path}")
     wb = Workbook()
@@ -609,7 +634,7 @@ def generate_excel_registry(
         ws.column_dimensions[col].width = w
     registry_number = build_info_block(ws, registry_data)
     build_header(ws)
-    rows = collect_files(folder_path, filter_names)
+    rows = collect_files(folder_path, filter_names, aosr_names)
     last_row = fill_rows(ws, rows, folder_path)
     sig_row = build_signatures(ws, registry_data, last_row)
     setup_print(ws, sig_row)

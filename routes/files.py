@@ -9,7 +9,7 @@ from pathlib import Path
 from flask import Blueprint, jsonify, request
 from natsort import natsorted
 
-from routes.core import PROJECT_DIR, logger
+from routes.core import PROJECT_DIR, logger, sanitize_upload_name
 
 files_bp = Blueprint("files", __name__)
 
@@ -129,7 +129,7 @@ def add_files():
                 )
                 continue
 
-        safe_name = "".join(c for c in filename if c.isalnum() or c in "._- ();№")
+        safe_name = sanitize_upload_name(filename)
         if not safe_name:
             safe_name = filename
 
@@ -205,9 +205,7 @@ def add_files_from_dir():
 
     for src_path in found:
         try:
-            safe_name = "".join(
-                c for c in src_path.name if c.isalnum() or c in "._- ();№"
-            )
+            safe_name = sanitize_upload_name(src_path.name)
             if not safe_name:
                 safe_name = src_path.name
 

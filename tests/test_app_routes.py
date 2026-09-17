@@ -28,6 +28,11 @@ class TestPageRoutes:
         resp = app_client.get("/rules")
         assert resp.status_code == 200
 
+    def test_prefixes_page(self, app_client):
+        resp = app_client.get("/prefixes")
+        assert resp.status_code == 200
+        assert "Префиксы сопроводительных" in resp.get_data(as_text=True)
+
     def test_materials_page(self, app_client):
         resp = app_client.get("/materials")
         assert resp.status_code == 200

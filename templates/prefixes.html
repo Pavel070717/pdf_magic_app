@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% set page = "prefixes" %}
+{% block content %}
+
+<div class="page-header">
+  <div class="page-header-icon">🔖</div>
+  <div>
+    <h1>Префиксы сопроводительных документов</h1>
+    <p>Автоматическая пометка «(копия)» в реестре</p>
+  </div>
+</div>
+
+<div style="padding: 24px; max-width: 800px;">
+  <div class="glass-card padded" style="margin-bottom: 16px;">
+    <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 16px;">Добавить префикс</h3>
+    <form id="prefix-add" style="display: flex; gap: 10px; flex-wrap: wrap;" onsubmit="return addPrefix(event)">
+      <input type="text" name="prefix" placeholder="Например: Сертификат качества" required style="flex: 1; min-width: 200px;">
+      <button type="submit" class="btn btn-primary">Добавить</button>
+    </form>
+    <div id="prefix-msg" style="margin-top: 10px; font-size: 13px;"></div>
+  </div>
+
+  <div class="glass-card padded" style="margin-bottom: 16px;">
+    <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 16px;">Список префиксов</h3>
+    <div id="prefixes-list"><span class="text-muted text-sm">Загрузка...</span></div>
+  </div>
+
+  <div class="glass-card padded">
+    <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 8px;">Как это работает</h3>
+    <p class="text-muted text-sm" style="margin: 0;">
+      Если имя документа начинается с префикса (без учёта регистра, до первой точки с запятой),
+      в реестре к наименованию в конце добавляется «(копия)».
+      Сами файлы на диске не переименовываются.
+    </p>
+  </div>
+</div>
+
+<script>
+// =============================================================================
+// Load prefixes list
+// =============================================================================
+function loadPrefixes() {
+  fetch('/api/accompanying-prefixes').then(function(r) { return r.json(); }).then(function(d) {
+    var el = document.getElementById('prefixes-list');
+    var prefixes = d.prefixes || [];
+    if (!prefixes.length) {
+      el.innerHTML = '<span class="text-muted">Префиксы не заданы</span>';
+      return;
+    }
+    el.innerHTML = prefixes.map(function(p, i) {
+      return '<div style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border);">' +
+        '<span class="badge badge-success">ПРЕФ</span>' +
+        '<span class="text-sm" style="color: var(--text-secondary);">' + escapeHtml(p) + '</span>' +
+        '<button class="btn btn-danger btn-sm" style="margin-left: auto;" onclick="removePrefix(' + i + ')">🗑️</button>' +
+        '</div>';
+    }).join('');
+    var items = el.querySelectorAll('div[style*="border-bottom"]');
+    if (items.length) items[items.length - 1].style.borderBottom = 'none';
+  }).catch(function() {
+    document.getElementById('prefixes-list').innerHTML = '<span class="text-danger">Ошибка</span>';
+  });
+}
+
+// =============================================================================
+// Save whole list via API (GET list -> modify -> POST)
+// =============================================================================
+function savePrefixes(prefixes, msg, okText) {
+  fetch('/api/accompanying-prefixes', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prefixes: prefixes })
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.success) {
+      msg.innerHTML = '<span class="text-success">' + okText + '</span>';
+      setTimeout(function() { msg.innerHTML = ''; }, 2500);
+      loadPrefixes();
+    } else {
+      msg.innerHTML = '<span class="text-danger">❌ ' + escapeHtml(d.error || 'Ошибка') + '</span>';
+    }
+  }).catch(function(err) {
+    msg.innerHTML = '<span class="text-danger">❌ Ошибка сети: ' + err.message + '</span>';
+  });
+}
+
+// =============================================================================
+// Add prefix
+// =============================================================================
+function addPrefix(e) {
+  e.preventDefault();
+  var form = document.getElementById('prefix-add');
+  var raw = form.querySelector('[name="prefix"]').value;
+  var prefix = raw.trim();
+  var msg = document.getElementById('prefix-msg');
+
+  if (!prefix) {
+    msg.innerHTML = '<span class="text-danger">Введите префикс</span>';
+    return false;
+  }
+
+  fetch('/api/accompanying-prefixes').then(function(r) { return r.json(); }).then(function(d) {
+    var prefixes = (d.prefixes || []).slice();
+    var exists = prefixes.some(function(p) { return p.toLowerCase() === prefix.toLowerCase(); });
+    if (exists) {
+      msg.innerHTML = '<span class="text-danger">Такой префикс уже есть</span>';
+      return;
+    }
+    prefixes.push(prefix);
+    savePrefixes(prefixes, msg, '✅ Префикс добавлен');
+    form.reset();
+  });
+  return false;
+}
+
+// =============================================================================
+// Remove prefix
+// =============================================================================
+function removePrefix(index) {
+  if (!confirm('Удалить префикс?')) return;
+  var msg = document.getElementById('prefix-msg');
+  fetch('/api/accompanying-prefixes').then(function(r) { return r.json(); }).then(function(d) {
+    var prefixes = (d.prefixes || []).slice();
+    if (index >= 0 && index < prefixes.length) prefixes.splice(index, 1);
+    savePrefixes(prefixes, msg, '✅ Префикс удалён');
+  });
+}
+
+// =============================================================================
+// Helpers
+// =============================================================================
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  var div = document.createElement('div');
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+
+// =============================================================================
+// Init
+// =============================================================================
+document.addEventListener('DOMContentLoaded', loadPrefixes);
+</script>
+
+{% endblock %}

@@ -43,6 +43,7 @@
         {{ nav_item('/aocr', '📋', 'АОСР', 'aocr') }}
         {{ nav_item('/requisites', '🏢', 'Реквизиты', 'requisites') }}
         {{ nav_item('/rules', '🔧', 'Правила замены', 'rules') }}
+        {{ nav_item('/prefixes', '🔖', 'Префиксы', 'prefixes') }}
         {{ nav_item('/materials', '🗄️', 'Материалы', 'materials') }}
 
         <a href="#" onclick="document.getElementById('registry-modal').classList.remove('hidden'); htmx.ajax('GET', '/api/registry/form', {target:'#registry-content'})" class="nav-link">
