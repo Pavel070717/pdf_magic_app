@@ -13,6 +13,7 @@ def register_blueprints(app: Flask):
     from routes.files import files_bp
     from routes.magic import magic_bp
     from routes.materials import materials_bp
+    from routes.msg import msg_bp
     from routes.registry import registry_bp
     from routes.requisites import requisites_bp
     from routes.rules import rules_bp
@@ -25,6 +26,7 @@ def register_blueprints(app: Flask):
     app.register_blueprint(magic_bp)
     app.register_blueprint(dir_bp)
     app.register_blueprint(rules_bp)
+    app.register_blueprint(msg_bp)
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(materials_bp)
     app.register_blueprint(state_bp)

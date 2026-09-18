@@ -1,0 +1,464 @@
+{% extends "base.html" %}
+{% set page = "msg" %}
+{% block content %}
+
+<style>
+.msg-tabs { display: flex; gap: 10px; margin-bottom: 18px; }
+.msg-tab {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 18px; border-radius: var(--radius); cursor: pointer;
+  background: var(--bg-glass); border: 1px solid var(--bg-glass-border);
+  color: var(--text-secondary); font-weight: 600; font-size: 14px;
+  transition: var(--transition); user-select: none;
+}
+.msg-tab:hover { background: var(--bg-glass-hover); color: var(--text-primary); }
+.msg-tab.active {
+  background: var(--accent-gradient); color: #fff;
+  border-color: transparent; box-shadow: var(--shadow-sm);
+}
+.msg-tab.active:hover { color: #fff; }
+.msg-panel { display: none; }
+.msg-panel.active { display: block; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+/* ── ОЖР ── */
+.ozh-row { display: grid; grid-template-columns: 1fr 90px 90px 110px 40px; gap: 10px; margin-bottom: 10px; align-items: center; }
+.ozh-input {
+  width: 100%; padding: 10px 12px; font-size: 14px; color: var(--text-primary);
+  background: var(--bg-elevated); border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); outline: none; transition: var(--transition-fast);
+}
+.ozh-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+.ozh-date-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.ozh-del {
+  width: 36px; height: 36px; border-radius: var(--radius-sm); background: var(--danger-bg);
+  color: var(--danger); display: flex; align-items: center; justify-content: center;
+  cursor: pointer; border: none; font-size: 16px; transition: var(--transition-fast);
+}
+.ozh-del:hover { transform: scale(1.06); background: var(--danger); color: #fff; }
+
+/* ── МСГ ── */
+.msg-toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+.msg-month-select {
+  padding: 9px 14px; font-size: 15px; font-weight: 700; color: var(--text-primary);
+  background: var(--bg-elevated); border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); outline: none; min-width: 180px; cursor: pointer;
+}
+.msg-nav-btn {
+  width: 36px; height: 36px; border-radius: var(--radius-sm); cursor: pointer;
+  background: var(--bg-elevated); border: 1px solid var(--border-strong);
+  color: var(--text-secondary); font-size: 16px; display: flex; align-items: center;
+  justify-content: center; transition: var(--transition-fast);
+}
+.msg-nav-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+.msg-table-wrap {
+  overflow: auto; max-height: calc(100vh - 280px); border-radius: var(--radius);
+  border: 1px solid var(--border-strong); background: var(--bg-secondary);
+}
+table.msg-table { border-collapse: separate; border-spacing: 0; width: max-content; min-width: 100%; font-size: 13px; }
+.msg-table th, .msg-table td {
+  border-bottom: 1px solid var(--border); border-right: 1px solid var(--border);
+  padding: 6px 8px; text-align: center; white-space: nowrap;
+}
+.msg-table thead th {
+  position: sticky; top: 0; z-index: 3;
+  background: var(--bg-elevated); color: var(--text-secondary);
+  font-weight: 600; padding: 8px 6px; font-size: 12px;
+}
+.msg-table thead th.msg-day-hdr { min-width: 44px; }
+.msg-table .msg-fix {
+  position: sticky; left: 0; z-index: 2; background: var(--bg-elevated);
+  text-align: left; box-shadow: 1px 0 0 var(--border);
+  max-width: 210px; min-width: 210px; overflow: hidden; text-overflow: ellipsis;
+}
+.msg-table .msg-fix-2 { left: 210px; width: 90px; text-align: center; }
+.msg-table .msg-fix-3 { left: 300px; width: 80px; text-align: center; }
+.msg-table thead .msg-fix { z-index: 4; }
+.msg-table tbody td.msg-fix { background: var(--bg-secondary); }
+.msg-table tbody td.msg-fix-2, .msg-table tbody td.msg-fix-3 { background: var(--bg-secondary); }
+.msg-table tr:nth-child(even) td:not(.msg-fix-2):not(.msg-fix-3) { background: rgba(255,255,255,0.015); }
+.msg-table td.dow, .msg-table th.dow { background: var(--warning-bg); color: var(--warning); }
+.msg-table td.today-hl { box-shadow: inset 0 0 0 2px var(--accent); }
+.msg-table th.today-hl { color: var(--text-primary); }
+.msg-table td.vol { font-weight: 700; color: #fff; cursor: default; }
+.msg-table td.vol-zero { color: var(--text-muted); opacity: 0.35; }
+.msg-table td.f-total, .msg-table th.f-total { background: var(--accent-glow); color: var(--text-primary); font-weight: 700; }
+.msg-table tr.msg-total-row td {
+  background: var(--bg-glass); font-weight: 700; border-top: 2px solid var(--border-strong);
+}
+.msg-table tr.msg-total-row td.msg-fix { position: sticky; left: 0; background: var(--bg-elevated); }
+.msg-table tr.msg-total-row td.msg-fix-2 { left: 210px; background: var(--bg-elevated); }
+.msg-table tr.msg-total-row td.msg-fix-3 { left: 300px; background: var(--bg-elevated); }
+.msg-table tr.msg-total-row td.today-hl { box-shadow: inset 0 0 0 2px var(--accent); }
+.msg-empty { padding: 28px; text-align: center; color: var(--text-muted); font-size: 14px; }
+</style>
+
+<div class="page-header">
+  <div class="page-header-icon">📅</div>
+  <div>
+    <h1>МСГ — месячно-суточный график</h1>
+    <p>Общий журнал работ и визуальное расписание по дням месяца</p>
+  </div>
+</div>
+
+<div class="msg-tabs">
+  <div class="msg-tab active" data-tab="ozh" onclick="switchMsgTab('ozh')">📋 Общий журнал работ</div>
+  <div class="msg-tab" data-tab="view" onclick="switchMsgTab('view')">📅 МСГ — просмотр</div>
+</div>
+
+<div class="msg-panel active" id="panel-ozh">
+  <div class="glass-card padded" style="margin-bottom: 16px;">
+    <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 14px;">Запись работ за день</h3>
+    <div class="ozh-date-row" style="margin-bottom: 14px;">
+      <input type="date" id="ozh-date" class="ozh-input" style="width: 190px;">
+      <span class="text-muted text-sm">Выбери дату и добавь работы за этот день</span>
+    </div>
+    <div id="ozh-rows"><!-- динамические строки --></div>
+    <div style="display: flex; gap: 10px; margin-top: 6px; flex-wrap: wrap;">
+      <button class="btn btn-ghost" onclick="addOzhRow()">＋ Добавить работу</button>
+      <button class="btn btn-primary" onclick="saveOzh()">💾 Сохранить в журнал</button>
+      <span id="ozh-msg" style="font-size: 13px; align-self: center;"></span>
+    </div>
+  </div>
+
+  <div class="glass-card padded">
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap;">
+      <h3 style="font-size: 14px; font-weight: 700;">Записи журнала</h3>
+      <span id="ozh-journal-date" class="badge badge-accent">—</span>
+    </div>
+    <div id="ozh-journal"><span class="text-muted text-sm">Выбери дату</span></div>
+  </div>
+</div>
+
+<div class="msg-panel" id="panel-view">
+  <div class="glass-card padded">
+    <div class="msg-toolbar">
+      <button class="msg-nav-btn" onclick="shiftMonth(-1)" title="Предыдущий месяц">‹</button>
+      <select id="msg-month" class="msg-month-select" onchange="loadMsgMonth(this.value)"></select>
+      <button class="msg-nav-btn" onclick="shiftMonth(1)" title="Следующий месяц">›</button>
+      <span id="msg-total-badge" class="badge badge-success text-sm"></span>
+      <span class="text-muted text-sm" style="margin-left: auto;">Выходные 📅 подсвечены, сегодня — рамкой</span>
+    </div>
+    <div class="msg-table-wrap" id="msg-table-wrap">
+      <div class="msg-empty" id="msg-loading">Загрузка...</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// =============================================================================
+// Вкладки
+// =============================================================================
+function switchMsgTab(name) {
+  document.querySelectorAll('.msg-tab').forEach(function(t) {
+    t.classList.toggle('active', t.dataset.tab === name);
+  });
+  document.querySelectorAll('.msg-panel').forEach(function(p) {
+    p.classList.toggle('active', p.id === 'panel-' + name);
+  });
+  if (name === 'view') initMsgViewIfNeeded();
+}
+
+// =============================================================================
+// ОЖР — форма
+// =============================================================================
+var ozhSeq = 0;
+
+function addOzhRow(work_name, position, unit, volume) {
+  ozhSeq++;
+  var row = document.createElement('div');
+  row.className = 'ozh-row';
+  row.dataset.seq = ozhSeq;
+  row.innerHTML =
+    '<input class="ozh-input" data-f="work_name" placeholder="Наименование работ" ' +
+      'value="' + escapeHtml(work_name || '') + '">' +
+    '<input class="ozh-input" data-f="position" placeholder="Позиция "' +
+      'value="' + escapeHtml(position || '') + '">' +
+    '<input class="ozh-input" data-f="unit" placeholder="Ед. изм." ' +
+      'value="' + escapeHtml(unit || '') + '">' +
+    '<input class="ozh-input" data-f="volume" type="number" step="any" min="0" ' +
+      'placeholder="0,00" value="' + escapeHtml(String(volume ?? '')) + '">' +
+    '<button class="ozh-del" title="Удалить" onclick="removeOzhRow(this)">✕</button>';
+  document.getElementById('ozh-rows').appendChild(row);
+  return row;
+}
+
+function removeOzhRow(btn) {
+  var rows = document.querySelectorAll('#ozh-rows .ozh-row');
+  if (rows.length === 1) {
+    rows[0].querySelector('[data-f="work_name"]').value = '';
+    rows[0].querySelector('[data-f="position"]').value = '';
+    rows[0].querySelector('[data-f="unit"]').value = '';
+    rows[0].querySelector('[data-f="volume"]').value = '';
+    return;
+  }
+  btn.closest('.ozh-row').remove();
+}
+
+function collectOzhRows() {
+  return Array.prototype.map.call(document.querySelectorAll('#ozh-rows .ozh-row'), function(row) {
+    return {
+      work_name: row.querySelector('[data-f="work_name"]').value.trim(),
+      position: row.querySelector('[data-f="position"]').value.trim(),
+      unit: row.querySelector('[data-f="unit"]').value.trim(),
+      volume: row.querySelector('[data-f="volume"]').value
+    };
+  }).filter(function(it) { return it.work_name; });
+}
+
+function saveOzh() {
+  var date = document.getElementById('ozh-date').value;
+  var msg = document.getElementById('ozh-msg');
+  if (!date) {
+    msg.innerHTML = '<span class="text-danger">❌ Выбери дату</span>';
+    return;
+  }
+  var items = collectOzhRows();
+  if (!items.length) {
+    msg.innerHTML = '<span class="text-danger">❌ Добавь хотя бы одну работу</span>';
+    return;
+  }
+  msg.innerHTML = '<span class="text-muted">Сохранение...</span>';
+  fetch('/api/msg/ozh/items', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ date: date, items: items })
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.success) {
+      msg.innerHTML = '<span class="text-success">✅ Сохранено: ' + d.count + ' работ</span>';
+      clearOzhForm();
+      loadOzhJournal();
+      refreshMonthsList();
+      setTimeout(function() { msg.innerHTML = ''; }, 3000);
+    } else {
+      msg.innerHTML = '<span class="text-danger">❌ ' + escapeHtml(d.error || 'Ошибка') + '</span>';
+    }
+  }).catch(function(err) {
+    msg.innerHTML = '<span class="text-danger">❌ Ошибка сети: ' + escapeHtml(err.message) + '</span>';
+  });
+}
+
+function clearOzhForm() {
+  document.querySelectorAll('#ozh-rows .ozh-row').forEach(function(row) {
+    ['work_name', 'position', 'unit', 'volume'].forEach(function(f) {
+      row.querySelector('[data-f="' + f + '"]').value = '';
+    });
+  });
+}
+
+function loadOzhJournal() {
+  var date = document.getElementById('ozh-date').value;
+  var box = document.getElementById('ozh-journal');
+  document.getElementById('ozh-journal-date').textContent = date ? formatHuman(date) : '—';
+  if (!date) { box.innerHTML = '<span class="text-muted text-sm">Выбери дату</span>'; return; }
+  box.innerHTML = '<span class="text-muted text-sm">Загрузка...</span>';
+  fetch('/api/msg/ozh/items?date=' + encodeURIComponent(date))
+    .then(function(r) { return r.json(); }).then(function(d) {
+    if (!d.success) { box.innerHTML = '<span class="text-danger">Ошибка</span>'; return; }
+    var items = d.items || [];
+    if (!items.length) {
+      box.innerHTML = '<span class="text-muted text-sm">На эту дату записей нет</span>';
+      return;
+    }
+    var html = '<table style="width:100%; border-collapse: collapse;">' +
+      '<thead><tr>' +
+      '<th class="text-sm text-muted" style="text-align:left; padding:6px 10px;">Наименование работ</th>' +
+      '<th class="text-sm text-muted" style="padding:6px 10px;">Позиция</th>' +
+      '<th class="text-sm text-muted" style="padding:6px 10px;">Ед. изм.</th>' +
+      '<th class="text-sm text-muted" style="padding:6px 10px;">Объём</th>' +
+      '<th style="width:40px;"></th></tr></thead><tbody>';
+    items.forEach(function(it) {
+      html += '<tr style="border-top:1px solid var(--border);">' +
+        '<td style="padding:7px 10px;">' + escapeHtml(it.work_name) + '</td>' +
+        '<td style="padding:7px 10px; text-align:center;">' + escapeHtml(it.position) + '</td>' +
+        '<td style="padding:7px 10px; text-align:center;">' + escapeHtml(it.unit) + '</td>' +
+        '<td style="padding:7px 10px; text-align:right; font-weight:700;">' + fmtNum(it.volume) + '</td>' +
+        '<td style="padding:4px 10px; text-align:center;"><button class="btn btn-danger btn-sm" onclick="deleteOzhItem(' + it.id + ')">🗑️</button></td>' +
+        '</tr>';
+    });
+    html += '</tbody></table>';
+    box.innerHTML = html;
+  }).catch(function() { box.innerHTML = '<span class="text-danger">Ошибка</span>'; });
+}
+
+function deleteOzhItem(id) {
+  if (!confirm('Удалить запись из журнала?')) return;
+  fetch('/api/msg/ozh/items/' + id, { method: 'DELETE' })
+    .then(function(r) { return r.json(); }).then(function(d) {
+    if (d.success) { loadOzhJournal(); refreshMonthsList(); showToast('Запись удалена', 'success'); }
+  });
+}
+
+// =============================================================================
+// МСГ — просмотр
+// =============================================================================
+var msgState = { month: null, months: [], hasInited: false };
+
+function initMsgViewIfNeeded() {
+  if (msgState.hasInited) return;
+  msgState.hasInited = true;
+  refreshMonthsList();
+}
+
+function refreshMonthsList() {
+  fetch('/api/msg/months').then(function(r) { return r.json(); }).then(function(d) {
+    if (!d.success) return;
+    var select = document.getElementById('msg-month');
+    var prev = msgState.month || d.current;
+    select.innerHTML = d.months.map(function(m) {
+      return '<option value="' + m.value + '"' + (m.value === prev ? ' selected' : '') + '>' +
+        escapeHtml(m.label) + (m.has_data ? ' •' : '') + '</option>';
+    }).join('');
+    msgState.month = prev;
+    msgState.months = d.months;
+    loadMsgMonth(prev);
+  });
+}
+
+function shiftMonth(delta) {
+  var idx = msgState.months.findIndex(function(m) { return m.value === msgState.month; });
+  if (idx === -1) return;
+  var target = msgState.months[idx + delta];
+  if (!target) return;
+  document.getElementById('msg-month').value = target.value;
+  loadMsgMonth(target.value);
+}
+
+function loadMsgMonth(month) {
+  msgState.month = month || document.getElementById('msg-month').value;
+  var wrap = document.getElementById('msg-table-wrap');
+  wrap.innerHTML = '<div class="msg-empty">Загрузка...</div>';
+  fetch('/api/msg/month?month=' + encodeURIComponent(msgState.month))
+    .then(function(r) { return r.json(); }).then(function(d) {
+    if (!d.success) { wrap.innerHTML = '<div class="msg-empty">Ошибка</div>'; return; }
+    renderMsgTable(wrap, d);
+  }).catch(function() {
+    wrap.innerHTML = '<div class="msg-empty">Ошибка сети</div>';
+  });
+}
+
+function renderMsgTable(wrap, d) {
+  var days = d.days_in_month;
+  var weekends = d.weekends || [];
+  var today = d.today;
+  var rows = d.rows || [];
+  var dayTotals = d.day_totals || {};
+  var grand = d.grand_total || 0;
+
+  document.getElementById('msg-total-badge').textContent =
+    rows.length ? 'Работ: ' + rows.length + ' · Итог за месяц: ' + fmtNum(grand) : '';
+  document.getElementById('msg-total-badge').style.display = rows.length ? '' : 'none';
+
+  if (!rows.length) {
+    wrap.innerHTML = '<div class="msg-empty">Записей за месяц нет — заполни Общий журнал работ 📋</div>';
+    return;
+  }
+
+  var maxVol = 0;
+  rows.forEach(function(r) {
+    Object.keys(r.days || {}).forEach(function(k) { maxVol = Math.max(maxVol, r.days[k]); });
+    maxVol = Math.max(maxVol, r.total);
+  });
+  maxVol = maxVol || 1;
+
+  var FIX_W_N = '210px', FIX_W_P = '90px', FIX_W_U = '80px';
+  var html = '<table class="msg-table">';
+  html += '<colgroup><col style="width:' + FIX_W_N + '; min-width:' + FIX_W_N + '">' +
+    '<col style="width:' + FIX_W_P + '">' +
+    '<col style="width:' + FIX_W_U + '">';
+  for (var i = 1; i <= days; i++) html += '<col>';
+  html += '<col style="width:' + FIX_W_U + '"></colgroup>';
+
+  // Header
+  html += '<thead><tr>' +
+    '<th class="msg-fix" style="left:0; width:' + FIX_W_N + ';">Наименование работ</th>' +
+    '<th class="msg-fix msg-fix-2">Позиция</th>' +
+    '<th class="msg-fix msg-fix-3">Ед. изм.</th>';
+  for (var day = 1; day <= days; day++) {
+    var cls = 'msg-day-hdr' + (weekends.indexOf(day) !== -1 ? ' dow' : '') +
+      (day === today ? ' today-hl' : '');
+    html += '<th class="' + cls + '">' + day + '</th>';
+  }
+  html += '<th class="msg-day-hdr f-total" title="Итог за месяц">Итог</th></tr></thead>';
+
+  // Body
+  html += '<tbody>';
+  rows.forEach(function(r, idx) {
+    html += '<tr>' +
+      '<td class="msg-fix" style="left:0;" title="' + escapeHtml(r.work_name) + '">' + escapeHtml(r.work_name) + '</td>' +
+      '<td class="msg-fix msg-fix-2">' + escapeHtml(r.position) + '</td>' +
+      '<td class="msg-fix msg-fix-3">' + escapeHtml(r.unit) + '</td>';
+    for (var day = 1; day <= days; day++) {
+      var v = (r.days && r.days[String(day)]) || 0;
+      var cellCls = 'msg-day';
+      if (weekends.indexOf(day) !== -1) cellCls += ' dow';
+      if (day === today) cellCls += ' today-hl';
+      if (v > 0) {
+        var alpha = 0.18 + 0.5 * Math.min(v / maxVol, 1);
+        html += '<td class="' + cellCls + ' vol" style="background:rgba(79,143,255,' + alpha.toFixed(3) + ');">' +
+          fmtNum(v) + '</td>';
+      } else {
+        html += '<td class="' + cellCls + ' vol-zero">·</td>';
+      }
+    }
+    html += '<td class="f-total">' + fmtNum(r.total) + '</td></tr>';
+  });
+
+  // Итог за месяц
+  html += '<tr class="msg-total-row">' +
+    '<td class="msg-fix" style="left:0;">Итог за месяц</td>' +
+    '<td class="msg-fix msg-fix-2"></td><td class="msg-fix msg-fix-3"></td>';
+  for (var d2 = 1; d2 <= days; d2++) {
+    var t = (dayTotals[String(d2)] || 0);
+    var cls = 'msg-day';
+    if (weekends.indexOf(d2) !== -1) cls += ' dow';
+    if (d2 === today) cls += ' today-hl';
+    html += '<td class="' + cls + '" style="font-weight:700;">' +
+      (t > 0 ? fmtNum(t) : '<span style="opacity:.35">·</span>') + '</td>';
+  }
+  html += '<td class="f-total">' + fmtNum(grand) + '</td></tr>';
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+
+// =============================================================================
+// Helpers
+// =============================================================================
+function fmtNum(v) {
+  if (v === 0 || v === null || v === undefined) return '0';
+  var n = Math.round(Number(v) * 100) / 100;
+  return String(n).replace('.', ',');
+}
+
+function formatHuman(dateStr) {
+  var p = dateStr.split('-');
+  if (p.length !== 3) return dateStr;
+  var names = ['января','февраля','марта','апреля','мая','июня','июля',
+    'августа','сентября','октября','ноября','декабря'];
+  return parseInt(p[2], 10) + ' ' + names[parseInt(p[1], 10) - 1] + ' ' + p[0];
+}
+
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  var div = document.createElement('div');
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+
+// =============================================================================
+// Init
+// =============================================================================
+document.addEventListener('DOMContentLoaded', function() {
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0');
+  document.getElementById('ozh-date').value =
+    today.getFullYear() + '-' + mm + '-' + dd;
+  addOzhRow();
+  loadOzhJournal();
+  document.getElementById('ozh-date').addEventListener('change', loadOzhJournal);
+});
+</script>
+
+{% endblock %}

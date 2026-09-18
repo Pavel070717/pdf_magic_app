@@ -25,6 +25,7 @@ from routes.core import (
     logger,
 )
 from utils.database import init_converter_db, init_db, init_requisites_db
+from utils.msg_db import init_msg_db
 
 logger.info("=" * 60)
 logger.info("Запуск PDF Magic App")
@@ -105,6 +106,11 @@ def materials_page():
     return render_template("materials.html", page="materials")
 
 
+@app.route("/msg")
+def msg_page():
+    return render_template("msg.html", page="msg")
+
+
 # ── Health check ──
 @app.route("/api/health")
 def health_check():
@@ -168,6 +174,7 @@ def main() -> None:
     init_db()
     init_converter_db()
     init_requisites_db()
+    init_msg_db()
 
     logger.info(f"Целевая папка: {APP_DIR}")
     logger.info("Веб-интерфейс: http://localhost:5000")
