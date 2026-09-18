@@ -172,6 +172,17 @@ def delete_conversion(conv_id: int) -> bool:
         conn.close()
 
 
+def update_conversion_status(conv_id: int, status: str) -> None:
+    conn = get_db()
+    try:
+        conn.execute(
+            "UPDATE conversions SET status = ? WHERE id = ?", (status, conv_id)
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
 # ─── Requisites (реквизиты) ───────────────────────────────────────
 
 

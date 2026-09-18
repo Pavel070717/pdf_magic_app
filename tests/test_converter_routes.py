@@ -55,7 +55,9 @@ class TestConvertPDF:
         assert resp.status_code == 200
         result = resp.get_json()
         assert result["success"] is True
-        assert "job_id" in result
+        assert isinstance(result["job"], dict)
+        assert "id" in result["job"]
+        assert result["job"]["status"] in ("pending", "running")
         mock_thread_instance.start.assert_called_once()
 
     @patch("utils.database.add_conversion", return_value=1)

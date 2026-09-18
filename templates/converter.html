@@ -96,7 +96,7 @@ function startConversion(e) {
         panel.innerHTML = '<div class="text-danger text-sm">❌ ' + escapeHtml(d.error || 'Не удалось запустить конвертацию') + '</div>';
         return;
       }
-      if (job.status === 'completed') {
+if (job.status === 'completed' || job.status === 'done') {
         renderProgress(job);
         loadHistory();
         return;
@@ -124,9 +124,9 @@ function pollProgress(jobId) {
       var jobData = job.job || job;
       renderProgress(jobData);
 
-      if (jobData.status === 'completed' || jobData.status === 'failed' || jobData.status === 'error') {
+      if (jobData.status === 'completed' || jobData.status === 'done' || jobData.status === 'failed' || jobData.status === 'error') {
         if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
-        if (jobData.status === 'completed') loadHistory();
+        if (jobData.status === 'completed' || jobData.status === 'done') loadHistory();
       }
     })
     .catch(function() {
@@ -196,15 +196,18 @@ function loadHistory() {
         '<th>Статус</th><th>Дата</th>' +
         '<th></th></tr></thead><tbody>';
       items.forEach(function(item) {
-        var statusClass = item.status === 'completed' ? 'text-success' : item.status === 'failed' ? 'text-danger' : 'text-muted';
-        var statusLabel = item.status === 'completed' ? '✅ Готово' : item.status === 'failed' ? '❌ Ошибка' : '⏳ ' + (item.status || 'В процессе');
+        var st = item.status;
+        var isDone = st === 'completed' || st === 'done';
+        var isFailed = st === 'failed' || st === 'error';
+        var statusClass = isDone ? 'text-success' : isFailed ? 'text-danger' : 'text-muted';
+        var statusLabel = isDone ? '✅ Готово' : isFailed ? '❌ Ошибка' : '⏳ ' + (st || 'В процессе');
         html += '<tr>' +
           '<td>' + escapeHtml(item.filename || item.name || '') + '</td>' +
           '<td>' + escapeHtml(item.format || '') + '</td>' +
           '<td class="' + statusClass + '">' + statusLabel + '</td>' +
           '<td class="text-muted text-sm">' + escapeHtml(item.created_at || item.date || '') + '</td>' +
           '<td>';
-        if (item.status === 'completed') {
+        if (isDone) {
           html += '<a class="text-accent text-sm" href="/api/converter/download/' + encodeURIComponent(item.id) + '" style="margin-right: 8px;">📥</a>';
         }
         html += '<button class="btn btn-danger btn-sm" onclick="deleteHistory(\'' + escapeHtml(item.id || '') + '\')">🗑️</button>' +

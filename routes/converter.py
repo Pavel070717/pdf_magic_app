@@ -107,7 +107,7 @@ def convert_pdf():
     thread.daemon = True
     thread.start()
 
-    return jsonify({"success": True, "job_id": job_id})
+    return jsonify({"success": True, "job": job})
 
 
 def _update_job(job_id: str, **kwargs) -> None:
@@ -115,6 +115,15 @@ def _update_job(job_id: str, **kwargs) -> None:
         job = _jobs.get(job_id)
         if job:
             job.update(kwargs)
+            db_id = job.get("db_id")
+            status = job.get("status")
+            if db_id and status in ("done", "error"):
+                try:
+                    from utils.database import update_conversion_status
+
+                    update_conversion_status(db_id, "done" if status == "done" else "failed")
+                except Exception:
+                    pass
 
 
 def _run_conversion(job_id: str, pdf_path: Path, fmt: str) -> None:

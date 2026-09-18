@@ -7,6 +7,7 @@ from utils.database import (
     delete_conversion,
     get_conversions,
     init_converter_db,
+    update_conversion_status,
 )
 
 
@@ -75,6 +76,16 @@ def test_delete_conversion(temp_db):
 
     convs = get_conversions()
     assert len(convs) == 0
+
+
+def test_update_conversion_status(temp_db):
+    """update_conversion_status persists done/failed state."""
+    init_converter_db()
+    cid = add_conversion("test.pdf", "markdown", "/path")
+    update_conversion_status(cid, "done")
+    assert get_conversions()[0]["status"] == "done"
+    update_conversion_status(cid, "failed")
+    assert get_conversions()[0]["status"] == "failed"
 
 
 def test_delete_nonexistent_conversion(temp_db):
