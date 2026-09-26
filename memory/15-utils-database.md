@@ -22,9 +22,12 @@ PROJECT_DIR/data/materials.db
 | `doc_name` | TEXT | Тип документа |
 | `material_name` | TEXT | Название материала |
 | `number` | TEXT | Номер |
-| `date` | TEXT | Дата |
+| `date` | TEXT | Дата паспорта |
 | `producer` | TEXT | Производитель |
-| `filename` | TEXT | Имя файла на диске |
+| `arrival_date` | TEXT | Дата поступления (ISO `YYYY-MM-DD`) — имя папки хранения |
+| `quantity` | REAL | Количество (default 0) |
+| `folder` | TEXT | Имя папки поступления |
+| `filename` | TEXT | Относительный путь `folder/filename` |
 | `original_filename` | TEXT | Оригинальное имя |
 | `created_at` | TIMESTAMP | Время создания |
 
@@ -63,11 +66,15 @@ PROJECT_DIR/data/materials.db
 ## Ключевые функции
 
 ### Материалы
-- `add_material(...)` → int — добавление, возвращает ID
+- `_ensure_materials_new_schema(conn)` — миграция: при старой схеме пересоздаёт таблицу (добавляет `arrival_date`, `quantity`, `folder`)
+- `add_material(...)` → int — добавление (последние параметры `arrival_date`, `quantity`, `folder` со значениями по умолчанию)
 - `get_all_materials()` → list[dict] — все (DESC по created_at)
 - `get_material(id)` → dict | None
 - `delete_material(id)` → bool
-- `search_materials(query)` → list[dict] — поиск по 4 полям
+- `search_materials(query)` → list[dict] — поиск по полям
+- `get_material_passports()` → list[dict] — уникальные комбинации (doc_name, material_name, number, date, producer) + label для селекта
+- `count_materials_in_folder(folder)` → int — число строк в папке поступления
+- `reset_materials()` → None — обнуляет только таблицу материалов
 
 ### Конвертации
 - `add_conversion(filename, fmt, source_path)` → int
