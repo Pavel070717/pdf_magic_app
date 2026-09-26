@@ -48,7 +48,8 @@ class TestAddMaterial:
         assert resp.status_code == 400
         assert "поступления" in resp.get_json()["error"]
 
-    def test_missing_file(self, app_client, temp_db_all, temp_dir):
+    def test_missing_file_and_reason(self, app_client, temp_db_all, temp_dir):
+        """Без файла и без причины — материал не добавляется."""
         with patch("routes.materials.MATERIALS_DIR", temp_dir):
             resp = app_client.post(
                 "/api/materials/add",
@@ -59,7 +60,7 @@ class TestAddMaterial:
                 },
             )
         assert resp.status_code == 400
-        assert "PDF" in resp.get_json()["error"]
+        assert "причин" in resp.get_json()["error"]
 
     def test_valid_add(self, app_client, temp_db_all, temp_dir):
         with patch("routes.materials.MATERIALS_DIR", temp_dir):
@@ -149,8 +150,8 @@ class TestAddMaterial:
         folders = sorted(p.name for p in temp_dir.iterdir() if p.is_dir())
         assert folders == ["2025-12-01", "2026-01-15", "2026-09-26"]
 
-    def test_no_date_uses_b_d_token(self, app_client, temp_db_all, temp_dir):
-        """Пустая дата документа → в имени файла токен «б_д»."""
+    def test_no_date_uses_bez_daty_token(self, app_client, temp_db_all, temp_dir):
+        """Пустая дата документа → в имени файла токен «без даты»."""
         with patch("routes.materials.MATERIALS_DIR", temp_dir):
             resp = app_client.post(
                 "/api/materials/add",
@@ -165,7 +166,7 @@ class TestAddMaterial:
             assert resp.status_code == 200
         files = list((temp_dir / "2026-09-26").glob("*.pdf"))
         assert len(files) == 1
-        assert ";б_д.pdf" in files[0].name
+        assert ";без даты.pdf" in files[0].name
 
     def test_slash_in_name_becomes_underscore(self, app_client, temp_db_all, temp_dir):
         """'/' в наименовании документа/материала на выходе заменяется на '_'."""
@@ -188,20 +189,55 @@ class TestAddMaterial:
         assert "/" not in name
         assert name.startswith("01_Акт_Приёмка;Бетон_раствор;255_1;")
 
-    def test_non_pdf_content_type(self, app_client, temp_db_all, temp_dir):
+    def test_any_file_type_accepted(self, app_client, temp_db_all, temp_dir):
+        """Прикреплять можно любой файл (не только PDF) — сохраняется с его
+        расширением."""
         with patch("routes.materials.MATERIALS_DIR", temp_dir):
             data = {
-                "doc_name": "Doc",
-                "material_name": "Mat",
+                "doc_name": "Фото",
+                "material_name": "Узел",
                 "arrival_date": "2026-09-26",
-                "file": (io.BytesIO(b"not pdf"), "file.txt"),
+                "file": (io.BytesIO(b"\xff\xd8\xff\xe0 jpeg"), "foto.jpg"),
             }
             resp = app_client.post(
                 "/api/materials/add",
                 data=data,
                 content_type="multipart/form-data",
             )
-        assert resp.status_code == 400
+        assert resp.status_code == 200
+        files = list((temp_dir / "2026-09-26").glob("*.jpg"))
+        assert len(files) == 1
+        assert files[0].name.startswith("01_")
+
+    def test_no_file_with_reason_creates_txt(self, app_client, temp_db_all, temp_dir):
+        """Без файла, но с причиной: txt с причинами появляется в папке даты,
+        пронумерован, содержимое = введённая причина; запись в БД хранит причину."""
+        from utils.database import get_all_materials
+
+        with patch("routes.materials.MATERIALS_DIR", temp_dir):
+            resp = app_client.post(
+                "/api/materials/add",
+                data={
+                    "doc_name": "Сертификат качества",
+                    "material_name": "Арматура А400",
+                    "number": "77",
+                    "reason": "документация уйдет с поставкой завтра",
+                    "arrival_date": "2026-09-26",
+                },
+                content_type="multipart/form-data",
+            )
+            assert resp.status_code == 200
+            folder = temp_dir / "2026-09-26"
+            assert folder.is_dir()
+            txts = list(folder.glob("*.txt"))
+            assert len(txts) == 1
+            assert txts[0].name.startswith("01_")
+            assert txts[0].read_text(encoding="utf-8").strip() == (
+                "документация уйдет с поставкой завтра"
+            )
+            mats = get_all_materials()
+            assert len(mats) == 1
+            assert mats[0]["reason"] == "документация уйдет с поставкой завтра"
 
     def test_add_without_optional_fields(self, app_client, temp_db_all, temp_dir):
         data = {
@@ -287,7 +323,7 @@ class TestPassports:
         assert "· шт" in data["passports"][0]["label"]
 
     def test_passport_without_date_label(self, app_client, temp_db_all, temp_dir):
-        """Паспорт без даты в выпадающем списке показывается как «от б/д»."""
+        """Паспорт без даты в выпадающем списке показывается как «от без даты»."""
         with patch("routes.materials.MATERIALS_DIR", temp_dir):
             app_client.post(
                 "/api/materials/add",
@@ -303,7 +339,7 @@ class TestPassports:
         data = app_client.get("/api/materials/passports").get_json()
         assert data["success"] is True
         assert len(data["passports"]) == 1
-        assert "б/д" in data["passports"][0]["label"]
+        assert "без даты" in data["passports"][0]["label"]
 
     def test_passports_list_groups_unique(self, app_client, temp_db_all, temp_dir):
         with patch("routes.materials.MATERIALS_DIR", temp_dir):

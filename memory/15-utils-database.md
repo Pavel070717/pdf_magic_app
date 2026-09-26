@@ -25,6 +25,7 @@ PROJECT_DIR/data/materials.db
 | `date` | TEXT | Дата паспорта |
 | `producer` | TEXT | Производитель |
 | `unit` | TEXT | Единица измерения (для datalist по ранее введённым) |
+| `reason` | TEXT | Причина отсутствия сопроводительного документа (если файла нет) |
 | `arrival_date` | TEXT | Дата поступления (ISO `YYYY-MM-DD`) — имя папки хранения |
 | `quantity` | REAL | Количество (default 0) |
 | `folder` | TEXT | Имя папки поступления |
@@ -67,8 +68,8 @@ PROJECT_DIR/data/materials.db
 ## Ключевые функции
 
 ### Материалы
-- `_ensure_materials_new_schema(conn)` — миграция: добавляет недостающие колонки (`arrival_date`, `quantity`, `folder`, `unit`) через `ALTER TABLE ADD COLUMN` без потери данных + индексы
-- `add_material(...)` → int — добавление (последние параметры `arrival_date`, `quantity`, `folder`, `unit` со значениями по умолчанию)
+- `_ensure_materials_new_schema(conn)` — миграция: добавляет недостающие колонки (`arrival_date`, `quantity`, `folder`, `unit`, `reason`) через `ALTER TABLE ADD COLUMN` без потери данных + индексы
+- `add_material(...)` → int — добавление (последние параметры `arrival_date`, `quantity`, `folder`, `unit`, `reason` со значениями по умолчанию)
 - `get_all_materials()` → list[dict] — все (DESC по created_at)
 - `get_material(id)` → dict | None
 - `delete_material(id)` → bool

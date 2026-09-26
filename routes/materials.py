@@ -2,6 +2,7 @@
 Blueprint: /api/materials/* — materials CRUD with PDF storage.
 """
 
+import os
 import re
 from pathlib import Path
 
@@ -91,9 +92,11 @@ def add_material_endpoint():
         date = sanitize_text(request.form.get("date", ""))
         producer = sanitize_text(request.form.get("producer", ""))
         unit = sanitize_text(request.form.get("unit", ""))
+        reason = sanitize_text(request.form.get("reason", "")).strip()
         arrival_input = sanitize_text(request.form.get("arrival_date", ""))
         quantity_raw = sanitize_text(request.form.get("quantity", "0"))
         file = request.files.get("file")
+        has_file = bool(file and file.filename)
 
         if not doc_name:
             return (
@@ -120,12 +123,16 @@ def add_material_endpoint():
             quantity = float(str(quantity_raw or "0").replace(",", "."))
         except ValueError:
             quantity = 0.0
-        if not file or file.filename == "":
-            return jsonify({"success": False, "error": "Загрузите PDF-файл"}), 400
-        if file.content_type and not file.content_type.startswith("application/pdf"):
+        if not has_file and not reason:
             return (
                 jsonify(
-                    {"success": False, "error": "Можно загружать только PDF-файлы"}
+                    {
+                        "success": False,
+                        "error": (
+                            "Прикрепите сопроводительный документ или укажите "
+                            "причину его отсутствия"
+                        ),
+                    }
                 ),
                 400,
             )
@@ -136,9 +143,16 @@ def add_material_endpoint():
         safe_doc = _safe_name(doc_name)
         safe_mat = _safe_name(material_name)
         safe_num = _safe_name(number or "—")
-        # Пустая дата документа = «без даты» (б/д). Слэш из токена заменяется
-        # на "_", как и в остальных частях имени (на Windows "/" запрещён).
-        safe_date = _safe_name(date or "б/д")
+        # Пустая дата документа = «без даты». Слэш из токена заменяется на "_",
+        # как и в остальных частях имени (на Windows "/" запрещён).
+        safe_date = _safe_name(date or "без даты")
+
+        # Расширение файла — из прикреплённого файла (это может быть не только
+        # PDF, но и фото и т.п.). Если файла нет — создаём txt с причиной.
+        if has_file:
+            ext = os.path.splitext(file.filename or "")[1].lower() or ".pdf"
+        else:
+            ext = ".txt"
 
         # Папка поступления: ISO-дата — проводник сортирует старые → новые
         folder_name = arrival_date
@@ -146,19 +160,24 @@ def add_material_endpoint():
         folder_path.mkdir(parents=True, exist_ok=True)
 
         num = _next_file_number(folder_path)
-        new_filename = f"{num}_{safe_doc};{safe_mat};{safe_num};{safe_date}.pdf"
+        new_filename = f"{num}_{safe_doc};{safe_mat};{safe_num};{safe_date}{ext}"
         filepath = folder_path / new_filename
 
         counter = 1
+        base = f"{num}_{safe_doc};{safe_mat};{safe_num};{safe_date}"
         while filepath.exists():
             new_filename = (
-                f"{num}_{counter}_{safe_doc};{safe_mat};{safe_num};{safe_date}.pdf"
+                f"{num}_{counter}_{safe_doc};{safe_mat};{safe_num};{safe_date}{ext}"
             )
             filepath = folder_path / new_filename
             counter += 1
 
-        file.save(str(filepath))
-        logger.info(f"PDF материала сохранён: {filepath}")
+        if has_file:
+            file.save(str(filepath))
+            logger.info(f"Файл материала сохранён: {filepath}")
+        else:
+            filepath.write_text(reason, encoding="utf-8")
+            logger.info(f"txt причины отсутствия сохранён: {filepath}")
 
         stored_filename = f"{folder_name}/{filepath.name}"
         material_id = add_material(
@@ -168,11 +187,12 @@ def add_material_endpoint():
             date=date,
             producer=producer,
             filename=stored_filename,
-            original_filename=file.filename or "unknown.pdf",
+            original_filename=file.filename if has_file else f"{base}{ext}",
             arrival_date=arrival_date,
             quantity=quantity,
             folder=folder_name,
             unit=unit,
+            reason=reason,
         )
 
         return jsonify(
@@ -201,7 +221,7 @@ def get_passports():
                 (
                     f"{r['doc_name']} {r['material_name']}{unit_part}"
                     f" (№ {r['number'] or '—'})"
-                    f" от {_readable_date(r['date']) or 'б/д'} · {r['producer']}"
+                    f" от {_readable_date(r['date']) or 'без даты'} · {r['producer']}"
                 )
                 .replace("  ", " ")
                 .strip(" ·")
@@ -260,9 +280,9 @@ def get_material_pdf(material_id):
         if not str(filepath).startswith(str(materials_dir_resolved)):
             return jsonify({"success": False, "error": "Недопустимый путь"}), 400
         if not filepath.exists():
-            return jsonify({"success": False, "error": "PDF-файл не найден"}), 404
+            return jsonify({"success": False, "error": "Файл не найден"}), 404
 
-        return send_file(str(filepath), mimetype="application/pdf")
+        return send_file(str(filepath))
     except Exception as e:
         logger.exception("Ошибка получения PDF")
         return jsonify({"success": False, "error": str(e)}), 500

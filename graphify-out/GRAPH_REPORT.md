@@ -1,16 +1,16 @@
 # Graph Report - pdf_magic_app  (2026-09-26)
 
 ## Corpus Check
-- 85 files · ~64,364 words
+- 85 files · ~64,856 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1356 nodes · 2566 edges · 82 communities (64 shown, 12 thin omitted)
+- 1360 nodes · 2571 edges · 83 communities (64 shown, 13 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 22 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3e9a90c9`
+- Built from commit: `a7217d86`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -19,13 +19,13 @@
 - ._ws
 - save_replace_rules
 - test_magic_routes.py
-- sanitize_folder_name
+- core.py
 - database.py
 - sanitize_text
 - test_routes.py
-- directories.py
+- test_database_converter.py
 - _fill_sheet1
-- get_requisites
+- init_requisites_db
 - reset_project.py
 - load_state
 - What You Must Do When Invoked
@@ -36,13 +36,13 @@
 - conftest.py
 - requisites.py
 - test_files_routes.py
-- materials.py
+- can_share_number
 - test_msg_routes.py
 - test_directories_routes.py
 - TestRegistryData
 - TestAddFiles
-- test_database_converter.py
-- core.py
+- converter.py
+- Flask
 - files.py
 - test_materials_routes.py
 - TestAddMaterial
@@ -52,7 +52,7 @@
 - routes/core.py — Ядро приложения
 - routes/requisites.py — Реквизиты объектов
 - Текущее состояние проекта
-- init_requisites_db
+- generate_numbered_filename
 - Тесты — Покрытие и структура
 - utils/excel_registry.py — Генерация Excel-реестра
 - app.py — Точка входа приложения
@@ -82,7 +82,7 @@
 - AGENTS.md
 - extraction-spec.md
 - magic.py
-- save_state
+- TestStartMagic
 - TestAddFilesFromDir
 - generate_aocr
 - TestGenerateAOCR
@@ -90,6 +90,7 @@
 - TestRenameDirectory
 - TestDeleteDirectory
 - TestPassports
+- registry.py
 - МСГ — месячно-суточный график (routes/msg.py, utils/msg_db.py, templates/msg.html)
 
 ## God Nodes (most connected - your core abstractions)
@@ -119,7 +120,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (82 total, 12 thin omitted)
+## Communities (83 total, 13 thin omitted)
 
 ### Community 0 - "htmx.min.js"
 Cohesion: 0.08
@@ -134,16 +135,16 @@ Cohesion: 0.06
 Nodes (45): api_add_replace_rule(), api_clear_replace_rules(), api_delete_replace_rule(), api_get_accompanying_prefixes(), api_get_replace_rules(), api_save_accompanying_prefixes(), route, Blueprint: /api/replace-rules/* + /api/accompanying-prefixes/* (+37 more)
 
 ### Community 3 - "test_magic_routes.py"
-Cohesion: 0.09
-Nodes (13): can_share_number(), generate_numbered_filename(), Сквозная нумерация: '01.Имя.ext, Убирает старый порядковый номер 'NN.' в начале имени файла. '01.Акт.pdf' →…, PDF и Excel (АОСР) с одинаковым наименованием получают один номер., strip_leading_number(), Tests for routes/magic.py — file copy/numbering/registry endpoints., TestCancelMagic (+5 more)
+Cohesion: 0.16
+Nodes (7): Убирает старый порядковый номер 'NN.' в начале имени файла. '01.Акт.pdf' →…, strip_leading_number(), Tests for routes/magic.py — file copy/numbering/registry endpoints., TestCancelMagic, TestMagicProgress, TestMagicResult, TestStripLeadingNumber
 
-### Community 4 - "sanitize_folder_name"
-Cohesion: 0.07
-Nodes (13): build_tree_from_fs(), create_subfolders(), sanitize_folder_name(), tree_from_subfolders(), update_tree_paths(), Tests for routes/core.py — sanitization, tree builders, subfolder creation., TestBuildTreeFromFs, TestCreateSubfolders (+5 more)
+### Community 4 - "core.py"
+Cohesion: 0.05
+Nodes (34): Logger, build_tree_from_created(), build_tree_from_fs(), create_subfolders(), get_app_dir(), Any, Path, Shared state, utilities, and helpers — with type hints for mypy. (+26 more)
 
 ### Community 5 - "database.py"
-Cohesion: 0.11
-Nodes (35): get_materials(), Tests for utils/database.py — SQLite materials CRUD., Empty strings for optional fields are stored correctly., Material dict contains all expected fields., init_db() creates the materials table without errors., Calling init_db multiple times is safe., Add a material and retrieve it., Non-existent ID returns None. (+27 more)
+Cohesion: 0.07
+Nodes (56): add_material_endpoint(), delete_material_endpoint(), get_material_pdf(), get_materials(), get_passports(), get_units(), _next_file_number(), _parse_iso_date() (+48 more)
 
 ### Community 6 - "sanitize_text"
 Cohesion: 0.19
@@ -153,25 +154,25 @@ Nodes (3): sanitize_text(), TestSanitizeText, TestHtmlInjection
 Cohesion: 0.04
 Nodes (12): Integration tests for Flask routes via test_client., TestConverterRoutes, TestDashboardRoutes, TestDirectoriesRoutes, TestFilesRoutes, TestHealthCheck, TestMaterialsRoutes, TestPageRoutes (+4 more)
 
-### Community 8 - "directories.py"
-Cohesion: 0.16
-Nodes (18): build_tree_from_created(), get_app_dir(), Any, Path, scan_filesystem_for_dirs(), set_app_dir(), sync_tree_from_fs(), add_subfolder() (+10 more)
+### Community 8 - "test_database_converter.py"
+Cohesion: 0.14
+Nodes (28): Tests for utils/database.py — converter subsystem., Different output formats are stored correctly., init_converter_db() creates the conversions table., Calling init_converter_db multiple times is safe., Add a conversion and retrieve it., Empty table returns empty list., Conversions ordered by created_at DESC., Conversions limited to 50 entries. (+20 more)
 
 ### Community 9 - "_fill_sheet1"
 Cohesion: 0.18
 Nodes (9): _fill_sheet1(), _fill_sheet2(), Any, Заполняет лист «1» данными из JSON., Заполняет лист «2»: название работы, даты, нормативы, представители., Генерирует уникальный путь для файла: stem.ext, stem_1.ext, stem_2.ext ..., _unique_path(), Tests for routes/aocr.py — AOCR form generation. (+1 more)
 
-### Community 10 - "get_requisites"
-Cohesion: 0.19
-Nodes (12): Tests for utils/database.py — requisites and objects subsystem., Saving requisites for existing object updates (upsert)., Saving with partial data preserves defaults for missing fields., Saving with empty data uses all defaults., Requisites dict contains all expected fields., Deleting an object cascades to requisites., Save and verify all 51 fields round-trip correctly., Save requisites and retrieve them. (+4 more)
+### Community 10 - "init_requisites_db"
+Cohesion: 0.18
+Nodes (13): Tests for utils/database.py — requisites and objects subsystem., Saving requisites for existing object updates (upsert)., Saving with partial data preserves defaults for missing fields., Saving with empty data uses all defaults., Requisites dict contains all expected fields., Deleting an object cascades to requisites., Save and verify all 51 fields round-trip correctly., Save requisites and retrieve them. (+5 more)
 
 ### Community 11 - "reset_project.py"
 Cohesion: 0.26
 Nodes (27): check_flask(), clean_converter_output(), clean_date_dirs(), clean_logs(), clean_materials_base(), clean_materials_folders(), clean_pycache(), clean_temp_uploads() (+19 more)
 
 ### Community 12 - "load_state"
-Cohesion: 0.11
-Nodes (16): Tests for routes/dashboard.py — dashboard statistics., TestDashboardStats, Tests for utils/state.py — thread-safe atomic state.json persistence., When state.json doesn't exist, load_state returns a default dict., Save state and load it back — round-trip integrity., Partial writes should not corrupt state.json (atomic replace)., Corrupt JSON falls back to default state., Multiple threads writing state concurrently should not corrupt it. (+8 more)
+Cohesion: 0.09
+Nodes (29): ensure_app_dirs(), copy_files_worker(), Background worker: copy and number files, generate Excel registry., Start file copy/numbering worker in background thread., start_magic(), clear_state(), route, Tests for routes/dashboard.py — dashboard statistics. (+21 more)
 
 ### Community 13 - "What You Must Do When Invoked"
 Cohesion: 0.08
@@ -198,16 +199,16 @@ Cohesion: 0.18
 Nodes (14): app_client(), clean_state(), fixture, Fixtures for pdf_magic_app tests., Mock STATE_FILE to a temporary path, isolated per test., Return a clean default state, saved to temp file., Mock DB_PATH to a temporary database, isolated per test., Mock DB_PATH to a temporary database with all tables initialized. (+6 more)
 
 ### Community 19 - "requisites.py"
-Cohesion: 0.16
-Nodes (18): create_object(), get_aocr_data(), _get_object_name(), list_objects(), route, Blueprint: /api/requisites/* — Управление объектами строительства и их…, GET /api/requisites/<object_id>/aocr — merged data ready for AOCP form…, Return the name of an object by its id, or None if not found. (+10 more)
+Cohesion: 0.08
+Nodes (28): create_object(), get_aocr_data(), _get_object_name(), list_objects(), route, Blueprint: /api/requisites/* — Управление объектами строительства и их…, GET /api/requisites/<object_id>/aocr — merged data ready for AOCP form…, Return the name of an object by its id, or None if not found. (+20 more)
 
 ### Community 20 - "test_files_routes.py"
 Cohesion: 0.11
 Nodes (5): Tests for routes/files.py — file upload, list, reorder, delete., TestClearFiles, TestGetFiles, TestRemoveFile, TestReorderFiles
 
-### Community 21 - "materials.py"
-Cohesion: 0.15
-Nodes (21): add_material_endpoint(), delete_material_endpoint(), get_material_pdf(), get_passports(), get_units(), _next_file_number(), _parse_iso_date(), Path (+13 more)
+### Community 21 - "can_share_number"
+Cohesion: 0.36
+Nodes (3): can_share_number(), PDF и Excel (АОСР) с одинаковым наименованием получают один номер., TestCanShareNumber
 
 ### Community 22 - "test_msg_routes.py"
 Cohesion: 0.14
@@ -221,13 +222,13 @@ Nodes (6): Tests for routes/directories.py — directory CRUD endpoints., TestCr
 Cohesion: 0.18
 Nodes (3): Tests for routes/registry.py — registry data CRUD., TestRegistryData, TestRegistryForm
 
-### Community 26 - "test_database_converter.py"
-Cohesion: 0.05
-Nodes (49): convert_pdf(), delete_history_entry(), download_result(), _find_jar(), get_history(), get_progress(), Path, route (+41 more)
+### Community 26 - "converter.py"
+Cohesion: 0.07
+Nodes (21): convert_pdf(), delete_history_entry(), download_result(), _find_jar(), get_history(), get_progress(), Path, route (+13 more)
 
-### Community 28 - "core.py"
-Cohesion: 0.11
-Nodes (20): Flask, Logger, Blueprint: /api/aocr/* — Генерация формы АОСР (Акт освидетельствования скрытых…, ensure_app_dirs(), Shared state, utilities, and helpers — with type hints for mypy., setup_logging(), get_dashboard_stats(), route (+12 more)
+### Community 28 - "Flask"
+Cohesion: 0.23
+Nodes (8): Flask, Blueprint: /api/aocr/* — Генерация формы АОСР (Акт освидетельствования скрытых…, get_dashboard_stats(), route, Blueprint: /api/dashboard/stats, Routes package — registers all blueprints on a Flask app., register_blueprints(), Blueprint: /api/state/clear
 
 ### Community 29 - "files.py"
 Cohesion: 0.23
@@ -238,8 +239,8 @@ Cohesion: 0.11
 Nodes (7): Tests for routes/materials.py — materials CRUD with PDF storage., Ранее введённые единицы попадают в выпадающий список (уникальные)., TestDeleteMaterial, TestGetMaterialPDF, TestGetMaterials, TestResetMaterials, TestUnits
 
 ### Community 31 - "TestAddMaterial"
-Cohesion: 0.11
-Nodes (6): Тот же паспорт в другой день — появляется в папке новой даты., Имена папок — ISO-даты, проводник сортирует старые → новые., Пустая дата документа → в имени файла токен «б_д»., /' в наименовании документа/материала на выходе заменяется на '_'., Два материала в один день — файлы 01_, 02_ в одной папке., TestAddMaterial
+Cohesion: 0.09
+Nodes (9): Тот же паспорт в другой день — появляется в папке новой даты., Имена папок — ISO-даты, проводник сортирует старые → новые., Пустая дата документа → в имени файла токен «без даты»., /' в наименовании документа/материала на выходе заменяется на '_'., Прикреплять можно любой файл (не только PDF) — сохраняется с его расширением., Без файла, но с причиной: txt с причинами появляется в папке даты,…, Без файла и без причины — материал не добавляется., Два материала в один день — файлы 01_, 02_ в одной папке. (+1 more)
 
 ### Community 35 - "Архитектура PDF Magic App"
 Cohesion: 0.15
@@ -265,9 +266,9 @@ Nodes (11): routes/requisites.py — Реквизиты объектов, Зав
 Cohesion: 0.18
 Nodes (11): Dev, Зависимости, Известные ограничения, Как запускать, Контакты, Опциональные, Основные, Статус (+3 more)
 
-### Community 41 - "init_requisites_db"
-Cohesion: 0.16
-Nodes (11): init_requisites_db creates objects and requisites tables., Multiple calls to init_requisites_db are safe., Add an object and verify it exists., get_objects returns all objects., Empty table returns empty list., Delete removes an object., Deleting non-existent ID returns False., Object dict contains expected fields. (+3 more)
+### Community 41 - "generate_numbered_filename"
+Cohesion: 0.43
+Nodes (3): generate_numbered_filename(), Сквозная нумерация: '01.Имя.ext, TestGenerateNumberedFilename
 
 ### Community 42 - "Тесты — Покрытие и структура"
 Cohesion: 0.33
@@ -361,17 +362,17 @@ Nodes (3): For --cluster-only, For --update (incremental re-extraction), graphif
 Cohesion: 0.28
 Nodes (7): cancel_magic(), get_magic_progress(), get_magic_result(), route, Blueprint: /api/magic/* — file copy, numbering, and Excel registry generation., Cancel running magic job., Get magic result after completion.
 
-### Community 73 - "save_state"
-Cohesion: 0.14
-Nodes (12): copy_files_worker(), Background worker: copy and number files, generate Excel registry., Start file copy/numbering worker in background thread., start_magic(), patch, Одинаковые документы в итоговой папке различаются номером (01/02), а не…, TestCopyWorker, TestStartMagic (+4 more)
-
 ### Community 75 - "generate_aocr"
 Cohesion: 0.22
 Nodes (9): _export_pdf(), generate_aocr(), _get_output_dir(), Path, route, Пытается экспортировать .xlsx → .pdf через win32com (Excel). Возвращает путь к…, Генерирует .xlsx (и .pdf если доступен Excel) на основе данных из JSON., Возвращает директорию для сохранения из current_directory в state.json. (+1 more)
 
 ### Community 80 - "TestPassports"
 Cohesion: 0.33
-Nodes (3): Единица измерения видна в подписи паспорта., Паспорт без даты в выпадающем списке показывается как «от б/д»., TestPassports
+Nodes (3): Единица измерения видна в подписи паспорта., Паспорт без даты в выпадающем списке показывается как «от без даты»., TestPassports
+
+### Community 81 - "registry.py"
+Cohesion: 0.38
+Nodes (6): get_registry_data(), get_registry_form(), route, Blueprint: /api/registry/* — registry data CRUD., Return HTML form for the registry modal., save_registry_data()
 
 ### Community 83 - "МСГ — месячно-суточный график (routes/msg.py, utils/msg_db.py, templates/msg.html)"
 Cohesion: 0.22
@@ -379,18 +380,18 @@ Nodes (8): Вкладка «МСГ — просмотр», Вкладка «Об
 
 ## Knowledge Gaps
 - **205 isolated node(s):** `$schema`, `plugin`, `Usage`, `What graphify is for`, `Step 0 - GitHub repos and multi-path merge (only if a URL or several paths)` (+200 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 582 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **12 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 583 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **13 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `load_state()` connect `load_state` to `save_replace_rules`, `test_magic_routes.py`, `directories.py`, `magic.py`, `save_state`, `generate_aocr`, `test_files_routes.py`, `test_directories_routes.py`, `core.py`, `files.py`?**
-  _High betweenness centrality (0.085) - this node is a cross-community bridge._
-- **Why does `save_state()` connect `save_state` to `save_replace_rules`, `test_magic_routes.py`, `directories.py`, `magic.py`, `load_state`, `conftest.py`, `test_files_routes.py`, `test_directories_routes.py`, `core.py`, `files.py`?**
+- **Why does `load_state()` connect `load_state` to `save_replace_rules`, `test_magic_routes.py`, `core.py`, `magic.py`, `TestStartMagic`, `generate_aocr`, `registry.py`, `test_files_routes.py`, `test_directories_routes.py`, `Flask`, `files.py`?**
+  _High betweenness centrality (0.087) - this node is a cross-community bridge._
+- **Why does `save_state()` connect `load_state` to `save_replace_rules`, `test_magic_routes.py`, `core.py`, `magic.py`, `TestStartMagic`, `registry.py`, `conftest.py`, `test_files_routes.py`, `test_directories_routes.py`, `Flask`, `files.py`?**
   _High betweenness centrality (0.059) - this node is a cross-community bridge._
-- **Why does `sanitize_text()` connect `sanitize_text` to `save_replace_rules`, `sanitize_folder_name`, `_fill_sheet1`, `generate_aocr`, `TestInputValidation`, `materials.py`, `core.py`?**
-  _High betweenness centrality (0.035) - this node is a cross-community bridge._
+- **Why does `get_all_materials()` connect `database.py` to `Flask`, `test_materials_routes.py`, `TestAddMaterial`?**
+  _High betweenness centrality (0.038) - this node is a cross-community bridge._
 - **What connects `$schema`, `plugin`, `Usage` to the rest of the system?**
   _205 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `htmx.min.js` be split into smaller, more focused modules?**

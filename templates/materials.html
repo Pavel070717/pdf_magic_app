@@ -29,8 +29,8 @@
       <div class="field"><label>Наименование материала</label><input type="text" name="material_name" required></div>
       <div class="field"><label>Номер</label><input type="text" name="number"></div>
       <div class="field"><label>Дата документа</label><input type="date" name="date" id="mat-date-input" style="min-width: 0;">
-        <label style="display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 12px; color: var(--text-secondary); cursor: pointer;">
-          <input type="checkbox" id="mat-date-no-date" onchange="toggleNoDate(this)"> б/д — без даты
+        <label style="display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 12px; color: var(--text-secondary); cursor: pointer; white-space: nowrap;">
+          <input type="checkbox" id="mat-date-no-date" onchange="toggleNoDate(this)"> Без даты
         </label>
       </div>
       <div class="field"><label>Производитель</label><input type="text" name="producer"></div>
@@ -40,12 +40,14 @@
         <datalist id="unit-datalist"></datalist>
       </div>
     </div>
-    <div class="grid-3" style="margin-bottom: 12px;">
+    <div class="grid-2" style="margin-bottom: 12px;">
       <div class="field"><label>Количество</label>
         <input type="text" name="quantity" inputmode="decimal" value="0,000" min="0"
           onfocus="focusQtyInput(this)" onblur="fmtQtyInput(this)"></div>
       <div class="field"><label>Дата поступления</label><input type="date" name="arrival_date" required></div>
-      <div class="field"><label>PDF сертификат</label><input type="file" name="file" accept=".pdf" required></div>
+      <div class="field"><label>Сопроводительный документ (PDF, фото и др.)</label><input type="file" name="file" id="mat-file-input" onchange="updateReasonHint()"></div>
+      <div class="field"><label>Причина отсутствия сопроводительного документа</label>
+        <input type="text" name="reason" id="mat-reason-input" oninput="updateReasonHint()" placeholder="заполняется, если документ не прикреплён"></div>
     </div>
     <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
       <button type="submit" class="btn btn-primary">Добавить</button>
@@ -137,6 +139,17 @@ function addMaterial(e) {
   var form = document.getElementById('mat-add');
   var data = new FormData(form);
   var msg = document.getElementById('mat-msg');
+
+  var fileInput = document.getElementById('mat-file-input');
+  var reasonInput = document.getElementById('mat-reason-input');
+  var noFile = !fileInput.files || !fileInput.files.length;
+  var reasonText = String(reasonInput.value || '').trim();
+  if (noFile && !reasonText) {
+    msg.innerHTML = '<span class="text-danger">❌ Прикрепите сопроводительный документ или укажите причину его отсутствия</span>';
+    updateReasonHint();
+    return false;
+  }
+
   msg.innerHTML = '<span class="text-muted">Добавление...</span>';
 
   fetch('/api/materials/add', { method: 'POST', body: data })
@@ -151,6 +164,7 @@ function addMaterial(e) {
         var arr = form.querySelector('[name="arrival_date"]');
         arr.value = today.getFullYear() + '-' + mm + '-' + dd;
         updateFolderHint();
+        updateReasonHint();
         loadMaterials(document.getElementById('mat-search').value);
         loadPassports();
         loadUnits();
@@ -162,6 +176,17 @@ function addMaterial(e) {
       msg.innerHTML = '<span class="text-danger">❌ Ошибка сети: ' + err.message + '</span>';
     });
   return false;
+}
+
+// Если файл не прикреплён — подсвечиваем поле причины (оно обязательно)
+function updateReasonHint() {
+  var fileInput = document.getElementById('mat-file-input');
+  var reasonInput = document.getElementById('mat-reason-input');
+  if (!fileInput || !reasonInput) return;
+  var noFile = !fileInput.files || !fileInput.files.length;
+  var need = noFile && !String(reasonInput.value || '').trim();
+  reasonInput.style.borderColor = need ? '#ff4d4f' : '';
+  reasonInput.title = need ? 'Документ не прикреплён — укажите причину' : '';
 }
 
 // =============================================================================

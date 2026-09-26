@@ -30,6 +30,7 @@ def init_db() -> None:
                 date TEXT DEFAULT '',
                 producer TEXT DEFAULT '',
                 unit TEXT DEFAULT '',
+                reason TEXT DEFAULT '',
                 arrival_date TEXT DEFAULT '',
                 quantity REAL DEFAULT 0,
                 folder TEXT DEFAULT '',
@@ -56,6 +57,7 @@ def _ensure_materials_new_schema(conn) -> None:
         "quantity": "REAL DEFAULT 0",
         "folder": "TEXT DEFAULT ''",
         "unit": "TEXT DEFAULT ''",
+        "reason": "TEXT DEFAULT ''",
     }
     for name, definition in extra.items():
         if name not in cols:
@@ -82,13 +84,14 @@ def add_material(
     quantity: float = 0.0,
     folder: str = "",
     unit: str = "",
+    reason: str = "",
 ) -> int:
     conn = get_db()
     try:
         cursor = conn.execute(
             """INSERT INTO materials (doc_name, material_name, number, date, producer,
-               unit, arrival_date, quantity, folder, filename, original_filename)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+               unit, reason, arrival_date, quantity, folder, filename, original_filename)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 doc_name,
                 material_name,
@@ -96,6 +99,7 @@ def add_material(
                 date or "",
                 producer or "",
                 unit or "",
+                reason or "",
                 arrival_date or "",
                 quantity or 0.0,
                 folder or "",
@@ -114,7 +118,7 @@ def get_all_materials() -> list[dict[str, object]]:
     try:
         cursor = conn.execute(
             """SELECT id, doc_name, material_name, number, date, producer, unit,
-               arrival_date, quantity, folder, filename, original_filename, created_at
+               reason, arrival_date, quantity, folder, filename, original_filename, created_at
                FROM materials ORDER BY created_at DESC, id DESC"""
         )
         return [dict(row) for row in cursor.fetchall()]
@@ -148,7 +152,7 @@ def search_materials(query: str) -> list[dict[str, object]]:
         like = f"%{query}%"
         cursor = conn.execute(
             """SELECT id, doc_name, material_name, number, date, producer, unit,
-               arrival_date, quantity, folder, filename, original_filename, created_at
+               reason, arrival_date, quantity, folder, filename, original_filename, created_at
                FROM materials
                WHERE doc_name LIKE ? OR material_name LIKE ? OR number LIKE ?
                   OR producer LIKE ? OR arrival_date LIKE ? OR unit LIKE ?
