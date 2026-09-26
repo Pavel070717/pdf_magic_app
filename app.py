@@ -197,7 +197,9 @@ def main() -> None:
             except Exception:
                 pass
             logger.info("Сервер остановлен.")
-            sys.exit(0)
+            sys.stdout.flush()
+            sys.stderr.flush()
+            os._exit(0)
 
         signal.signal(signal.SIGINT, _shutdown_handler)
 
