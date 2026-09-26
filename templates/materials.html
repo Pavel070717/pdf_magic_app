@@ -2,6 +2,22 @@
 {% set page = "materials" %}
 {% block content %}
 
+<style>
+  .mfn { cursor: pointer; margin-left: 6px; opacity: .5; font-size: 11px; user-select: none; }
+  .mfn:hover, .mfn.active { opacity: 1; color: var(--accent, #4f9cf9); }
+  .mat-filter-panel { position: fixed; z-index: 9999; background: var(--bg-elevated, #1b2230); border: 1px solid var(--border-strong, #33405a); border-radius: 8px; box-shadow: 0 8px 30px rgba(0,0,0,.45); padding: 10px; min-width: 190px; max-width: 340px; font-size: 12px; }
+  .mat-filter-panel label { display: flex; align-items: center; gap: 6px; padding: 2px 4px; white-space: nowrap; }
+  .mat-filter-panel input[type=checkbox] { margin: 0; }
+  .mat-filter-list { max-height: 260px; overflow: auto; }
+  .mat-filter-tree ul { list-style: none; margin: 0; padding-left: 16px; }
+  .mat-filter-tree details > summary { cursor: pointer; list-style: none; display: flex; align-items: center; }
+  .mat-filter-tree details > summary::-webkit-details-marker { display: none; }
+  .mat-filter-tree details > summary::after { content: ' ▸'; font-size: 10px; color: var(--text-secondary); }
+  .mat-filter-tree details[open] > summary::after { content: ' ▾'; }
+  .mat-filter-tree .mf-tree-title { font-weight: 600; }
+  .mat-filter-panel .btn.active { background: var(--accent, #4f9cf9); color: #fff; }
+</style>
+
 <div class="page-header">
   <div class="page-header-icon">🗄️</div>
   <div>
@@ -45,10 +61,18 @@
         <input type="text" name="quantity" inputmode="decimal" value="0,000" min="0"
           onfocus="focusQtyInput(this)" onblur="fmtQtyInput(this)"></div>
       <div class="field"><label>Дата поступления</label><input type="date" name="arrival_date" required></div>
-      <div class="field"><label>Сопроводительный документ (PDF, фото и др.)</label><input type="file" name="file" id="mat-file-input" onchange="hideReasonError()"></div>
-      <div class="field"><label>Причина отсутствия сопроводительного документа</label>
-        <input type="text" name="reason" id="mat-reason-input" oninput="hideReasonError()" placeholder="заполняется, если документ не прикреплён">
-        <div id="mat-reason-error" class="text-danger text-sm" style="display: none; color: #ff4d4f; margin-top: 4px;">✕ В случае отсутствия файла обязательно укажите причину</div></div>
+      <div class="field">
+        <label>Сопроводительный документ (PDF, фото и др.)</label>
+        <input type="file" name="file" id="mat-file-input" onchange="hideReasonError()">
+        <label style="display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 12px; color: var(--text-secondary); cursor: pointer; white-space: nowrap;">
+          <input type="checkbox" id="mat-missing-doc" onchange="toggleMissingDoc(this)"> Отсутствует сопроводительный документ
+        </label>
+      </div>
+      <div class="field" id="mat-reason-area" style="display: none;">
+        <label>Причина отсутствия сопроводительного документа</label>
+        <input type="text" name="reason" id="mat-reason-input" disabled oninput="hideReasonError()" placeholder="обязательно, т.к. документа нет">
+        <div id="mat-reason-error" class="text-danger text-sm" style="color: #ff4d4f; margin-top: 4px; display: none;">✕ В случае отсутствия документа обязательно укажите причину</div>
+      </div>
     </div>
     <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
       <button type="submit" class="btn btn-primary">Добавить</button>
@@ -123,6 +147,39 @@ function toggleNoDate(cb) {
   }
 }
 
+// Галочка «Отсутствует сопроводительный документ»: появляется поле причины,
+// блокируются номер, дата документа и выбор файла.
+function toggleMissingDoc(cb) {
+  var found = cb && cb.checked;
+  var fileInput = document.getElementById('mat-file-input');
+  var numberInput = document.querySelector('#mat-add [name="number"]');
+  var dateInput = document.getElementById('mat-date-input');
+  var noDate = document.getElementById('mat-date-no-date');
+  var reasonArea = document.getElementById('mat-reason-area');
+  var reasonInput = document.getElementById('mat-reason-input');
+
+  if (found) {
+    if (fileInput) fileInput.disabled = true;
+    if (numberInput) numberInput.disabled = true;
+    if (dateInput) dateInput.disabled = true;
+    if (noDate) noDate.disabled = true;
+    if (noDate && noDate.checked) noDate.checked = false;
+  } else {
+    if (fileInput) fileInput.disabled = false;
+    if (numberInput) numberInput.disabled = false;
+    if (dateInput) dateInput.disabled = false;
+    if (noDate) noDate.disabled = false;
+    if (reasonInput) { reasonInput.value = ''; reasonInput.disabled = true; }
+    if (reasonArea) reasonArea.style.display = 'none';
+    hideReasonError();
+  }
+
+  if (found && reasonArea) {
+    reasonArea.style.display = '';
+    if (reasonInput) reasonInput.disabled = false;
+  }
+}
+
 function updateFolderHint() {
   var el = document.getElementById('mat-folder-hint');
   var v = document.getElementById('arrival-date-input').value;
@@ -144,13 +201,23 @@ function addMaterial(e) {
   var fileInput = document.getElementById('mat-file-input');
   var reasonInput = document.getElementById('mat-reason-input');
   var reasonError = document.getElementById('mat-reason-error');
+  var missingCb = document.getElementById('mat-missing-doc');
+  var missingChecked = !!(missingCb && missingCb.checked);
   var noFile = !fileInput.files || !fileInput.files.length;
   var reasonText = String(reasonInput.value || '').trim();
-  if (noFile && !reasonText) {
-    reasonInput.style.borderColor = '#ff4d4f';
-    reasonError.style.display = 'block';
-    reasonInput.focus();
-    msg.innerHTML = '';
+
+  if (missingChecked) {
+    hideReasonError();
+    if (!reasonText) {
+      reasonInput.style.borderColor = '#ff4d4f';
+      reasonError.style.display = 'block';
+      reasonInput.focus();
+      msg.innerHTML = '';
+      return false;
+    }
+  } else if (noFile) {
+    fileInput.style.borderColor = '#ff4d4f';
+    msg.innerHTML = '<span class="text-danger">❌ Прикрепите сопроводительный документ</span>';
     return false;
   }
   hideReasonError();
@@ -163,6 +230,8 @@ function addMaterial(e) {
       if (d.success) {
         msg.innerHTML = '<span class="text-success">✅ Материал добавлен → папка «' + escapeHtml(d.folder || '') + '»</span>';
         form.reset();
+        var missingCb = document.getElementById('mat-missing-doc');
+        if (missingCb) { missingCb.checked = false; toggleMissingDoc(missingCb); }
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
         var mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -182,14 +251,300 @@ function addMaterial(e) {
   return false;
 }
 
-// Поле причины подсвечивается и выдаёт красную подсказку ТОЛЬКО в момент
-// нажатия «Добавить», если файл не прикреплён и причина пуста.
+// Снимает подсветку ошибок (вызывается при выборе файла / вводе причины).
 function hideReasonError() {
+  var fileInput = document.getElementById('mat-file-input');
   var reasonInput = document.getElementById('mat-reason-input');
   var reasonError = document.getElementById('mat-reason-error');
-  if (!reasonInput || !reasonError) return;
-  reasonInput.style.borderColor = '';
-  reasonError.style.display = 'none';
+  if (fileInput) fileInput.style.borderColor = '';
+  if (reasonInput) reasonInput.style.borderColor = '';
+  if (reasonError) reasonError.style.display = 'none';
+}
+
+// =============================================================================
+// Фильтры по столбцам, дерево дат и сортировка
+// =============================================================================
+var MAT_COLS = [
+  { key: 'doc_name',      label: 'Документ' },
+  { key: 'material_name', label: 'Материал' },
+  { key: 'number',        label: '№' },
+  { key: 'date',          label: 'Дата док.', date: true },
+  { key: 'producer',      label: 'Производитель' },
+  { key: 'arrival_date',  label: 'Дата поступл.', date: true },
+  { key: 'unit',          label: 'Ед. изм.' },
+  { key: 'quantity',      label: 'Кол-во' },
+  { key: 'has_file',      label: 'Файл' }
+];
+var MONTHS_RU = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+  'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+var materialsCache = [];
+var filters = {};
+var sort = { key: '', dir: '' };
+
+function materialHasFile(m) {
+  return m && m.filename && !String(m.filename).toLowerCase().endsWith('.txt');
+}
+
+function matCell(m, col) {
+  switch (col.key) {
+    case 'number': return '<span class="text-muted">' + escapeHtml(m.number || '—') + '</span>';
+    case 'date': return '<span class="text-muted">' + escapeHtml(m.date ? fmtDate(m.date) : 'без даты') + '</span>';
+    case 'arrival_date': return '<span class="text-muted">' + escapeHtml(fmtDate(m.arrival_date) || '—') + '</span>';
+    case 'producer': return '<span class="text-muted">' + escapeHtml(m.producer || '—') + '</span>';
+    case 'unit': return '<span class="text-muted">' + escapeHtml(m.unit || '—') + '</span>';
+    case 'quantity': return '<span class="text-muted">' + escapeHtml(fmtQty(m.quantity)) + '</span>';
+    case 'has_file':
+      return '<a class="text-accent text-xs" title="' + escapeHtml(m.folder || '') + '" href="/api/materials/pdf/' + encodeURIComponent(m.id || 0) + '">' + (materialHasFile(m) ? '📎' : '✎') + '</a>';
+    default: return escapeHtml(m[col.key] || '');
+  }
+}
+
+function matValue(m, col) {
+  if (col.key === 'has_file') return materialHasFile(m) ? 'Документ' : 'Причина (txt)';
+  if (col.date) return m[col.key] || '';
+  return String(m[col.key] || '') || '—';
+}
+
+function datesForKey(key) {
+  var seen = {};
+  materialsCache.forEach(function(m) { var v = m[key]; if (v) seen[v] = 1; });
+  return Object.keys(seen).sort();
+}
+
+function filteredAndSorted() {
+  var list = materialsCache.slice();
+  Object.keys(filters).forEach(function(key) {
+    var sel = filters[key];
+    if (!sel || !sel.length) return;
+    var col = MAT_COLS.filter(function(c) { return c.key === key; })[0];
+    var isDate = !!(col && col.date);
+    list = list.filter(function(m) {
+      var v = isDate ? (m[key] || '') : matValue(m, col);
+      return sel.indexOf(v) !== -1;
+    });
+  });
+  if (sort.key && sort.dir) {
+    var sc = MAT_COLS.filter(function(c) { return c.key === sort.key; })[0];
+    list.sort(function(a, b) {
+      var av = sc && sc.date ? (a[sc.key] || '') : String(a[sort.key] || '');
+      var bv = sc && sc.date ? (b[sc.key] || '') : String(b[sort.key] || '');
+      if (sc && sc.key === 'has_file') { av = matValue(a, sc); bv = matValue(b, sc); }
+      var r = av < bv ? -1 : (av > bv ? 1 : 0);
+      return sort.dir === 'desc' ? -r : r;
+    });
+  }
+  return list;
+}
+
+function renderMaterialsTable() {
+  var el = document.getElementById('materials-list');
+  var list = filteredAndSorted();
+  var total = materialsCache.length;
+  var cnt = document.getElementById('mat-count');
+  cnt.textContent = total ? list.length + ' / ' + total + ' зап.' : '0 зап.';
+  cnt.style.display = total ? '' : 'none';
+  if (!total) { el.innerHTML = '<span class="text-muted">Материалы не найдены</span>'; return; }
+  var html = '<table><thead><tr>';
+  MAT_COLS.forEach(function(col) {
+    var act = filters[col.key] && filters[col.key].length ? ' active' : '';
+    html += '<th>' + escapeHtml(col.label) + '<span class="mfn' + act + '" data-key="' + col.key +
+      '" onclick="openMatFilter(event, \'' + col.key + '\')">⏷</span></th>';
+  });
+  html += '<th></th></tr></thead><tbody>';
+  list.forEach(function(m) {
+    html += '<tr>';
+    MAT_COLS.forEach(function(col) { html += '<td>' + matCell(m, col) + '</td>'; });
+    html += '<td><button class="btn btn-danger btn-sm" onclick="deleteMat(' + (m.id || 0) + ')">🗑️</button></td></tr>';
+  });
+  html += '</tbody></table>';
+  el.innerHTML = html;
+}
+
+function uniqueValues(col) {
+  var map = {};
+  materialsCache.forEach(function(m) { var v = matValue(m, col); map[v] = (map[v] || 0) + 1; });
+  return Object.keys(map).map(function(k) { return { value: k, count: map[k] }; })
+    .sort(function(a, b) { return a.value.localeCompare(b.value, 'ru'); });
+}
+
+function textFilterHTML(col) {
+  var sel = filters[col.key] || [];
+  var h = '<div style="display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap;">' +
+    '<button type="button" class="btn btn-danger btn-sm" onclick="clearMatFilter(\'' + col.key + '\')">Сбросить</button></div>';
+  h += '<div class="mat-filter-list">';
+  uniqueValues(col).forEach(function(u) {
+    var c = sel.indexOf(u.value) !== -1 ? ' checked' : '';
+    h += '<label><input type="checkbox" name="' + col.key + '" value="' + escapeHtml(u.value) + '"' + c + '>' +
+      '<span>' + escapeHtml(u.value) + '</span><span class="text-muted"> ' + u.count + '</span></label>';
+  });
+  h += '</div>';
+  return h;
+}
+
+function yearSelected(key, y, allDates, sel) {
+  var inYear = allDates.filter(function(d) { return d.slice(0, 4) === y; });
+  var n = inYear.filter(function(d) { return sel.indexOf(d) !== -1; }).length;
+  return inYear.length > 0 && n === inYear.length;
+}
+
+function monthAllSelected(mo, allDates, sel) {
+  var inMonth = allDates.filter(function(d) { return d.slice(0, 7) === mo; });
+  var n = inMonth.filter(function(d) { return sel.indexOf(d) !== -1; }).length;
+  return inMonth.length > 0 && n === inMonth.length;
+}
+
+function dateFilterHTML(col) {
+  var key = col.key;
+  var allDates = datesForKey(key);
+  var sel = filters[key] || [];
+  var years = [];
+  allDates.forEach(function(d) { if (years.indexOf(d.slice(0, 4)) === -1) years.push(d.slice(0, 4)); });
+  years.sort(); years.reverse();
+  var h = '<div style="display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap;">' +
+    '<button type="button" class="btn btn-danger btn-sm" onclick="clearMatFilter(\'' + key + '\')">Сбросить</button>' +
+    '<button type="button" class="btn btn-sm' + (sort.key === key && sort.dir === 'desc' ? ' active' : '') + '" onclick="matSort(\'' + key + '\',\'desc\')">↓ Новые</button>' +
+    '<button type="button" class="btn btn-sm' + (sort.key === key && sort.dir === 'asc' ? ' active' : '') + '" onclick="matSort(\'' + key + '\',\'asc\')">↑ Старые</button></div>';
+  h += '<div class="mat-filter-list mat-filter-tree">';
+  var hasBlank = materialsCache.some(function(m) { return !m[col.key]; });
+  if (hasBlank) {
+    var bc = sel.indexOf('') !== -1 ? ' checked' : '';
+    h += '<label><input type="checkbox" name="' + key + '" data-date=""' + bc + '><span>(без даты)</span></label>';
+  }
+  years.forEach(function(y) {
+    var yName = y;
+    h += '<details><summary><label class="mf-tree-title"><input type="checkbox" name="' + key + '" data-year="' + y + '"' +
+      (yearSelected(key, y, allDates, sel) ? ' checked' : '') + '><span>' + yName + '</span></label></summary><ul>';
+    var months = [];
+    allDates.forEach(function(d) {
+      var mo = d.slice(0, 7);
+      if (mo.slice(0, 4) === y && months.indexOf(mo) === -1) months.push(mo);
+    });
+    months.sort(); months.reverse();
+    months.forEach(function(mo) {
+      var mIdx = parseInt(mo.slice(5, 7), 10) - 1;
+      h += '<li><details><summary><label class="mf-tree-title"><input type="checkbox" name="' + key + '" data-month="' + mo + '"' +
+        (monthAllSelected(mo, allDates, sel) ? ' checked' : '') + '><span>' + MONTHS_RU[mIdx] + '</span></label></summary><ul>';
+      var days = allDates.filter(function(d) { return d.slice(0, 7) === mo; })
+        .sort().reverse();
+      days.forEach(function(d) {
+        var dc = sel.indexOf(d) !== -1 ? ' checked' : '';
+        h += '<li><label><input type="checkbox" name="' + key + '" data-date="' + d + '"' + dc + '>' +
+          '<span>' + parseInt(d.slice(8, 10), 10) + ' ' + MONTHS_RU[mIdx].toLowerCase() + '</span></label></li>';
+      });
+      h += '</ul></details></li>';
+    });
+    h += '</ul></details>';
+  });
+  h += '</div>';
+  return h;
+}
+
+function findCol(key) {
+  for (var i = 0; i < MAT_COLS.length; i++) if (MAT_COLS[i].key === key) return MAT_COLS[i];
+  return null;
+}
+
+function openMatFilter(ev, key) {
+  ev.stopPropagation();
+  closeMatFilterPanel();
+  var col = findCol(key);
+  if (!col) return;
+  var rect = ev.target.getBoundingClientRect();
+  var panel = document.createElement('div');
+  panel.id = 'mat-filter-panel';
+  panel.className = 'mat-filter-panel';
+  panel.style.left = Math.max(4, rect.left) + 'px';
+  panel.style.top = (rect.bottom + 4) + 'px';
+  panel.innerHTML = col.date ? dateFilterHTML(col) : textFilterHTML(col);
+  panel.addEventListener('change', function(e) { onMatFilterChange(e, col); });
+  document.body.appendChild(panel);
+  var closer = function(e) {
+    var p = document.getElementById('mat-filter-panel');
+    if (!p) return;
+    if (p.contains(e.target)) return;
+    if (e.target && e.target.classList && e.target.classList.contains('mfn')) return;
+    closeMatFilterPanel();
+    document.removeEventListener('mousedown', closer, true);
+  };
+  document.addEventListener('mousedown', closer, true);
+}
+
+function closeMatFilterPanel() {
+  var p = document.getElementById('mat-filter-panel');
+  if (p) p.parentNode.removeChild(p);
+}
+
+function onMatFilterChange(e, col) {
+  var t = e.target;
+  if (!t || t.type !== 'checkbox') return;
+  var key = col.key;
+  var add = t.checked;
+  var sel = (filters[key] || []).slice();
+  function apply(date) {
+    var i = sel.indexOf(date);
+    if (add && i === -1) sel.push(date);
+    if (!add && i !== -1) sel.splice(i, 1);
+  }
+  if (t.dataset.year) {
+    datesForKey(key).filter(function(d) { return d.slice(0, 4) === t.dataset.year; }).forEach(apply);
+  } else if (t.dataset.month) {
+    datesForKey(key).filter(function(d) { return d.slice(0, 7) === t.dataset.month; }).forEach(apply);
+  } else if (t.dataset.date !== undefined) {
+    apply(t.dataset.date);
+  } else {
+    apply(t.value);
+  }
+  filters[key] = sel;
+  renderMaterialsTable();
+  updateFunnelStates();
+  if (col.date) refreshDateTree(key);
+}
+
+function refreshDateTree(key) {
+  var panel = document.getElementById('mat-filter-panel');
+  if (!panel || panel.dataset.rendered !== key) {
+    if (panel) panel.dataset.rendered = key;
+  }
+  var sel = filters[key] || [];
+  var allDates = datesForKey(key);
+  [].forEach.call(panel.querySelectorAll('input[data-year]'), function(cb) {
+    var inYear = allDates.filter(function(d) { return d.slice(0, 4) === cb.dataset.year; });
+    var n = inYear.filter(function(d) { return sel.indexOf(d) !== -1; }).length;
+    cb.indeterminate = inYear.length > 0 && n > 0 && n < inYear.length;
+    cb.checked = yearSelected(key, cb.dataset.year, allDates, sel);
+  });
+  [].forEach.call(panel.querySelectorAll('input[data-month]'), function(cb) {
+    var inMonth = allDates.filter(function(d) { return d.slice(0, 7) === cb.dataset.month; });
+    var n = inMonth.filter(function(d) { return sel.indexOf(d) !== -1; }).length;
+    cb.indeterminate = inMonth.length > 0 && n > 0 && n < inMonth.length;
+    cb.checked = inMonth.length > 0 && n === inMonth.length;
+  });
+}
+
+function clearMatFilter(key) {
+  filters[key] = [];
+  updateFunnelStates();
+  renderMaterialsTable();
+  var col = findCol(key);
+  var panel = document.getElementById('mat-filter-panel');
+  if (panel && col) panel.innerHTML = col.date ? dateFilterHTML(col) : textFilterHTML(col);
+}
+
+function matSort(key, dir) {
+  sort = { key: key, dir: dir };
+  renderMaterialsTable();
+  var panel = document.getElementById('mat-filter-panel');
+  if (panel) {
+    var col = findCol(key);
+    if (col) panel.innerHTML = col.date ? dateFilterHTML(col) : textFilterHTML(col);
+  }
+}
+
+function updateFunnelStates() {
+  [].forEach.call(document.querySelectorAll('.mfn'), function(fn) {
+    var k = fn.getAttribute('data-key');
+    fn.classList.toggle('active', !!(filters[k] && filters[k].length));
+  });
 }
 
 // =============================================================================
@@ -198,34 +553,8 @@ function hideReasonError() {
 function loadMaterials(q) {
   var url = q ? '/api/materials?q=' + encodeURIComponent(q) : '/api/materials';
   fetch(url).then(function(r) { return r.json(); }).then(function(d) {
-    var el = document.getElementById('materials-list');
-    var mats = d.materials || d || [];
-    document.getElementById('mat-count').textContent = mats.length + ' зап.';
-    document.getElementById('mat-count').style.display = mats.length ? '' : 'none';
-    if (!mats.length) {
-      el.innerHTML = '<span class="text-muted">Материалы не найдены</span>';
-      return;
-    }
-    var html = '<table><thead><tr>' +
-      '<th>Документ</th><th>Материал</th><th>№</th><th>Дата док.</th><th>Производитель</th>' +
-      '<th>Дата поступл.</th><th>Ед. изм.</th><th>Кол-во</th><th>Файл</th><th></th>' +
-      '</tr></thead><tbody>';
-    mats.forEach(function(m) {
-      html += '<tr>' +
-        '<td>' + escapeHtml(m.doc_name || '') + '</td>' +
-        '<td>' + escapeHtml(m.material_name || '') + '</td>' +
-        '<td class="text-muted">' + escapeHtml(m.number || '—') + '</td>' +
-        '<td class="text-muted">' + escapeHtml(fmtDate(m.date) || (m.date ? '—' : 'б/д')) + '</td>' +
-        '<td class="text-muted">' + escapeHtml(m.producer || '—') + '</td>' +
-        '<td class="text-muted">' + escapeHtml(fmtDate(m.arrival_date) || '—') + '</td>' +
-        '<td class="text-muted">' + escapeHtml(m.unit || '—') + '</td>' +
-        '<td class="text-muted">' + escapeHtml(fmtQty(m.quantity)) + '</td>' +
-        '<td><a class="text-accent text-xs" title="' + escapeHtml(m.folder || '') + '" href="/api/materials/pdf/' + encodeURIComponent(m.id || 0) + '">📎</a></td>' +
-        '<td><button class="btn btn-danger btn-sm" onclick="deleteMat(' + (m.id || 0) + ')">🗑️</button></td>' +
-        '</tr>';
-    });
-    html += '</tbody></table>';
-    el.innerHTML = html;
+    materialsCache = (d.materials || d || []).slice();
+    renderMaterialsTable();
   }).catch(function() {
     document.getElementById('materials-list').innerHTML = '<span class="text-danger">Ошибка</span>';
   });

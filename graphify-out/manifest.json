@@ -126,9 +126,9 @@
     "semantic_hash": ""
   },
   "tests/test_app_routes.py": {
-    "mtime": 1789629484.8576782,
-    "seen": 1789629525.144077,
-    "ast_hash": "cbd31e957e1b5e766fc88c9af79ef8f4",
+    "mtime": 1790426271.1141632,
+    "seen": 1790426364.2341294,
+    "ast_hash": "368c55b339d819c8569febadbd38e3cd",
     "semantic_hash": ""
   },
   "tests/test_converter_routes.py": {
@@ -432,9 +432,9 @@
     "semantic_hash": ""
   },
   "memory/11-routes-materials.md": {
-    "mtime": 1790425279.8058314,
-    "seen": 1790425290.7732,
-    "ast_hash": "8f129a33d2eecb49870deff553c57e1b",
+    "mtime": 1790426354.2101407,
+    "seen": 1790426364.2391958,
+    "ast_hash": "627fd3236821eeb286d52032f658ac44",
     "semantic_hash": ""
   },
   "memory/12-routes-registry.md": {
@@ -492,9 +492,9 @@
     "semantic_hash": ""
   },
   "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md": {
-    "mtime": 1790425645.5206468,
-    "seen": 1790425652.8254945,
-    "ast_hash": "e733ccc9c2c8861d46beac1b435ce8c3",
+    "mtime": 1790426347.844185,
+    "seen": 1790426364.2391958,
+    "ast_hash": "15e93957045d5073ea879e6d21b00f5b",
     "semantic_hash": ""
   },
   "mypy_errors.txt": {
@@ -546,9 +546,9 @@
     "semantic_hash": ""
   },
   "templates/materials.html": {
-    "mtime": 1790425598.057245,
-    "seen": 1790425652.8254945,
-    "ast_hash": "c60e2d300cec755c4eda128a1c717876",
+    "mtime": 1790426234.4343278,
+    "seen": 1790426364.2391958,
+    "ast_hash": "89ae8eac005dc7f7bb199011ce6fbb21",
     "semantic_hash": ""
   },
   "templates/registry_form.html": {

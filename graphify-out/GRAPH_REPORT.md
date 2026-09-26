@@ -1,7 +1,7 @@
 # Graph Report - pdf_magic_app  (2026-09-26)
 
 ## Corpus Check
-- 85 files · ~64,865 words
+- 85 files · ~66,823 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e5c73cd5`
+- Built from commit: `8f4d1b40`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 

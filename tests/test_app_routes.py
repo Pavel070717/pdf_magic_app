@@ -36,6 +36,15 @@ class TestPageRoutes:
     def test_materials_page(self, app_client):
         resp = app_client.get("/materials")
         assert resp.status_code == 200
+        html = resp.get_data(as_text=True)
+        # Галочка «Отсутствует сопроводительный документ» + скрытое поле причины
+        assert "mat-missing-doc" in html
+        assert "Отсутствует сопроводительный документ" in html
+        assert 'id="mat-reason-area"' in html
+        # Фильтры по столбцам + функция дерева дат
+        assert 'class="mfn' in html
+        assert "openMatFilter" in html
+        assert "dateFilterHTML" in html
 
 
 class TestHealthCheck:
