@@ -24,6 +24,7 @@ PROJECT_DIR/data/materials.db
 | `number` | TEXT | Номер |
 | `date` | TEXT | Дата паспорта |
 | `producer` | TEXT | Производитель |
+| `unit` | TEXT | Единица измерения (для datalist по ранее введённым) |
 | `arrival_date` | TEXT | Дата поступления (ISO `YYYY-MM-DD`) — имя папки хранения |
 | `quantity` | REAL | Количество (default 0) |
 | `folder` | TEXT | Имя папки поступления |
@@ -66,13 +67,14 @@ PROJECT_DIR/data/materials.db
 ## Ключевые функции
 
 ### Материалы
-- `_ensure_materials_new_schema(conn)` — миграция: при старой схеме пересоздаёт таблицу (добавляет `arrival_date`, `quantity`, `folder`)
-- `add_material(...)` → int — добавление (последние параметры `arrival_date`, `quantity`, `folder` со значениями по умолчанию)
+- `_ensure_materials_new_schema(conn)` — миграция: добавляет недостающие колонки (`arrival_date`, `quantity`, `folder`, `unit`) через `ALTER TABLE ADD COLUMN` без потери данных + индексы
+- `add_material(...)` → int — добавление (последние параметры `arrival_date`, `quantity`, `folder`, `unit` со значениями по умолчанию)
 - `get_all_materials()` → list[dict] — все (DESC по created_at)
 - `get_material(id)` → dict | None
 - `delete_material(id)` → bool
 - `search_materials(query)` → list[dict] — поиск по полям
-- `get_material_passports()` → list[dict] — уникальные комбинации (doc_name, material_name, number, date, producer) + label для селекта
+- `get_material_passports()` → list[dict] — уникальные комбинации (doc_name, material_name, number, date, producer, unit) + label
+- `get_material_units()` → list[str] — уникальные ранее введённые единицы измерения
 - `count_materials_in_folder(folder)` → int — число строк в папке поступления
 - `reset_materials()` → None — обнуляет только таблицу материалов
 

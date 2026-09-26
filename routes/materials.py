@@ -90,6 +90,7 @@ def add_material_endpoint():
         number = sanitize_text(request.form.get("number", ""))
         date = sanitize_text(request.form.get("date", ""))
         producer = sanitize_text(request.form.get("producer", ""))
+        unit = sanitize_text(request.form.get("unit", ""))
         arrival_input = sanitize_text(request.form.get("arrival_date", ""))
         quantity_raw = sanitize_text(request.form.get("quantity", "0"))
         file = request.files.get("file")
@@ -171,6 +172,7 @@ def add_material_endpoint():
             arrival_date=arrival_date,
             quantity=quantity,
             folder=folder_name,
+            unit=unit,
         )
 
         return jsonify(
@@ -194,9 +196,10 @@ def get_passports():
     try:
         rows = get_material_passports()
         for r in rows:
+            unit_part = f" · {r['unit']}" if r.get("unit") else ""
             r["label"] = (
                 (
-                    f"{r['doc_name']} {r['material_name']}"
+                    f"{r['doc_name']} {r['material_name']}{unit_part}"
                     f" (№ {r['number'] or '—'})"
                     f" от {_readable_date(r['date']) or 'б/д'} · {r['producer']}"
                 )
@@ -206,6 +209,17 @@ def get_passports():
         return jsonify({"success": True, "passports": rows})
     except Exception as e:
         logger.exception("Ошибка получения паспортов")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@materials_bp.route("/api/materials/units")
+def get_units():
+    from utils.database import get_material_units
+
+    try:
+        return jsonify({"success": True, "units": get_material_units()})
+    except Exception as e:
+        logger.exception("Ошибка получения единиц измерения")
         return jsonify({"success": False, "error": str(e)}), 500
 
 

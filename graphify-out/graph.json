@@ -134,19 +134,6 @@
       "source_location": "L8"
     },
     {
-      "id": "tests_test_magic_routes_teststartmagic",
-      "label": "TestStartMagic",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "load_state",
-      "file_type": "code",
-      "norm_label": "teststartmagic",
-      "source_file": "tests/test_magic_routes.py",
-      "source_location": "L74"
-    },
-    {
       "id": "tests_test_app_routes_testappconfig",
       "label": "TestAppConfig",
       "_callable": true,
@@ -355,19 +342,6 @@
       "source_location": "L333"
     },
     {
-      "id": "tests_test_directories_routes_testaddsubfolder",
-      "label": "TestAddSubfolder",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "test_directories_routes.py",
-      "file_type": "code",
-      "norm_label": "testaddsubfolder",
-      "source_file": "tests/test_directories_routes.py",
-      "source_location": "L132"
-    },
-    {
       "id": "tests_test_directories_routes_testcreatedirectory",
       "label": "TestCreateDirectory",
       "_callable": true,
@@ -379,19 +353,6 @@
       "norm_label": "testcreatedirectory",
       "source_file": "tests/test_directories_routes.py",
       "source_location": "L9"
-    },
-    {
-      "id": "tests_test_directories_routes_testdeletedirectory",
-      "label": "TestDeleteDirectory",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "test_directories_routes.py",
-      "file_type": "code",
-      "norm_label": "testdeletedirectory",
-      "source_file": "tests/test_directories_routes.py",
-      "source_location": "L85"
     },
     {
       "id": "tests_test_directories_routes_testgetcurrentdirectory",
@@ -431,19 +392,6 @@
       "norm_label": "testrecreatedirectory",
       "source_file": "tests/test_directories_routes.py",
       "source_location": "L257"
-    },
-    {
-      "id": "tests_test_directories_routes_testrenamedirectory",
-      "label": "TestRenameDirectory",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "test_directories_routes.py",
-      "file_type": "code",
-      "norm_label": "testrenamedirectory",
-      "source_file": "tests/test_directories_routes.py",
-      "source_location": "L192"
     },
     {
       "id": "tests_test_directories_routes_testscandirectories",
@@ -602,19 +550,6 @@
       "source_location": "L54"
     },
     {
-      "id": "tests_test_magic_routes_testcopyworker",
-      "label": "TestCopyWorker",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "test_magic_routes.py",
-      "file_type": "code",
-      "norm_label": "testcopyworker",
-      "source_file": "tests/test_magic_routes.py",
-      "source_location": "L139"
-    },
-    {
       "id": "tests_test_magic_routes_testgeneratenumberedfilename",
       "label": "TestGenerateNumberedFilename",
       "_callable": true,
@@ -654,6 +589,19 @@
       "source_location": "L365"
     },
     {
+      "id": "tests_test_magic_routes_teststripleadingnumber",
+      "label": "TestStripLeadingNumber",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_magic_routes.py",
+      "file_type": "code",
+      "norm_label": "teststripleadingnumber",
+      "source_file": "tests/test_magic_routes.py",
+      "source_location": "L34"
+    },
+    {
       "id": "tests_test_materials_routes_testdeletematerial",
       "label": "TestDeleteMaterial",
       "_callable": true,
@@ -664,7 +612,7 @@
       "file_type": "code",
       "norm_label": "testdeletematerial",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L326"
+      "source_location": "L392"
     },
     {
       "id": "tests_test_materials_routes_testgetmaterialpdf",
@@ -677,7 +625,7 @@
       "file_type": "code",
       "norm_label": "testgetmaterialpdf",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L305"
+      "source_location": "L371"
     },
     {
       "id": "tests_test_materials_routes_testgetmaterials",
@@ -693,19 +641,6 @@
       "source_location": "L9"
     },
     {
-      "id": "tests_test_materials_routes_testpassports",
-      "label": "TestPassports",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 30,
-      "community_name": "test_materials_routes.py",
-      "file_type": "code",
-      "norm_label": "testpassports",
-      "source_file": "tests/test_materials_routes.py",
-      "source_location": "L222"
-    },
-    {
       "id": "tests_test_materials_routes_testresetmaterials",
       "label": "TestResetMaterials",
       "_callable": true,
@@ -716,7 +651,20 @@
       "file_type": "code",
       "norm_label": "testresetmaterials",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L280"
+      "source_location": "L346"
+    },
+    {
+      "id": "tests_test_materials_routes_testunits",
+      "label": "TestUnits",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 30,
+      "community_name": "test_materials_routes.py",
+      "file_type": "code",
+      "norm_label": "testunits",
+      "source_file": "tests/test_materials_routes.py",
+      "source_location": "L222"
     },
     {
       "id": "tests_test_materials_routes_testaddmaterial",
@@ -1005,17 +953,30 @@
       "source_location": "L15"
     },
     {
-      "id": "tests_test_magic_routes_teststripleadingnumber",
-      "label": "TestStripLeadingNumber",
+      "id": "tests_test_magic_routes_testcopyworker",
+      "label": "TestCopyWorker",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 73,
-      "community_name": "strip_leading_number",
+      "community_name": "save_state",
       "file_type": "code",
-      "norm_label": "teststripleadingnumber",
+      "norm_label": "testcopyworker",
       "source_file": "tests/test_magic_routes.py",
-      "source_location": "L34"
+      "source_location": "L139"
+    },
+    {
+      "id": "tests_test_magic_routes_teststartmagic",
+      "label": "TestStartMagic",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 73,
+      "community_name": "save_state",
+      "file_type": "code",
+      "norm_label": "teststartmagic",
+      "source_file": "tests/test_magic_routes.py",
+      "source_location": "L74"
     },
     {
       "id": "tests_test_files_routes_testaddfilesfromdir",
@@ -1057,6 +1018,45 @@
       "source_location": "L10"
     },
     {
+      "id": "tests_test_directories_routes_testaddsubfolder",
+      "label": "TestAddSubfolder",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 77,
+      "community_name": "TestAddSubfolder",
+      "file_type": "code",
+      "norm_label": "testaddsubfolder",
+      "source_file": "tests/test_directories_routes.py",
+      "source_location": "L132"
+    },
+    {
+      "id": "tests_test_directories_routes_testrenamedirectory",
+      "label": "TestRenameDirectory",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "TestRenameDirectory",
+      "file_type": "code",
+      "norm_label": "testrenamedirectory",
+      "source_file": "tests/test_directories_routes.py",
+      "source_location": "L192"
+    },
+    {
+      "id": "tests_test_directories_routes_testdeletedirectory",
+      "label": "TestDeleteDirectory",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 79,
+      "community_name": "TestDeleteDirectory",
+      "file_type": "code",
+      "norm_label": "testdeletedirectory",
+      "source_file": "tests/test_directories_routes.py",
+      "source_location": "L85"
+    },
+    {
       "id": "tests_test_core_testbuildtreefromcreated",
       "label": "TestBuildTreeFromCreated",
       "_callable": true,
@@ -1068,6 +1068,19 @@
       "norm_label": "testbuildtreefromcreated",
       "source_file": "tests/test_core.py",
       "source_location": "L293"
+    },
+    {
+      "id": "tests_test_materials_routes_testpassports",
+      "label": "TestPassports",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 80,
+      "community_name": "TestPassports",
+      "file_type": "code",
+      "norm_label": "testpassports",
+      "source_file": "tests/test_materials_routes.py",
+      "source_location": "L269"
     },
     {
       "id": "tests_test_aocr_routes_testhelperfunctions",
@@ -3228,7 +3241,7 @@
       "file_type": "code",
       "norm_label": "get_requisites()",
       "source_file": "utils/database.py",
-      "source_location": "L382"
+      "source_location": "L391"
     },
     {
       "id": "utils_database_save_requisites",
@@ -3240,7 +3253,7 @@
       "file_type": "code",
       "norm_label": "save_requisites()",
       "source_file": "utils/database.py",
-      "source_location": "L392"
+      "source_location": "L401"
     },
     {
       "id": "reset_project_check_flask",
@@ -3531,42 +3544,6 @@
       "source_location": "L73"
     },
     {
-      "id": "routes_registry_get_registry_data",
-      "label": "get_registry_data()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "load_state",
-      "file_type": "code",
-      "norm_label": "get_registry_data()",
-      "source_file": "routes/registry.py",
-      "source_location": "L23"
-    },
-    {
-      "id": "routes_registry_get_registry_form",
-      "label": "get_registry_form()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "load_state",
-      "file_type": "code",
-      "norm_label": "get_registry_form()",
-      "source_file": "routes/registry.py",
-      "source_location": "L13"
-    },
-    {
-      "id": "routes_registry_save_registry_data",
-      "label": "save_registry_data()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "load_state",
-      "file_type": "code",
-      "norm_label": "save_registry_data()",
-      "source_file": "routes/registry.py",
-      "source_location": "L41"
-    },
-    {
       "id": "tests_test_dashboard_routes_testdashboardstats_test_activity_data_length",
       "label": ".test_activity_data_length()",
       "_callable": true,
@@ -3651,90 +3628,6 @@
       "source_location": "L31"
     },
     {
-      "id": "tests_test_directories_routes_testcreatedirectory_test_is_creating_lock",
-      "label": ".test_is_creating_lock()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "load_state",
-      "file_type": "code",
-      "norm_label": ".test_is_creating_lock()",
-      "source_file": "tests/test_directories_routes.py",
-      "source_location": "L46"
-    },
-    {
-      "id": "tests_test_directories_routes_testrecreatedirectory_test_recreate_success",
-      "label": ".test_recreate_success()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "load_state",
-      "file_type": "code",
-      "norm_label": ".test_recreate_success()",
-      "source_file": "tests/test_directories_routes.py",
-      "source_location": "L282"
-    },
-    {
-      "id": "tests_test_magic_routes_teststartmagic_test_existing_numbered_files",
-      "label": ".test_existing_numbered_files()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "load_state",
-      "file_type": "code",
-      "norm_label": ".test_existing_numbered_files()",
-      "source_file": "tests/test_magic_routes.py",
-      "source_location": "L92"
-    },
-    {
-      "id": "tests_test_magic_routes_teststartmagic_test_invalid_target_dir_fallback",
-      "label": ".test_invalid_target_dir_fallback()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "load_state",
-      "file_type": "code",
-      "norm_label": ".test_invalid_target_dir_fallback()",
-      "source_file": "tests/test_magic_routes.py",
-      "source_location": "L125"
-    },
-    {
-      "id": "tests_test_magic_routes_teststartmagic_test_no_files_in_state",
-      "label": ".test_no_files_in_state()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "load_state",
-      "file_type": "code",
-      "norm_label": ".test_no_files_in_state()",
-      "source_file": "tests/test_magic_routes.py",
-      "source_location": "L75"
-    },
-    {
-      "id": "tests_test_magic_routes_teststartmagic_test_nonexistent_target_dir",
-      "label": ".test_nonexistent_target_dir()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "load_state",
-      "file_type": "code",
-      "norm_label": ".test_nonexistent_target_dir()",
-      "source_file": "tests/test_magic_routes.py",
-      "source_location": "L84"
-    },
-    {
-      "id": "tests_test_magic_routes_teststartmagic_test_success_starts_thread",
-      "label": ".test_success_starts_thread()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "load_state",
-      "file_type": "code",
-      "norm_label": ".test_success_starts_thread()",
-      "source_file": "tests/test_magic_routes.py",
-      "source_location": "L108"
-    },
-    {
       "id": "tests_test_state_test_concurrent_saves",
       "label": "test_concurrent_saves()",
       "_callable": true,
@@ -3807,18 +3700,6 @@
       "source_location": "L90"
     },
     {
-      "id": "utils_state_atomic_save",
-      "label": "_atomic_save()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "load_state",
-      "file_type": "code",
-      "norm_label": "_atomic_save()",
-      "source_file": "utils/state.py",
-      "source_location": "L36"
-    },
-    {
       "id": "utils_state_load_state",
       "label": "load_state()",
       "_callable": true,
@@ -3829,18 +3710,6 @@
       "norm_label": "load_state()",
       "source_file": "utils/state.py",
       "source_location": "L19"
-    },
-    {
-      "id": "utils_state_save_state",
-      "label": "save_state()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "load_state",
-      "file_type": "code",
-      "norm_label": "save_state()",
-      "source_file": "utils/state.py",
-      "source_location": "L31"
     },
     {
       "id": "app_aocr_page",
@@ -4767,6 +4636,18 @@
       "source_location": "L17"
     },
     {
+      "id": "routes_requisites_create_object",
+      "label": "create_object()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "requisites.py",
+      "file_type": "code",
+      "norm_label": "create_object()",
+      "source_file": "routes/requisites.py",
+      "source_location": "L47"
+    },
+    {
       "id": "routes_requisites_get_aocr_data",
       "label": "get_aocr_data()",
       "_callable": true,
@@ -4848,7 +4729,7 @@
       "file_type": "code",
       "norm_label": "delete_object()",
       "source_file": "utils/database.py",
-      "source_location": "L369"
+      "source_location": "L378"
     },
     {
       "id": "utils_database_get_objects",
@@ -4860,7 +4741,7 @@
       "file_type": "code",
       "norm_label": "get_objects()",
       "source_file": "utils/database.py",
-      "source_location": "L350"
+      "source_location": "L359"
     },
     {
       "id": "routes_rules_api_add_replace_rule",
@@ -5436,7 +5317,7 @@
       "file_type": "code",
       "norm_label": "delete_material_endpoint()",
       "source_file": "routes/materials.py",
-      "source_location": "L258"
+      "source_location": "L272"
     },
     {
       "id": "routes_materials_get_material_pdf",
@@ -5448,7 +5329,7 @@
       "file_type": "code",
       "norm_label": "get_material_pdf()",
       "source_file": "routes/materials.py",
-      "source_location": "L236"
+      "source_location": "L250"
     },
     {
       "id": "routes_materials_get_passports",
@@ -5460,7 +5341,19 @@
       "file_type": "code",
       "norm_label": "get_passports()",
       "source_file": "routes/materials.py",
-      "source_location": "L191"
+      "source_location": "L193"
+    },
+    {
+      "id": "routes_materials_get_units",
+      "label": "get_units()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "materials.py",
+      "file_type": "code",
+      "norm_label": "get_units()",
+      "source_file": "routes/materials.py",
+      "source_location": "L216"
     },
     {
       "id": "routes_materials_next_file_number",
@@ -5508,7 +5401,7 @@
       "file_type": "code",
       "norm_label": "reset_materials_endpoint()",
       "source_file": "routes/materials.py",
-      "source_location": "L213"
+      "source_location": "L227"
     },
     {
       "id": "routes_materials_safe_name",
@@ -5532,7 +5425,7 @@
       "file_type": "code",
       "norm_label": "count_materials_in_folder()",
       "source_file": "utils/database.py",
-      "source_location": "L181"
+      "source_location": "L190"
     },
     {
       "id": "utils_database_get_material_passports",
@@ -5544,7 +5437,19 @@
       "file_type": "code",
       "norm_label": "get_material_passports()",
       "source_file": "utils/database.py",
-      "source_location": "L167"
+      "source_location": "L163"
+    },
+    {
+      "id": "utils_database_get_material_units",
+      "label": "get_material_units()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "materials.py",
+      "file_type": "code",
+      "norm_label": "get_material_units()",
+      "source_file": "utils/database.py",
+      "source_location": "L177"
     },
     {
       "id": "utils_database_reset_materials",
@@ -5556,7 +5461,7 @@
       "file_type": "code",
       "norm_label": "reset_materials()",
       "source_file": "utils/database.py",
-      "source_location": "L192"
+      "source_location": "L201"
     },
     {
       "id": "tests_test_msg_routes_post_items",
@@ -5715,78 +5620,6 @@
       "source_location": "L69"
     },
     {
-      "id": "tests_test_directories_routes_testaddsubfolder_test_folder_already_exists",
-      "label": ".test_folder_already_exists()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "test_directories_routes.py",
-      "file_type": "code",
-      "norm_label": ".test_folder_already_exists()",
-      "source_file": "tests/test_directories_routes.py",
-      "source_location": "L169"
-    },
-    {
-      "id": "tests_test_directories_routes_testaddsubfolder_test_invalid_folder_name",
-      "label": ".test_invalid_folder_name()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "test_directories_routes.py",
-      "file_type": "code",
-      "norm_label": ".test_invalid_folder_name()",
-      "source_file": "tests/test_directories_routes.py",
-      "source_location": "L149"
-    },
-    {
-      "id": "tests_test_directories_routes_testaddsubfolder_test_missing_fields",
-      "label": ".test_missing_fields()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "test_directories_routes.py",
-      "file_type": "code",
-      "norm_label": ".test_missing_fields()",
-      "source_file": "tests/test_directories_routes.py",
-      "source_location": "L141"
-    },
-    {
-      "id": "tests_test_directories_routes_testaddsubfolder_test_no_data",
-      "label": ".test_no_data()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "test_directories_routes.py",
-      "file_type": "code",
-      "norm_label": ".test_no_data()",
-      "source_file": "tests/test_directories_routes.py",
-      "source_location": "L133"
-    },
-    {
-      "id": "tests_test_directories_routes_testaddsubfolder_test_parent_not_found",
-      "label": ".test_parent_not_found()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "test_directories_routes.py",
-      "file_type": "code",
-      "norm_label": ".test_parent_not_found()",
-      "source_file": "tests/test_directories_routes.py",
-      "source_location": "L159"
-    },
-    {
-      "id": "tests_test_directories_routes_testaddsubfolder_test_success",
-      "label": ".test_success()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "test_directories_routes.py",
-      "file_type": "code",
-      "norm_label": ".test_success()",
-      "source_file": "tests/test_directories_routes.py",
-      "source_location": "L180"
-    },
-    {
       "id": "tests_test_directories_routes_testcreatedirectory_test_empty_project_code",
       "label": ".test_empty_project_code()",
       "_callable": true,
@@ -5809,6 +5642,18 @@
       "norm_label": ".test_invalid_project_code()",
       "source_file": "tests/test_directories_routes.py",
       "source_location": "L35"
+    },
+    {
+      "id": "tests_test_directories_routes_testcreatedirectory_test_is_creating_lock",
+      "label": ".test_is_creating_lock()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "test_directories_routes.py",
+      "file_type": "code",
+      "norm_label": ".test_is_creating_lock()",
+      "source_file": "tests/test_directories_routes.py",
+      "source_location": "L46"
     },
     {
       "id": "tests_test_directories_routes_testcreatedirectory_test_no_data",
@@ -5857,66 +5702,6 @@
       "norm_label": ".test_whitespace_project_code()",
       "source_file": "tests/test_directories_routes.py",
       "source_location": "L27"
-    },
-    {
-      "id": "tests_test_directories_routes_testdeletedirectory_test_delete_existing_dir",
-      "label": ".test_delete_existing_dir()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "test_directories_routes.py",
-      "file_type": "code",
-      "norm_label": ".test_delete_existing_dir()",
-      "source_file": "tests/test_directories_routes.py",
-      "source_location": "L120"
-    },
-    {
-      "id": "tests_test_directories_routes_testdeletedirectory_test_delete_nonexistent_dir",
-      "label": ".test_delete_nonexistent_dir()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "test_directories_routes.py",
-      "file_type": "code",
-      "norm_label": ".test_delete_nonexistent_dir()",
-      "source_file": "tests/test_directories_routes.py",
-      "source_location": "L110"
-    },
-    {
-      "id": "tests_test_directories_routes_testdeletedirectory_test_empty_path",
-      "label": ".test_empty_path()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "test_directories_routes.py",
-      "file_type": "code",
-      "norm_label": ".test_empty_path()",
-      "source_file": "tests/test_directories_routes.py",
-      "source_location": "L94"
-    },
-    {
-      "id": "tests_test_directories_routes_testdeletedirectory_test_no_data",
-      "label": ".test_no_data()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "test_directories_routes.py",
-      "file_type": "code",
-      "norm_label": ".test_no_data()",
-      "source_file": "tests/test_directories_routes.py",
-      "source_location": "L86"
-    },
-    {
-      "id": "tests_test_directories_routes_testdeletedirectory_test_path_not_on_desktop",
-      "label": ".test_path_not_on_desktop()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "test_directories_routes.py",
-      "file_type": "code",
-      "norm_label": ".test_path_not_on_desktop()",
-      "source_file": "tests/test_directories_routes.py",
-      "source_location": "L102"
     },
     {
       "id": "tests_test_directories_routes_testgetcurrentdirectory_test_get_current",
@@ -5979,76 +5764,16 @@
       "source_location": "L274"
     },
     {
-      "id": "tests_test_directories_routes_testrenamedirectory_test_invalid_new_name",
-      "label": ".test_invalid_new_name()",
+      "id": "tests_test_directories_routes_testrecreatedirectory_test_recreate_success",
+      "label": ".test_recreate_success()",
       "_callable": true,
       "_origin": "ast",
       "community": 23,
       "community_name": "test_directories_routes.py",
       "file_type": "code",
-      "norm_label": ".test_invalid_new_name()",
+      "norm_label": ".test_recreate_success()",
       "source_file": "tests/test_directories_routes.py",
-      "source_location": "L209"
-    },
-    {
-      "id": "tests_test_directories_routes_testrenamedirectory_test_missing_fields",
-      "label": ".test_missing_fields()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "test_directories_routes.py",
-      "file_type": "code",
-      "norm_label": ".test_missing_fields()",
-      "source_file": "tests/test_directories_routes.py",
-      "source_location": "L201"
-    },
-    {
-      "id": "tests_test_directories_routes_testrenamedirectory_test_new_name_conflict",
-      "label": ".test_new_name_conflict()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "test_directories_routes.py",
-      "file_type": "code",
-      "norm_label": ".test_new_name_conflict()",
-      "source_file": "tests/test_directories_routes.py",
-      "source_location": "L232"
-    },
-    {
-      "id": "tests_test_directories_routes_testrenamedirectory_test_no_data",
-      "label": ".test_no_data()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "test_directories_routes.py",
-      "file_type": "code",
-      "norm_label": ".test_no_data()",
-      "source_file": "tests/test_directories_routes.py",
-      "source_location": "L193"
-    },
-    {
-      "id": "tests_test_directories_routes_testrenamedirectory_test_nonexistent_folder",
-      "label": ".test_nonexistent_folder()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "test_directories_routes.py",
-      "file_type": "code",
-      "norm_label": ".test_nonexistent_folder()",
-      "source_file": "tests/test_directories_routes.py",
-      "source_location": "L219"
-    },
-    {
-      "id": "tests_test_directories_routes_testrenamedirectory_test_success",
-      "label": ".test_success()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "test_directories_routes.py",
-      "file_type": "code",
-      "norm_label": ".test_success()",
-      "source_file": "tests/test_directories_routes.py",
-      "source_location": "L244"
+      "source_location": "L282"
     },
     {
       "id": "tests_test_directories_routes_testscandirectories_test_scan",
@@ -6708,7 +6433,7 @@
       "file_type": "code",
       "norm_label": "add_conversion()",
       "source_file": "utils/database.py",
-      "source_location": "L224"
+      "source_location": "L233"
     },
     {
       "id": "utils_database_delete_conversion",
@@ -6720,7 +6445,7 @@
       "file_type": "code",
       "norm_label": "delete_conversion()",
       "source_file": "utils/database.py",
-      "source_location": "L248"
+      "source_location": "L257"
     },
     {
       "id": "utils_database_get_conversions",
@@ -6732,7 +6457,7 @@
       "file_type": "code",
       "norm_label": "get_conversions()",
       "source_file": "utils/database.py",
-      "source_location": "L237"
+      "source_location": "L246"
     },
     {
       "id": "utils_database_init_converter_db",
@@ -6744,7 +6469,7 @@
       "file_type": "code",
       "norm_label": "init_converter_db()",
       "source_file": "utils/database.py",
-      "source_location": "L206"
+      "source_location": "L215"
     },
     {
       "id": "utils_database_update_conversion_status",
@@ -6756,7 +6481,31 @@
       "file_type": "code",
       "norm_label": "update_conversion_status()",
       "source_file": "utils/database.py",
-      "source_location": "L258"
+      "source_location": "L267"
+    },
+    {
+      "id": "routes_core_ensure_app_dirs",
+      "label": "ensure_app_dirs()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "core.py",
+      "file_type": "code",
+      "norm_label": "ensure_app_dirs()",
+      "source_file": "routes/core.py",
+      "source_location": "L99"
+    },
+    {
+      "id": "routes_core_setup_logging",
+      "label": "setup_logging()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "core.py",
+      "file_type": "code",
+      "norm_label": "setup_logging()",
+      "source_file": "routes/core.py",
+      "source_location": "L20"
     },
     {
       "id": "routes_dashboard_get_dashboard_stats",
@@ -6764,7 +6513,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 28,
-      "community_name": "Flask",
+      "community_name": "core.py",
       "file_type": "code",
       "norm_label": "get_dashboard_stats()",
       "source_file": "routes/dashboard.py",
@@ -6776,11 +6525,47 @@
       "_callable": true,
       "_origin": "ast",
       "community": 28,
-      "community_name": "Flask",
+      "community_name": "core.py",
       "file_type": "code",
       "norm_label": "register_blueprints()",
       "source_file": "routes/__init__.py",
       "source_location": "L8"
+    },
+    {
+      "id": "routes_registry_get_registry_data",
+      "label": "get_registry_data()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "core.py",
+      "file_type": "code",
+      "norm_label": "get_registry_data()",
+      "source_file": "routes/registry.py",
+      "source_location": "L23"
+    },
+    {
+      "id": "routes_registry_get_registry_form",
+      "label": "get_registry_form()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "core.py",
+      "file_type": "code",
+      "norm_label": "get_registry_form()",
+      "source_file": "routes/registry.py",
+      "source_location": "L13"
+    },
+    {
+      "id": "routes_registry_save_registry_data",
+      "label": "save_registry_data()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "core.py",
+      "file_type": "code",
+      "norm_label": "save_registry_data()",
+      "source_file": "routes/registry.py",
+      "source_location": "L41"
     },
     {
       "id": "routes_state_clear_state",
@@ -6788,23 +6573,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 28,
-      "community_name": "Flask",
+      "community_name": "core.py",
       "file_type": "code",
       "norm_label": "clear_state()",
       "source_file": "routes/state.py",
       "source_location": "L15"
-    },
-    {
-      "id": "routes_core_ensure_app_dirs",
-      "label": "ensure_app_dirs()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "core.py",
-      "file_type": "code",
-      "norm_label": "ensure_app_dirs()",
-      "source_file": "routes/core.py",
-      "source_location": "L99"
     },
     {
       "id": "routes_core_sanitize_upload_name",
@@ -6812,23 +6585,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 29,
-      "community_name": "core.py",
+      "community_name": "files.py",
       "file_type": "code",
       "norm_label": "sanitize_upload_name()",
       "source_file": "routes/core.py",
       "source_location": "L144"
-    },
-    {
-      "id": "routes_core_setup_logging",
-      "label": "setup_logging()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "core.py",
-      "file_type": "code",
-      "norm_label": "setup_logging()",
-      "source_file": "routes/core.py",
-      "source_location": "L20"
     },
     {
       "id": "routes_files_add_files",
@@ -6836,7 +6597,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 29,
-      "community_name": "core.py",
+      "community_name": "files.py",
       "file_type": "code",
       "norm_label": "add_files()",
       "source_file": "routes/files.py",
@@ -6848,7 +6609,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 29,
-      "community_name": "core.py",
+      "community_name": "files.py",
       "file_type": "code",
       "norm_label": "add_files_from_dir()",
       "source_file": "routes/files.py",
@@ -6860,7 +6621,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 29,
-      "community_name": "core.py",
+      "community_name": "files.py",
       "file_type": "code",
       "norm_label": "clear_files()",
       "source_file": "routes/files.py",
@@ -6872,7 +6633,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 29,
-      "community_name": "core.py",
+      "community_name": "files.py",
       "file_type": "code",
       "norm_label": "_collect_dir_files()",
       "source_file": "routes/files.py",
@@ -6884,7 +6645,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 29,
-      "community_name": "core.py",
+      "community_name": "files.py",
       "file_type": "code",
       "norm_label": "get_files()",
       "source_file": "routes/files.py",
@@ -6896,7 +6657,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 29,
-      "community_name": "core.py",
+      "community_name": "files.py",
       "file_type": "code",
       "norm_label": "remove_file()",
       "source_file": "routes/files.py",
@@ -6908,7 +6669,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 29,
-      "community_name": "core.py",
+      "community_name": "files.py",
       "file_type": "code",
       "norm_label": "reorder_files()",
       "source_file": "routes/files.py",
@@ -6927,18 +6688,6 @@
       "source_location": "L45"
     },
     {
-      "id": "routes_magic_copy_files_worker",
-      "label": "copy_files_worker()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "test_magic_routes.py",
-      "file_type": "code",
-      "norm_label": "copy_files_worker()",
-      "source_file": "routes/magic.py",
-      "source_location": "L157"
-    },
-    {
       "id": "routes_magic_generate_numbered_filename",
       "label": "generate_numbered_filename()",
       "_callable": true,
@@ -6949,6 +6698,18 @@
       "norm_label": "generate_numbered_filename()",
       "source_file": "routes/magic.py",
       "source_location": "L30"
+    },
+    {
+      "id": "routes_magic_strip_leading_number",
+      "label": "strip_leading_number()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_magic_routes.py",
+      "file_type": "code",
+      "norm_label": "strip_leading_number()",
+      "source_file": "routes/magic.py",
+      "source_location": "L36"
     },
     {
       "id": "tests_test_magic_routes_testcancelmagic_test_cancel",
@@ -7035,54 +6796,6 @@
       "source_location": "L58"
     },
     {
-      "id": "tests_test_magic_routes_testcopyworker_test_aosr_xlsx_not_copied_but_name_used",
-      "label": ".test_aosr_xlsx_not_copied_but_name_used()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "test_magic_routes.py",
-      "file_type": "code",
-      "norm_label": ".test_aosr_xlsx_not_copied_but_name_used()",
-      "source_file": "tests/test_magic_routes.py",
-      "source_location": "L177"
-    },
-    {
-      "id": "tests_test_magic_routes_testcopyworker_test_comma_in_name_survives_copy_and_registry",
-      "label": ".test_comma_in_name_survives_copy_and_registry()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "test_magic_routes.py",
-      "file_type": "code",
-      "norm_label": ".test_comma_in_name_survives_copy_and_registry()",
-      "source_file": "tests/test_magic_routes.py",
-      "source_location": "L140"
-    },
-    {
-      "id": "tests_test_magic_routes_testcopyworker_test_no_upload_dedup_suffix_in_output",
-      "label": ".test_no_upload_dedup_suffix_in_output()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "test_magic_routes.py",
-      "file_type": "code",
-      "norm_label": ".test_no_upload_dedup_suffix_in_output()",
-      "source_file": "tests/test_magic_routes.py",
-      "source_location": "L297"
-    },
-    {
-      "id": "tests_test_magic_routes_testcopyworker_test_rules_apply_only_in_registry_not_to_filename",
-      "label": ".test_rules_apply_only_in_registry_not_to_filename()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "test_magic_routes.py",
-      "file_type": "code",
-      "norm_label": ".test_rules_apply_only_in_registry_not_to_filename()",
-      "source_file": "tests/test_magic_routes.py",
-      "source_location": "L242"
-    },
-    {
       "id": "tests_test_magic_routes_testgeneratenumberedfilename_test_basic",
       "label": ".test_basic()",
       "_callable": true,
@@ -7155,6 +6868,78 @@
       "source_location": "L366"
     },
     {
+      "id": "tests_test_magic_routes_teststripleadingnumber_test_double_prefix",
+      "label": ".test_double_prefix()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_magic_routes.py",
+      "file_type": "code",
+      "norm_label": ".test_double_prefix()",
+      "source_file": "tests/test_magic_routes.py",
+      "source_location": "L38"
+    },
+    {
+      "id": "tests_test_magic_routes_teststripleadingnumber_test_multi_part_prefix",
+      "label": ".test_multi_part_prefix()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_magic_routes.py",
+      "file_type": "code",
+      "norm_label": ".test_multi_part_prefix()",
+      "source_file": "tests/test_magic_routes.py",
+      "source_location": "L41"
+    },
+    {
+      "id": "tests_test_magic_routes_teststripleadingnumber_test_no_prefix",
+      "label": ".test_no_prefix()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_magic_routes.py",
+      "file_type": "code",
+      "norm_label": ".test_no_prefix()",
+      "source_file": "tests/test_magic_routes.py",
+      "source_location": "L47"
+    },
+    {
+      "id": "tests_test_magic_routes_teststripleadingnumber_test_prefix_with_space",
+      "label": ".test_prefix_with_space()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_magic_routes.py",
+      "file_type": "code",
+      "norm_label": ".test_prefix_with_space()",
+      "source_file": "tests/test_magic_routes.py",
+      "source_location": "L50"
+    },
+    {
+      "id": "tests_test_magic_routes_teststripleadingnumber_test_single_prefix",
+      "label": ".test_single_prefix()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_magic_routes.py",
+      "file_type": "code",
+      "norm_label": ".test_single_prefix()",
+      "source_file": "tests/test_magic_routes.py",
+      "source_location": "L35"
+    },
+    {
+      "id": "tests_test_magic_routes_teststripleadingnumber_test_year_not_stripped",
+      "label": ".test_year_not_stripped()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_magic_routes.py",
+      "file_type": "code",
+      "norm_label": ".test_year_not_stripped()",
+      "source_file": "tests/test_magic_routes.py",
+      "source_location": "L44"
+    },
+    {
       "id": "tests_test_materials_routes_testdeletematerial_test_delete_existing",
       "label": ".test_delete_existing()",
       "_callable": true,
@@ -7164,7 +6949,7 @@
       "file_type": "code",
       "norm_label": ".test_delete_existing()",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L331"
+      "source_location": "L397"
     },
     {
       "id": "tests_test_materials_routes_testdeletematerial_test_nonexistent",
@@ -7176,7 +6961,7 @@
       "file_type": "code",
       "norm_label": ".test_nonexistent()",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L327"
+      "source_location": "L393"
     },
     {
       "id": "tests_test_materials_routes_testgetmaterialpdf_test_material_pdf_not_found",
@@ -7188,7 +6973,7 @@
       "file_type": "code",
       "norm_label": ".test_material_pdf_not_found()",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L310"
+      "source_location": "L376"
     },
     {
       "id": "tests_test_materials_routes_testgetmaterialpdf_test_nonexistent_material",
@@ -7200,7 +6985,7 @@
       "file_type": "code",
       "norm_label": ".test_nonexistent_material()",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L306"
+      "source_location": "L372"
     },
     {
       "id": "tests_test_materials_routes_testgetmaterials_test_empty_list",
@@ -7239,30 +7024,6 @@
       "source_location": "L21"
     },
     {
-      "id": "tests_test_materials_routes_testpassports_test_passport_without_date_label",
-      "label": ".test_passport_without_date_label()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 30,
-      "community_name": "test_materials_routes.py",
-      "file_type": "code",
-      "norm_label": ".test_passport_without_date_label()",
-      "source_file": "tests/test_materials_routes.py",
-      "source_location": "L223"
-    },
-    {
-      "id": "tests_test_materials_routes_testpassports_test_passports_list_groups_unique",
-      "label": ".test_passports_list_groups_unique()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 30,
-      "community_name": "test_materials_routes.py",
-      "file_type": "code",
-      "norm_label": ".test_passports_list_groups_unique()",
-      "source_file": "tests/test_materials_routes.py",
-      "source_location": "L242"
-    },
-    {
       "id": "tests_test_materials_routes_testresetmaterials_test_reset_clears_section",
       "label": ".test_reset_clears_section()",
       "_callable": true,
@@ -7272,7 +7033,43 @@
       "file_type": "code",
       "norm_label": ".test_reset_clears_section()",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L281"
+      "source_location": "L347"
+    },
+    {
+      "id": "tests_test_materials_routes_testunits_test_add_saves_unit",
+      "label": ".test_add_saves_unit()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 30,
+      "community_name": "test_materials_routes.py",
+      "file_type": "code",
+      "norm_label": ".test_add_saves_unit()",
+      "source_file": "tests/test_materials_routes.py",
+      "source_location": "L248"
+    },
+    {
+      "id": "tests_test_materials_routes_testunits_test_units_collect_previously_entered",
+      "label": ".test_units_collect_previously_entered()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 30,
+      "community_name": "test_materials_routes.py",
+      "file_type": "code",
+      "norm_label": ".test_units_collect_previously_entered()",
+      "source_file": "tests/test_materials_routes.py",
+      "source_location": "L228"
+    },
+    {
+      "id": "tests_test_materials_routes_testunits_test_units_empty",
+      "label": ".test_units_empty()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 30,
+      "community_name": "test_materials_routes.py",
+      "file_type": "code",
+      "norm_label": ".test_units_empty()",
+      "source_file": "tests/test_materials_routes.py",
+      "source_location": "L223"
     },
     {
       "id": "tests_test_materials_routes_testaddmaterial_test_add_without_optional_fields",
@@ -7935,18 +7732,6 @@
       "source_location": "L13"
     },
     {
-      "id": "routes_requisites_create_object",
-      "label": "create_object()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "init_requisites_db",
-      "file_type": "code",
-      "norm_label": "create_object()",
-      "source_file": "routes/requisites.py",
-      "source_location": "L47"
-    },
-    {
       "id": "tests_test_database_requisites_testobjects_test_add_object",
       "label": ".test_add_object()",
       "_callable": true,
@@ -8052,7 +7837,7 @@
       "file_type": "code",
       "norm_label": "add_object()",
       "source_file": "utils/database.py",
-      "source_location": "L359"
+      "source_location": "L368"
     },
     {
       "id": "utils_database_init_requisites_db",
@@ -8064,7 +7849,7 @@
       "file_type": "code",
       "norm_label": "init_requisites_db()",
       "source_file": "utils/database.py",
-      "source_location": "L272"
+      "source_location": "L281"
     },
     {
       "id": "tests_test_security_testinputvalidation_test_add_rule_empty_from",
@@ -8340,7 +8125,7 @@
       "file_type": "code",
       "norm_label": "add_material()",
       "source_file": "utils/database.py",
-      "source_location": "L79"
+      "source_location": "L73"
     },
     {
       "id": "utils_database_delete_material",
@@ -8352,7 +8137,7 @@
       "file_type": "code",
       "norm_label": "delete_material()",
       "source_file": "utils/database.py",
-      "source_location": "L139"
+      "source_location": "L135"
     },
     {
       "id": "utils_database_ensure_materials_new_schema",
@@ -8364,7 +8149,7 @@
       "file_type": "code",
       "norm_label": "_ensure_materials_new_schema()",
       "source_file": "utils/database.py",
-      "source_location": "L46"
+      "source_location": "L47"
     },
     {
       "id": "utils_database_get_all_materials",
@@ -8376,7 +8161,7 @@
       "file_type": "code",
       "norm_label": "get_all_materials()",
       "source_file": "utils/database.py",
-      "source_location": "L116"
+      "source_location": "L112"
     },
     {
       "id": "utils_database_get_db",
@@ -8400,7 +8185,7 @@
       "file_type": "code",
       "norm_label": "get_material()",
       "source_file": "utils/database.py",
-      "source_location": "L129"
+      "source_location": "L125"
     },
     {
       "id": "utils_database_init_db",
@@ -8424,7 +8209,7 @@
       "file_type": "code",
       "norm_label": "search_materials()",
       "source_file": "utils/database.py",
-      "source_location": "L149"
+      "source_location": "L145"
     },
     {
       "id": "routes_core_sanitize_text",
@@ -9075,100 +8860,160 @@
       "source_location": "L144"
     },
     {
+      "id": "routes_magic_copy_files_worker",
+      "label": "copy_files_worker()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 73,
+      "community_name": "save_state",
+      "file_type": "code",
+      "norm_label": "copy_files_worker()",
+      "source_file": "routes/magic.py",
+      "source_location": "L157"
+    },
+    {
       "id": "routes_magic_start_magic",
       "label": "start_magic()",
       "_callable": true,
       "_origin": "ast",
-      "community": 72,
-      "community_name": "magic.py",
+      "community": 73,
+      "community_name": "save_state",
       "file_type": "code",
       "norm_label": "start_magic()",
       "source_file": "routes/magic.py",
       "source_location": "L52"
     },
     {
-      "id": "routes_magic_strip_leading_number",
-      "label": "strip_leading_number()",
+      "id": "tests_test_magic_routes_testcopyworker_test_aosr_xlsx_not_copied_but_name_used",
+      "label": ".test_aosr_xlsx_not_copied_but_name_used()",
       "_callable": true,
       "_origin": "ast",
       "community": 73,
-      "community_name": "strip_leading_number",
+      "community_name": "save_state",
       "file_type": "code",
-      "norm_label": "strip_leading_number()",
-      "source_file": "routes/magic.py",
+      "norm_label": ".test_aosr_xlsx_not_copied_but_name_used()",
+      "source_file": "tests/test_magic_routes.py",
+      "source_location": "L177"
+    },
+    {
+      "id": "tests_test_magic_routes_testcopyworker_test_comma_in_name_survives_copy_and_registry",
+      "label": ".test_comma_in_name_survives_copy_and_registry()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 73,
+      "community_name": "save_state",
+      "file_type": "code",
+      "norm_label": ".test_comma_in_name_survives_copy_and_registry()",
+      "source_file": "tests/test_magic_routes.py",
+      "source_location": "L140"
+    },
+    {
+      "id": "tests_test_magic_routes_testcopyworker_test_no_upload_dedup_suffix_in_output",
+      "label": ".test_no_upload_dedup_suffix_in_output()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 73,
+      "community_name": "save_state",
+      "file_type": "code",
+      "norm_label": ".test_no_upload_dedup_suffix_in_output()",
+      "source_file": "tests/test_magic_routes.py",
+      "source_location": "L297"
+    },
+    {
+      "id": "tests_test_magic_routes_testcopyworker_test_rules_apply_only_in_registry_not_to_filename",
+      "label": ".test_rules_apply_only_in_registry_not_to_filename()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 73,
+      "community_name": "save_state",
+      "file_type": "code",
+      "norm_label": ".test_rules_apply_only_in_registry_not_to_filename()",
+      "source_file": "tests/test_magic_routes.py",
+      "source_location": "L242"
+    },
+    {
+      "id": "tests_test_magic_routes_teststartmagic_test_existing_numbered_files",
+      "label": ".test_existing_numbered_files()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 73,
+      "community_name": "save_state",
+      "file_type": "code",
+      "norm_label": ".test_existing_numbered_files()",
+      "source_file": "tests/test_magic_routes.py",
+      "source_location": "L92"
+    },
+    {
+      "id": "tests_test_magic_routes_teststartmagic_test_invalid_target_dir_fallback",
+      "label": ".test_invalid_target_dir_fallback()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 73,
+      "community_name": "save_state",
+      "file_type": "code",
+      "norm_label": ".test_invalid_target_dir_fallback()",
+      "source_file": "tests/test_magic_routes.py",
+      "source_location": "L125"
+    },
+    {
+      "id": "tests_test_magic_routes_teststartmagic_test_no_files_in_state",
+      "label": ".test_no_files_in_state()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 73,
+      "community_name": "save_state",
+      "file_type": "code",
+      "norm_label": ".test_no_files_in_state()",
+      "source_file": "tests/test_magic_routes.py",
+      "source_location": "L75"
+    },
+    {
+      "id": "tests_test_magic_routes_teststartmagic_test_nonexistent_target_dir",
+      "label": ".test_nonexistent_target_dir()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 73,
+      "community_name": "save_state",
+      "file_type": "code",
+      "norm_label": ".test_nonexistent_target_dir()",
+      "source_file": "tests/test_magic_routes.py",
+      "source_location": "L84"
+    },
+    {
+      "id": "tests_test_magic_routes_teststartmagic_test_success_starts_thread",
+      "label": ".test_success_starts_thread()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 73,
+      "community_name": "save_state",
+      "file_type": "code",
+      "norm_label": ".test_success_starts_thread()",
+      "source_file": "tests/test_magic_routes.py",
+      "source_location": "L108"
+    },
+    {
+      "id": "utils_state_atomic_save",
+      "label": "_atomic_save()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 73,
+      "community_name": "save_state",
+      "file_type": "code",
+      "norm_label": "_atomic_save()",
+      "source_file": "utils/state.py",
       "source_location": "L36"
     },
     {
-      "id": "tests_test_magic_routes_teststripleadingnumber_test_double_prefix",
-      "label": ".test_double_prefix()",
+      "id": "utils_state_save_state",
+      "label": "save_state()",
       "_callable": true,
       "_origin": "ast",
       "community": 73,
-      "community_name": "strip_leading_number",
+      "community_name": "save_state",
       "file_type": "code",
-      "norm_label": ".test_double_prefix()",
-      "source_file": "tests/test_magic_routes.py",
-      "source_location": "L38"
-    },
-    {
-      "id": "tests_test_magic_routes_teststripleadingnumber_test_multi_part_prefix",
-      "label": ".test_multi_part_prefix()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 73,
-      "community_name": "strip_leading_number",
-      "file_type": "code",
-      "norm_label": ".test_multi_part_prefix()",
-      "source_file": "tests/test_magic_routes.py",
-      "source_location": "L41"
-    },
-    {
-      "id": "tests_test_magic_routes_teststripleadingnumber_test_no_prefix",
-      "label": ".test_no_prefix()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 73,
-      "community_name": "strip_leading_number",
-      "file_type": "code",
-      "norm_label": ".test_no_prefix()",
-      "source_file": "tests/test_magic_routes.py",
-      "source_location": "L47"
-    },
-    {
-      "id": "tests_test_magic_routes_teststripleadingnumber_test_prefix_with_space",
-      "label": ".test_prefix_with_space()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 73,
-      "community_name": "strip_leading_number",
-      "file_type": "code",
-      "norm_label": ".test_prefix_with_space()",
-      "source_file": "tests/test_magic_routes.py",
-      "source_location": "L50"
-    },
-    {
-      "id": "tests_test_magic_routes_teststripleadingnumber_test_single_prefix",
-      "label": ".test_single_prefix()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 73,
-      "community_name": "strip_leading_number",
-      "file_type": "code",
-      "norm_label": ".test_single_prefix()",
-      "source_file": "tests/test_magic_routes.py",
-      "source_location": "L35"
-    },
-    {
-      "id": "tests_test_magic_routes_teststripleadingnumber_test_year_not_stripped",
-      "label": ".test_year_not_stripped()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 73,
-      "community_name": "strip_leading_number",
-      "file_type": "code",
-      "norm_label": ".test_year_not_stripped()",
-      "source_file": "tests/test_magic_routes.py",
-      "source_location": "L44"
+      "norm_label": "save_state()",
+      "source_file": "utils/state.py",
+      "source_location": "L31"
     },
     {
       "id": "tests_test_files_routes_testaddfilesfromdir_test_empty_path",
@@ -9373,6 +9218,210 @@
       "norm_label": ".test_valid_generation()",
       "source_file": "tests/test_aocr_routes.py",
       "source_location": "L36"
+    },
+    {
+      "id": "tests_test_directories_routes_testaddsubfolder_test_folder_already_exists",
+      "label": ".test_folder_already_exists()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 77,
+      "community_name": "TestAddSubfolder",
+      "file_type": "code",
+      "norm_label": ".test_folder_already_exists()",
+      "source_file": "tests/test_directories_routes.py",
+      "source_location": "L169"
+    },
+    {
+      "id": "tests_test_directories_routes_testaddsubfolder_test_invalid_folder_name",
+      "label": ".test_invalid_folder_name()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 77,
+      "community_name": "TestAddSubfolder",
+      "file_type": "code",
+      "norm_label": ".test_invalid_folder_name()",
+      "source_file": "tests/test_directories_routes.py",
+      "source_location": "L149"
+    },
+    {
+      "id": "tests_test_directories_routes_testaddsubfolder_test_missing_fields",
+      "label": ".test_missing_fields()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 77,
+      "community_name": "TestAddSubfolder",
+      "file_type": "code",
+      "norm_label": ".test_missing_fields()",
+      "source_file": "tests/test_directories_routes.py",
+      "source_location": "L141"
+    },
+    {
+      "id": "tests_test_directories_routes_testaddsubfolder_test_no_data",
+      "label": ".test_no_data()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 77,
+      "community_name": "TestAddSubfolder",
+      "file_type": "code",
+      "norm_label": ".test_no_data()",
+      "source_file": "tests/test_directories_routes.py",
+      "source_location": "L133"
+    },
+    {
+      "id": "tests_test_directories_routes_testaddsubfolder_test_parent_not_found",
+      "label": ".test_parent_not_found()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 77,
+      "community_name": "TestAddSubfolder",
+      "file_type": "code",
+      "norm_label": ".test_parent_not_found()",
+      "source_file": "tests/test_directories_routes.py",
+      "source_location": "L159"
+    },
+    {
+      "id": "tests_test_directories_routes_testaddsubfolder_test_success",
+      "label": ".test_success()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 77,
+      "community_name": "TestAddSubfolder",
+      "file_type": "code",
+      "norm_label": ".test_success()",
+      "source_file": "tests/test_directories_routes.py",
+      "source_location": "L180"
+    },
+    {
+      "id": "tests_test_directories_routes_testrenamedirectory_test_invalid_new_name",
+      "label": ".test_invalid_new_name()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "TestRenameDirectory",
+      "file_type": "code",
+      "norm_label": ".test_invalid_new_name()",
+      "source_file": "tests/test_directories_routes.py",
+      "source_location": "L209"
+    },
+    {
+      "id": "tests_test_directories_routes_testrenamedirectory_test_missing_fields",
+      "label": ".test_missing_fields()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "TestRenameDirectory",
+      "file_type": "code",
+      "norm_label": ".test_missing_fields()",
+      "source_file": "tests/test_directories_routes.py",
+      "source_location": "L201"
+    },
+    {
+      "id": "tests_test_directories_routes_testrenamedirectory_test_new_name_conflict",
+      "label": ".test_new_name_conflict()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "TestRenameDirectory",
+      "file_type": "code",
+      "norm_label": ".test_new_name_conflict()",
+      "source_file": "tests/test_directories_routes.py",
+      "source_location": "L232"
+    },
+    {
+      "id": "tests_test_directories_routes_testrenamedirectory_test_no_data",
+      "label": ".test_no_data()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "TestRenameDirectory",
+      "file_type": "code",
+      "norm_label": ".test_no_data()",
+      "source_file": "tests/test_directories_routes.py",
+      "source_location": "L193"
+    },
+    {
+      "id": "tests_test_directories_routes_testrenamedirectory_test_nonexistent_folder",
+      "label": ".test_nonexistent_folder()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "TestRenameDirectory",
+      "file_type": "code",
+      "norm_label": ".test_nonexistent_folder()",
+      "source_file": "tests/test_directories_routes.py",
+      "source_location": "L219"
+    },
+    {
+      "id": "tests_test_directories_routes_testrenamedirectory_test_success",
+      "label": ".test_success()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "TestRenameDirectory",
+      "file_type": "code",
+      "norm_label": ".test_success()",
+      "source_file": "tests/test_directories_routes.py",
+      "source_location": "L244"
+    },
+    {
+      "id": "tests_test_directories_routes_testdeletedirectory_test_delete_existing_dir",
+      "label": ".test_delete_existing_dir()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 79,
+      "community_name": "TestDeleteDirectory",
+      "file_type": "code",
+      "norm_label": ".test_delete_existing_dir()",
+      "source_file": "tests/test_directories_routes.py",
+      "source_location": "L120"
+    },
+    {
+      "id": "tests_test_directories_routes_testdeletedirectory_test_delete_nonexistent_dir",
+      "label": ".test_delete_nonexistent_dir()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 79,
+      "community_name": "TestDeleteDirectory",
+      "file_type": "code",
+      "norm_label": ".test_delete_nonexistent_dir()",
+      "source_file": "tests/test_directories_routes.py",
+      "source_location": "L110"
+    },
+    {
+      "id": "tests_test_directories_routes_testdeletedirectory_test_empty_path",
+      "label": ".test_empty_path()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 79,
+      "community_name": "TestDeleteDirectory",
+      "file_type": "code",
+      "norm_label": ".test_empty_path()",
+      "source_file": "tests/test_directories_routes.py",
+      "source_location": "L94"
+    },
+    {
+      "id": "tests_test_directories_routes_testdeletedirectory_test_no_data",
+      "label": ".test_no_data()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 79,
+      "community_name": "TestDeleteDirectory",
+      "file_type": "code",
+      "norm_label": ".test_no_data()",
+      "source_file": "tests/test_directories_routes.py",
+      "source_location": "L86"
+    },
+    {
+      "id": "tests_test_directories_routes_testdeletedirectory_test_path_not_on_desktop",
+      "label": ".test_path_not_on_desktop()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 79,
+      "community_name": "TestDeleteDirectory",
+      "file_type": "code",
+      "norm_label": ".test_path_not_on_desktop()",
+      "source_file": "tests/test_directories_routes.py",
+      "source_location": "L102"
     },
     {
       "id": "routes_core_build_tree_from_created",
@@ -9613,6 +9662,42 @@
       "norm_label": ".test_projects_sorted_by_code()",
       "source_file": "tests/test_core.py",
       "source_location": "L317"
+    },
+    {
+      "id": "tests_test_materials_routes_testpassports_test_passport_label_has_unit",
+      "label": ".test_passport_label_has_unit()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 80,
+      "community_name": "TestPassports",
+      "file_type": "code",
+      "norm_label": ".test_passport_label_has_unit()",
+      "source_file": "tests/test_materials_routes.py",
+      "source_location": "L270"
+    },
+    {
+      "id": "tests_test_materials_routes_testpassports_test_passport_without_date_label",
+      "label": ".test_passport_without_date_label()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 80,
+      "community_name": "TestPassports",
+      "file_type": "code",
+      "norm_label": ".test_passport_without_date_label()",
+      "source_file": "tests/test_materials_routes.py",
+      "source_location": "L289"
+    },
+    {
+      "id": "tests_test_materials_routes_testpassports_test_passports_list_groups_unique",
+      "label": ".test_passports_list_groups_unique()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 80,
+      "community_name": "TestPassports",
+      "file_type": "code",
+      "norm_label": ".test_passports_list_groups_unique()",
+      "source_file": "tests/test_materials_routes.py",
+      "source_location": "L308"
     },
     {
       "id": "routes_aocr_fill_sheet1",
@@ -9966,28 +10051,6 @@
       "source_location": "L2"
     },
     {
-      "id": "routes_registry",
-      "label": "registry.py",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "load_state",
-      "file_type": "code",
-      "norm_label": "registry.py",
-      "source_file": "routes/registry.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "routes_registry_py_route",
-      "label": "route",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "load_state",
-      "file_type": "code",
-      "norm_label": "route",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
       "id": "tests_test_dashboard_routes",
       "label": "test_dashboard_routes.py",
       "_origin": "ast",
@@ -9999,17 +10062,6 @@
       "source_location": "L1"
     },
     {
-      "id": "tests_test_magic_routes_py_patch",
-      "label": "patch",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "load_state",
-      "file_type": "code",
-      "norm_label": "patch",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
       "id": "tests_test_state",
       "label": "test_state.py",
       "_origin": "ast",
@@ -10019,50 +10071,6 @@
       "norm_label": "test_state.py",
       "source_file": "tests/test_state.py",
       "source_location": "L1"
-    },
-    {
-      "id": "utils_state",
-      "label": "utils/state.py",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "load_state",
-      "file_type": "code",
-      "norm_label": "utils/state.py",
-      "source_file": "utils/state.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "utils_state_py_any",
-      "label": "Any",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "load_state",
-      "file_type": "code",
-      "norm_label": "any",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "routes_registry_rationale_1",
-      "label": "Blueprint: /api/registry/* \u2014 registry data CRUD.",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "load_state",
-      "file_type": "rationale",
-      "norm_label": "blueprint: /api/registry/* \u2014 registry data crud.",
-      "source_file": "routes/registry.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "routes_registry_rationale_14",
-      "label": "Return HTML form for the registry modal.",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "load_state",
-      "file_type": "rationale",
-      "norm_label": "return html form for the registry modal.",
-      "source_file": "routes/registry.py",
-      "source_location": "L14"
     },
     {
       "id": "tests_test_dashboard_routes_rationale_1",
@@ -10151,17 +10159,6 @@
       "norm_label": "russian characters are preserved correctly.",
       "source_file": "tests/test_state.py",
       "source_location": "L91"
-    },
-    {
-      "id": "utils_state_rationale_1",
-      "label": "Thread-safe atomic state.json persistence \u2014 with type hints.",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "load_state",
-      "file_type": "rationale",
-      "norm_label": "thread-safe atomic state.json persistence \u2014 with type hints.",
-      "source_file": "utils/state.py",
-      "source_location": "L1"
     },
     {
       "id": "opencode_skills_graphify_skill",
@@ -10919,6 +10916,17 @@
       "source_location": "L37"
     },
     {
+      "id": "routes_requisites_rationale_48",
+      "label": "POST /api/requisites/objects \u2014 create a new construction object. Expects JSON\u2026",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "requisites.py",
+      "file_type": "rationale",
+      "norm_label": "post /api/requisites/objects \u2014 create a new construction object. expects json...",
+      "source_file": "routes/requisites.py",
+      "source_location": "L48"
+    },
+    {
       "id": "routes_requisites_rationale_66",
       "label": "DELETE /api/requisites/objects/<id> \u2014 delete a construction object.",
       "_origin": "ast",
@@ -11370,7 +11378,7 @@
       "source_location": "L16"
     },
     {
-      "id": "utils_database_rationale_168",
+      "id": "utils_database_rationale_164",
       "label": "\u0423\u043d\u0438\u043a\u0430\u043b\u044c\u043d\u044b\u0435 \u00ab\u043f\u0430\u0441\u043f\u043e\u0440\u0442\u0430\u00bb (\u0441\u043e\u0447\u0435\u0442\u0430\u043d\u0438\u044f \u0432\u0441\u0435\u0445 \u043f\u043e\u043b\u0435\u0439), \u043e\u0442\u0441\u043e\u0440\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0435 \u043f\u043e \u0438\u043c\u0435\u043d\u0438.",
       "_origin": "ast",
       "community": 21,
@@ -11378,10 +11386,21 @@
       "file_type": "rationale",
       "norm_label": "\u0443\u043d\u0438\u043a\u0430\u043b\u044c\u043d\u044b\u0435 \u00ab\u043f\u0430\u0441\u043f\u043e\u0440\u0442\u0430\u00bb (\u0441\u043e\u0447\u0435\u0442\u0430\u043d\u0438\u044f \u0432\u0441\u0435\u0445 \u043f\u043e\u043b\u0435\u0438), \u043e\u0442\u0441\u043e\u0440\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0435 \u043f\u043e \u0438\u043c\u0435\u043d\u0438.",
       "source_file": "utils/database.py",
-      "source_location": "L168"
+      "source_location": "L164"
     },
     {
-      "id": "utils_database_rationale_193",
+      "id": "utils_database_rationale_178",
+      "label": "\u0420\u0430\u043d\u0435\u0435 \u0432\u0432\u043e\u0434\u0438\u0432\u0448\u0438\u0435\u0441\u044f \u0435\u0434\u0438\u043d\u0438\u0446\u044b \u0438\u0437\u043c\u0435\u0440\u0435\u043d\u0438\u044f (\u0434\u043b\u044f \u0432\u044b\u043f\u0430\u0434\u0430\u044e\u0449\u0435\u0433\u043e \u0441\u043f\u0438\u0441\u043a\u0430).",
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "materials.py",
+      "file_type": "rationale",
+      "norm_label": "\u0440\u0430\u043d\u0435\u0435 \u0432\u0432\u043e\u0434\u0438\u0432\u0448\u0438\u0435\u0441\u044f \u0435\u0434\u0438\u043d\u0438\u0446\u044b \u0438\u0437\u043c\u0435\u0440\u0435\u043d\u0438\u044f (\u0434\u043b\u044f \u0432\u044b\u043f\u0430\u0434\u0430\u044e\u0449\u0435\u0433\u043e \u0441\u043f\u0438\u0441\u043a\u0430).",
+      "source_file": "utils/database.py",
+      "source_location": "L178"
+    },
+    {
+      "id": "utils_database_rationale_202",
       "label": "\u041e\u0431\u043d\u0443\u043b\u044f\u0435\u0442 \u0442\u0430\u0431\u043b\u0438\u0446\u0443 \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u043e\u0432 (\u0442\u043e\u043b\u044c\u043a\u043e \u0435\u0451, \u043e\u0441\u0442\u0430\u043b\u044c\u043d\u044b\u0435 \u0442\u0430\u0431\u043b\u0438\u0446\u044b \u043d\u0435 \u0442\u0440\u043e\u0433\u0430\u0435\u0442).",
       "_origin": "ast",
       "community": 21,
@@ -11389,7 +11408,7 @@
       "file_type": "rationale",
       "norm_label": "\u043e\u0431\u043d\u0443\u043b\u044f\u0435\u0442 \u0442\u0430\u0431\u043b\u0438\u0446\u0443 \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u043e\u0432 (\u0442\u043e\u043b\u044c\u043a\u043e \u0435\u0435, \u043e\u0441\u0442\u0430\u043b\u044c\u043d\u044b\u0435 \u0442\u0430\u0431\u043b\u0438\u0446\u044b \u043d\u0435 \u0442\u0440\u043e\u0433\u0430\u0435\u0442).",
       "source_file": "utils/database.py",
-      "source_location": "L193"
+      "source_location": "L202"
     },
     {
       "id": "tests_test_msg_routes",
@@ -11950,9 +11969,20 @@
       "label": "Flask",
       "_origin": "ast",
       "community": 28,
-      "community_name": "Flask",
+      "community_name": "core.py",
       "file_type": "code",
       "norm_label": "flask",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "logger",
+      "label": "Logger",
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "core.py",
+      "file_type": "code",
+      "norm_label": "logger",
       "source_file": "",
       "source_location": ""
     },
@@ -11961,10 +11991,21 @@
       "label": "aocr.py",
       "_origin": "ast",
       "community": 28,
-      "community_name": "Flask",
+      "community_name": "core.py",
       "file_type": "code",
       "norm_label": "aocr.py",
       "source_file": "routes/aocr.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "routes_core",
+      "label": "core.py",
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "core.py",
+      "file_type": "code",
+      "norm_label": "core.py",
+      "source_file": "routes/core.py",
       "source_location": "L1"
     },
     {
@@ -11972,7 +12013,7 @@
       "label": "dashboard.py",
       "_origin": "ast",
       "community": 28,
-      "community_name": "Flask",
+      "community_name": "core.py",
       "file_type": "code",
       "norm_label": "dashboard.py",
       "source_file": "routes/dashboard.py",
@@ -11983,7 +12024,7 @@
       "label": "route",
       "_origin": "ast",
       "community": 28,
-      "community_name": "Flask",
+      "community_name": "core.py",
       "file_type": "code",
       "norm_label": "route",
       "source_file": "",
@@ -11994,18 +12035,40 @@
       "label": "routes/__init__.py",
       "_origin": "ast",
       "community": 28,
-      "community_name": "Flask",
+      "community_name": "core.py",
       "file_type": "code",
       "norm_label": "routes/__init__.py",
       "source_file": "routes/__init__.py",
       "source_location": "L1"
     },
     {
+      "id": "routes_registry",
+      "label": "registry.py",
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "core.py",
+      "file_type": "code",
+      "norm_label": "registry.py",
+      "source_file": "routes/registry.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "routes_registry_py_route",
+      "label": "route",
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "core.py",
+      "file_type": "code",
+      "norm_label": "route",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "routes_state",
       "label": "routes/state.py",
       "_origin": "ast",
       "community": 28,
-      "community_name": "Flask",
+      "community_name": "core.py",
       "file_type": "code",
       "norm_label": "routes/state.py",
       "source_file": "routes/state.py",
@@ -12016,7 +12079,7 @@
       "label": "route",
       "_origin": "ast",
       "community": 28,
-      "community_name": "Flask",
+      "community_name": "core.py",
       "file_type": "code",
       "norm_label": "route",
       "source_file": "",
@@ -12027,10 +12090,21 @@
       "label": "Blueprint: /api/aocr/* \u2014 \u0413\u0435\u043d\u0435\u0440\u0430\u0446\u0438\u044f \u0444\u043e\u0440\u043c\u044b \u0410\u041e\u0421\u0420 (\u0410\u043a\u0442 \u043e\u0441\u0432\u0438\u0434\u0435\u0442\u0435\u043b\u044c\u0441\u0442\u0432\u043e\u0432\u0430\u043d\u0438\u044f \u0441\u043a\u0440\u044b\u0442\u044b\u0445\u2026",
       "_origin": "ast",
       "community": 28,
-      "community_name": "Flask",
+      "community_name": "core.py",
       "file_type": "rationale",
       "norm_label": "blueprint: /api/aocr/* \u2014 \u0433\u0435\u043d\u0435\u0440\u0430\u0446\u0438\u044f \u0444\u043e\u0440\u043c\u044b \u0430\u043e\u0441\u0440 (\u0430\u043a\u0442 \u043e\u0441\u0432\u0438\u0434\u0435\u0442\u0435\u043b\u044c\u0441\u0442\u0432\u043e\u0432\u0430\u043d\u0438\u044f \u0441\u043a\u0440\u044b\u0442\u044b\u0445...",
       "source_file": "routes/aocr.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "routes_core_rationale_1",
+      "label": "Shared state, utilities, and helpers \u2014 with type hints for mypy.",
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "core.py",
+      "file_type": "rationale",
+      "norm_label": "shared state, utilities, and helpers \u2014 with type hints for mypy.",
+      "source_file": "routes/core.py",
       "source_location": "L1"
     },
     {
@@ -12038,7 +12112,7 @@
       "label": "Blueprint: /api/dashboard/stats",
       "_origin": "ast",
       "community": 28,
-      "community_name": "Flask",
+      "community_name": "core.py",
       "file_type": "rationale",
       "norm_label": "blueprint: /api/dashboard/stats",
       "source_file": "routes/dashboard.py",
@@ -12049,43 +12123,43 @@
       "label": "Routes package \u2014 registers all blueprints on a Flask app.",
       "_origin": "ast",
       "community": 28,
-      "community_name": "Flask",
+      "community_name": "core.py",
       "file_type": "rationale",
       "norm_label": "routes package \u2014 registers all blueprints on a flask app.",
       "source_file": "routes/__init__.py",
       "source_location": "L1"
     },
     {
+      "id": "routes_registry_rationale_1",
+      "label": "Blueprint: /api/registry/* \u2014 registry data CRUD.",
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "core.py",
+      "file_type": "rationale",
+      "norm_label": "blueprint: /api/registry/* \u2014 registry data crud.",
+      "source_file": "routes/registry.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "routes_registry_rationale_14",
+      "label": "Return HTML form for the registry modal.",
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "core.py",
+      "file_type": "rationale",
+      "norm_label": "return html form for the registry modal.",
+      "source_file": "routes/registry.py",
+      "source_location": "L14"
+    },
+    {
       "id": "routes_state_rationale_1",
       "label": "Blueprint: /api/state/clear",
       "_origin": "ast",
       "community": 28,
-      "community_name": "Flask",
+      "community_name": "core.py",
       "file_type": "rationale",
       "norm_label": "blueprint: /api/state/clear",
       "source_file": "routes/state.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "logger",
-      "label": "Logger",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "core.py",
-      "file_type": "code",
-      "norm_label": "logger",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "routes_core",
-      "label": "core.py",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "core.py",
-      "file_type": "code",
-      "norm_label": "core.py",
-      "source_file": "routes/core.py",
       "source_location": "L1"
     },
     {
@@ -12093,7 +12167,7 @@
       "label": "files.py",
       "_origin": "ast",
       "community": 29,
-      "community_name": "core.py",
+      "community_name": "files.py",
       "file_type": "code",
       "norm_label": "files.py",
       "source_file": "routes/files.py",
@@ -12104,7 +12178,7 @@
       "label": "Path",
       "_origin": "ast",
       "community": 29,
-      "community_name": "core.py",
+      "community_name": "files.py",
       "file_type": "code",
       "norm_label": "path",
       "source_file": "",
@@ -12115,29 +12189,18 @@
       "label": "route",
       "_origin": "ast",
       "community": 29,
-      "community_name": "core.py",
+      "community_name": "files.py",
       "file_type": "code",
       "norm_label": "route",
       "source_file": "",
       "source_location": ""
     },
     {
-      "id": "routes_core_rationale_1",
-      "label": "Shared state, utilities, and helpers \u2014 with type hints for mypy.",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "core.py",
-      "file_type": "rationale",
-      "norm_label": "shared state, utilities, and helpers \u2014 with type hints for mypy.",
-      "source_file": "routes/core.py",
-      "source_location": "L1"
-    },
-    {
       "id": "routes_core_rationale_145",
       "label": "\u041e\u0447\u0438\u0449\u0430\u0435\u0442 \u0438\u043c\u044f \u0437\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043c\u043e\u0433\u043e \u0444\u0430\u0439\u043b\u0430 \u043e\u0442 \u043d\u0435\u0434\u043e\u043f\u0443\u0441\u0442\u0438\u043c\u044b\u0445 \u0432 Windows \u0441\u0438\u043c\u0432\u043e\u043b\u043e\u0432. \u0421\u043e\u0445\u0440\u0430\u043d\u044f\u0435\u0442\u2026",
       "_origin": "ast",
       "community": 29,
-      "community_name": "core.py",
+      "community_name": "files.py",
       "file_type": "rationale",
       "norm_label": "\u043e\u0447\u0438\u0449\u0430\u0435\u0442 \u0438\u043c\u044f \u0437\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043c\u043e\u0433\u043e \u0444\u0430\u0438\u043b\u0430 \u043e\u0442 \u043d\u0435\u0434\u043e\u043f\u0443\u0441\u0442\u0438\u043c\u044b\u0445 \u0432 windows \u0441\u0438\u043c\u0432\u043e\u043b\u043e\u0432. \u0441\u043e\u0445\u0440\u0430\u043d\u044f\u0435\u0442...",
       "source_file": "routes/core.py",
@@ -12148,7 +12211,7 @@
       "label": "Blueprint: /api/files/* \u2014 file upload, list, reorder, delete.",
       "_origin": "ast",
       "community": 29,
-      "community_name": "core.py",
+      "community_name": "files.py",
       "file_type": "rationale",
       "norm_label": "blueprint: /api/files/* \u2014 file upload, list, reorder, delete.",
       "source_file": "routes/files.py",
@@ -12159,7 +12222,7 @@
       "label": "\u0418\u043c\u043f\u043e\u0440\u0442 \u0432\u0441\u0435\u0445 \u0434\u043e\u043f\u0443\u0441\u0442\u0438\u043c\u044b\u0445 \u0444\u0430\u0439\u043b\u043e\u0432 \u0438\u0437 \u0443\u043a\u0430\u0437\u0430\u043d\u043d\u043e\u0439 \u043f\u0430\u043f\u043a\u0438 (\u0440\u0435\u043a\u0443\u0440\u0441\u0438\u0432\u043d\u043e). \u0424\u0430\u0439\u043b\u044b \u043a\u043e\u043f\u0438\u0440\u0443\u044e\u0442\u0441\u044f\u2026",
       "_origin": "ast",
       "community": 29,
-      "community_name": "core.py",
+      "community_name": "files.py",
       "file_type": "rationale",
       "norm_label": "\u0438\u043c\u043f\u043e\u0440\u0442 \u0432\u0441\u0435\u0445 \u0434\u043e\u043f\u0443\u0441\u0442\u0438\u043c\u044b\u0445 \u0444\u0430\u0438\u043b\u043e\u0432 \u0438\u0437 \u0443\u043a\u0430\u0437\u0430\u043d\u043d\u043e\u0438 \u043f\u0430\u043f\u043a\u0438 (\u0440\u0435\u043a\u0443\u0440\u0441\u0438\u0432\u043d\u043e). \u0444\u0430\u0438\u043b\u044b \u043a\u043e\u043f\u0438\u0440\u0443\u044e\u0442\u0441\u044f...",
       "source_file": "routes/files.py",
@@ -12170,7 +12233,7 @@
       "label": "\u041f\u043e\u043b\u043d\u043e\u0441\u0442\u044c\u044e \u043e\u0447\u0438\u0441\u0442\u0438\u0442\u044c \u0441\u043f\u0438\u0441\u043e\u043a \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043d\u043d\u044b\u0445 \u0444\u0430\u0439\u043b\u043e\u0432.",
       "_origin": "ast",
       "community": 29,
-      "community_name": "core.py",
+      "community_name": "files.py",
       "file_type": "rationale",
       "norm_label": "\u043f\u043e\u043b\u043d\u043e\u0441\u0442\u044c\u044e \u043e\u0447\u0438\u0441\u0442\u0438\u0442\u044c \u0441\u043f\u0438\u0441\u043e\u043a \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043d\u043d\u044b\u0445 \u0444\u0430\u0438\u043b\u043e\u0432.",
       "source_file": "routes/files.py",
@@ -12181,7 +12244,7 @@
       "label": "\u0420\u0435\u043a\u0443\u0440\u0441\u0438\u0432\u043d\u043e \u0441\u043e\u0431\u0438\u0440\u0430\u0435\u0442 \u0444\u0430\u0439\u043b\u044b \u043f\u0430\u043f\u043a\u0438 \u0432 \u0435\u0441\u0442\u0435\u0441\u0442\u0432\u0435\u043d\u043d\u043e\u043c \u043f\u043e\u0440\u044f\u0434\u043a\u0435. \u0412\u043d\u0443\u0442\u0440\u0438 \u043a\u0430\u0436\u0434\u043e\u0439 \u043f\u0430\u043f\u043a\u0438\u2026",
       "_origin": "ast",
       "community": 29,
-      "community_name": "core.py",
+      "community_name": "files.py",
       "file_type": "rationale",
       "norm_label": "\u0440\u0435\u043a\u0443\u0440\u0441\u0438\u0432\u043d\u043e \u0441\u043e\u0431\u0438\u0440\u0430\u0435\u0442 \u0444\u0430\u0438\u043b\u044b \u043f\u0430\u043f\u043a\u0438 \u0432 \u0435\u0441\u0442\u0435\u0441\u0442\u0432\u0435\u043d\u043d\u043e\u043c \u043f\u043e\u0440\u044f\u0434\u043a\u0435. \u0432\u043d\u0443\u0442\u0440\u0438 \u043a\u0430\u0436\u0434\u043e\u0438 \u043f\u0430\u043f\u043a\u0438...",
       "source_file": "routes/files.py",
@@ -12199,17 +12262,6 @@
       "source_location": "L1"
     },
     {
-      "id": "routes_magic_rationale_158",
-      "label": "Background worker: copy and number files, generate Excel registry.",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "test_magic_routes.py",
-      "file_type": "rationale",
-      "norm_label": "background worker: copy and number files, generate excel registry.",
-      "source_file": "routes/magic.py",
-      "source_location": "L158"
-    },
-    {
       "id": "routes_magic_rationale_31",
       "label": "\u0421\u043a\u0432\u043e\u0437\u043d\u0430\u044f \u043d\u0443\u043c\u0435\u0440\u0430\u0446\u0438\u044f: '01.\u0418\u043c\u044f.ext",
       "_origin": "ast",
@@ -12219,6 +12271,17 @@
       "norm_label": "\u0441\u043a\u0432\u043e\u0437\u043d\u0430\u044f \u043d\u0443\u043c\u0435\u0440\u0430\u0446\u0438\u044f: '01.\u0438\u043c\u044f.ext",
       "source_file": "routes/magic.py",
       "source_location": "L31"
+    },
+    {
+      "id": "routes_magic_rationale_37",
+      "label": "\u0423\u0431\u0438\u0440\u0430\u0435\u0442 \u0441\u0442\u0430\u0440\u044b\u0439 \u043f\u043e\u0440\u044f\u0434\u043a\u043e\u0432\u044b\u0439 \u043d\u043e\u043c\u0435\u0440 'NN.' \u0432 \u043d\u0430\u0447\u0430\u043b\u0435 \u0438\u043c\u0435\u043d\u0438 \u0444\u0430\u0439\u043b\u0430. '01.\u0410\u043a\u0442.pdf' \u2192\u2026",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_magic_routes.py",
+      "file_type": "rationale",
+      "norm_label": "\u0443\u0431\u0438\u0440\u0430\u0435\u0442 \u0441\u0442\u0430\u0440\u044b\u0438 \u043f\u043e\u0440\u044f\u0434\u043a\u043e\u0432\u044b\u0438 \u043d\u043e\u043c\u0435\u0440 'nn.' \u0432 \u043d\u0430\u0447\u0430\u043b\u0435 \u0438\u043c\u0435\u043d\u0438 \u0444\u0430\u0438\u043b\u0430. '01.\u0430\u043a\u0442.pdf' \u2192...",
+      "source_file": "routes/magic.py",
+      "source_location": "L37"
     },
     {
       "id": "routes_magic_rationale_46",
@@ -12243,17 +12306,6 @@
       "source_location": "L1"
     },
     {
-      "id": "tests_test_magic_routes_rationale_298",
-      "label": "\u041e\u0434\u0438\u043d\u0430\u043a\u043e\u0432\u044b\u0435 \u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u044b \u0432 \u0438\u0442\u043e\u0433\u043e\u0432\u043e\u0439 \u043f\u0430\u043f\u043a\u0435 \u0440\u0430\u0437\u043b\u0438\u0447\u0430\u044e\u0442\u0441\u044f \u043d\u043e\u043c\u0435\u0440\u043e\u043c (01/02), \u0430 \u043d\u0435\u2026",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "test_magic_routes.py",
-      "file_type": "rationale",
-      "norm_label": "\u043e\u0434\u0438\u043d\u0430\u043a\u043e\u0432\u044b\u0435 \u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u044b \u0432 \u0438\u0442\u043e\u0433\u043e\u0432\u043e\u0438 \u043f\u0430\u043f\u043a\u0435 \u0440\u0430\u0437\u043b\u0438\u0447\u0430\u044e\u0442\u0441\u044f \u043d\u043e\u043c\u0435\u0440\u043e\u043c (01/02), \u0430 \u043d\u0435...",
-      "source_file": "tests/test_magic_routes.py",
-      "source_location": "L298"
-    },
-    {
       "id": "tests_test_materials_routes",
       "label": "test_materials_routes.py",
       "_origin": "ast",
@@ -12276,15 +12328,15 @@
       "source_location": "L1"
     },
     {
-      "id": "tests_test_materials_routes_rationale_224",
-      "label": "\u041f\u0430\u0441\u043f\u043e\u0440\u0442 \u0431\u0435\u0437 \u0434\u0430\u0442\u044b \u0432 \u0432\u044b\u043f\u0430\u0434\u0430\u044e\u0449\u0435\u043c \u0441\u043f\u0438\u0441\u043a\u0435 \u043f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0435\u0442\u0441\u044f \u043a\u0430\u043a \u00ab\u043e\u0442 \u0431/\u0434\u00bb.",
+      "id": "tests_test_materials_routes_rationale_229",
+      "label": "\u0420\u0430\u043d\u0435\u0435 \u0432\u0432\u0435\u0434\u0451\u043d\u043d\u044b\u0435 \u0435\u0434\u0438\u043d\u0438\u0446\u044b \u043f\u043e\u043f\u0430\u0434\u0430\u044e\u0442 \u0432 \u0432\u044b\u043f\u0430\u0434\u0430\u044e\u0449\u0438\u0439 \u0441\u043f\u0438\u0441\u043e\u043a (\u0443\u043d\u0438\u043a\u0430\u043b\u044c\u043d\u044b\u0435).",
       "_origin": "ast",
       "community": 30,
       "community_name": "test_materials_routes.py",
       "file_type": "rationale",
-      "norm_label": "\u043f\u0430\u0441\u043f\u043e\u0440\u0442 \u0431\u0435\u0437 \u0434\u0430\u0442\u044b \u0432 \u0432\u044b\u043f\u0430\u0434\u0430\u044e\u0449\u0435\u043c \u0441\u043f\u0438\u0441\u043a\u0435 \u043f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0435\u0442\u0441\u044f \u043a\u0430\u043a \u00ab\u043e\u0442 \u0431/\u0434\u00bb.",
+      "norm_label": "\u0440\u0430\u043d\u0435\u0435 \u0432\u0432\u0435\u0434\u0435\u043d\u043d\u044b\u0435 \u0435\u0434\u0438\u043d\u0438\u0446\u044b \u043f\u043e\u043f\u0430\u0434\u0430\u044e\u0442 \u0432 \u0432\u044b\u043f\u0430\u0434\u0430\u044e\u0449\u0438\u0438 \u0441\u043f\u0438\u0441\u043e\u043a (\u0443\u043d\u0438\u043a\u0430\u043b\u044c\u043d\u044b\u0435).",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L224"
+      "source_location": "L229"
     },
     {
       "id": "tests_test_materials_routes_rationale_114",
@@ -12540,7 +12592,7 @@
       "node_kind": "heading",
       "norm_label": "conversions \u2014 \u043a\u043e\u043d\u0432\u0435\u0440\u0442\u0430\u0446\u0438\u0438",
       "source_file": "memory/15-utils-database.md",
-      "source_location": "L34"
+      "source_location": "L35"
     },
     {
       "id": "memory_15_utils_database_materials_\u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u044b",
@@ -12564,7 +12616,7 @@
       "node_kind": "heading",
       "norm_label": "objects \u2014 \u043e\u0431\u044a\u0435\u043a\u0442\u044b",
       "source_file": "memory/15-utils-database.md",
-      "source_location": "L45"
+      "source_location": "L46"
     },
     {
       "id": "memory_15_utils_database_requisites_\u0440\u0435\u043a\u0432\u0438\u0437\u0438\u0442\u044b",
@@ -12576,7 +12628,7 @@
       "node_kind": "heading",
       "norm_label": "requisites \u2014 \u0440\u0435\u043a\u0432\u0438\u0437\u0438\u0442\u044b",
       "source_file": "memory/15-utils-database.md",
-      "source_location": "L53"
+      "source_location": "L54"
     },
     {
       "id": "memory_15_utils_database_utils_database_py_sqlite_\u0445\u0440\u0430\u043d\u0438\u043b\u0438\u0449\u0435",
@@ -12600,7 +12652,7 @@
       "node_kind": "heading",
       "norm_label": "\u043a\u043b\u044e\u0447\u0435\u0432\u044b\u0435 \u0444\u0443\u043d\u043a\u0446\u0438\u0438",
       "source_file": "memory/15-utils-database.md",
-      "source_location": "L66"
+      "source_location": "L67"
     },
     {
       "id": "memory_15_utils_database_\u043a\u043e\u043d\u0432\u0435\u0440\u0442\u0430\u0446\u0438\u0438",
@@ -12612,7 +12664,7 @@
       "node_kind": "heading",
       "norm_label": "\u043a\u043e\u043d\u0432\u0435\u0440\u0442\u0430\u0446\u0438\u0438",
       "source_file": "memory/15-utils-database.md",
-      "source_location": "L79"
+      "source_location": "L81"
     },
     {
       "id": "memory_15_utils_database_\u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u044b",
@@ -12624,7 +12676,7 @@
       "node_kind": "heading",
       "norm_label": "\u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u044b",
       "source_file": "memory/15-utils-database.md",
-      "source_location": "L68"
+      "source_location": "L69"
     },
     {
       "id": "memory_15_utils_database_\u043e\u0431\u044a\u0435\u043a\u0442\u044b_\u0438_\u0440\u0435\u043a\u0432\u0438\u0437\u0438\u0442\u044b",
@@ -12636,7 +12688,7 @@
       "node_kind": "heading",
       "norm_label": "\u043e\u0431\u044a\u0435\u043a\u0442\u044b \u0438 \u0440\u0435\u043a\u0432\u0438\u0437\u0438\u0442\u044b",
       "source_file": "memory/15-utils-database.md",
-      "source_location": "L84"
+      "source_location": "L86"
     },
     {
       "id": "memory_15_utils_database_\u043f\u043e\u0432\u0435\u0434\u0435\u043d\u0438\u0435",
@@ -12648,7 +12700,7 @@
       "node_kind": "heading",
       "norm_label": "\u043f\u043e\u0432\u0435\u0434\u0435\u043d\u0438\u0435",
       "source_file": "memory/15-utils-database.md",
-      "source_location": "L91"
+      "source_location": "L93"
     },
     {
       "id": "memory_15_utils_database_\u043f\u0443\u0442\u044c_\u043a_\u0431\u0434",
@@ -13149,7 +13201,7 @@
       "node_kind": "heading",
       "norm_label": "dev",
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L73"
+      "source_location": "L75"
     },
     {
       "id": "memory_21_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u0437\u0430\u0432\u0438\u0441\u0438\u043c\u043e\u0441\u0442\u0438",
@@ -13161,7 +13213,7 @@
       "node_kind": "heading",
       "norm_label": "\u0437\u0430\u0432\u0438\u0441\u0438\u043c\u043e\u0441\u0442\u0438",
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L64"
+      "source_location": "L66"
     },
     {
       "id": "memory_21_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u0438\u0437\u0432\u0435\u0441\u0442\u043d\u044b\u0435_\u043e\u0433\u0440\u0430\u043d\u0438\u0447\u0435\u043d\u0438\u044f",
@@ -13173,7 +13225,7 @@
       "node_kind": "heading",
       "norm_label": "\u0438\u0437\u0432\u0435\u0441\u0442\u043d\u044b\u0435 \u043e\u0433\u0440\u0430\u043d\u0438\u0447\u0435\u043d\u0438\u044f",
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L56"
+      "source_location": "L58"
     },
     {
       "id": "memory_21_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u043a\u0430\u043a_\u0437\u0430\u043f\u0443\u0441\u043a\u0430\u0442\u044c",
@@ -13185,7 +13237,7 @@
       "node_kind": "heading",
       "norm_label": "\u043a\u0430\u043a \u0437\u0430\u043f\u0443\u0441\u043a\u0430\u0442\u044c",
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L83"
+      "source_location": "L85"
     },
     {
       "id": "memory_21_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u043a\u043e\u043d\u0442\u0430\u043a\u0442\u044b",
@@ -13197,7 +13249,7 @@
       "node_kind": "heading",
       "norm_label": "\u043a\u043e\u043d\u0442\u0430\u043a\u0442\u044b",
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L92"
+      "source_location": "L94"
     },
     {
       "id": "memory_21_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u043e\u043f\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u044b\u0435",
@@ -13209,7 +13261,7 @@
       "node_kind": "heading",
       "norm_label": "\u043e\u043f\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u044b\u0435",
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L78"
+      "source_location": "L80"
     },
     {
       "id": "memory_21_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u043e\u0441\u043d\u043e\u0432\u043d\u044b\u0435",
@@ -13221,7 +13273,7 @@
       "node_kind": "heading",
       "norm_label": "\u043e\u0441\u043d\u043e\u0432\u043d\u044b\u0435",
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L66"
+      "source_location": "L68"
     },
     {
       "id": "memory_21_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u0441\u0442\u0430\u0442\u0443\u0441",
@@ -13245,7 +13297,7 @@
       "node_kind": "heading",
       "norm_label": "\u0441\u0442\u0440\u0443\u043a\u0442\u0443\u0440\u0430 \u043f\u0440\u043e\u0435\u043a\u0442\u0430",
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L38"
+      "source_location": "L40"
     },
     {
       "id": "memory_21_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u043f\u0440\u043e\u0435\u043a\u0442\u0430",
@@ -13270,17 +13322,6 @@
       "norm_label": "\u0447\u0442\u043e \u0441\u0434\u0435\u043b\u0430\u043d\u043e",
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
       "source_location": "L9"
-    },
-    {
-      "id": "routes_requisites_rationale_48",
-      "label": "POST /api/requisites/objects \u2014 create a new construction object. Expects JSON\u2026",
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "init_requisites_db",
-      "file_type": "rationale",
-      "norm_label": "post /api/requisites/objects \u2014 create a new construction object. expects json...",
-      "source_file": "routes/requisites.py",
-      "source_location": "L48"
     },
     {
       "id": "tests_test_database_requisites_rationale_19",
@@ -14300,15 +14341,15 @@
       "source_location": "L1"
     },
     {
-      "id": "utils_database_rationale_47",
-      "label": "\u041e\u0431\u043d\u0443\u043b\u044f\u0435\u0442 \u0440\u0430\u0437\u0434\u0435\u043b \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u043e\u0432: \u0435\u0441\u043b\u0438 \u0442\u0430\u0431\u043b\u0438\u0446\u0430 \u043e\u0442 \u0441\u0442\u0430\u0440\u043e\u0439 \u0441\u0445\u0435\u043c\u044b (\u0431\u0435\u0437 \u043d\u043e\u0432\u044b\u0445 \u043f\u043e\u043b\u0435\u0439) \u2014\u2026",
+      "id": "utils_database_rationale_48",
+      "label": "\u0414\u043e\u0431\u0430\u0432\u043b\u044f\u0435\u0442 \u043d\u0435\u0434\u043e\u0441\u0442\u0430\u044e\u0449\u0438\u0435 \u043a\u043e\u043b\u043e\u043d\u043a\u0438 \u0442\u0430\u0431\u043b\u0438\u0446\u044b materials (\u0431\u0435\u0437 \u043f\u043e\u0442\u0435\u0440\u0438 \u0434\u0430\u043d\u043d\u044b\u0445). \u0415\u0441\u043b\u0438\u2026",
       "_origin": "ast",
       "community": 5,
       "community_name": "database.py",
       "file_type": "rationale",
-      "norm_label": "\u043e\u0431\u043d\u0443\u043b\u044f\u0435\u0442 \u0440\u0430\u0437\u0434\u0435\u043b \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u043e\u0432: \u0435\u0441\u043b\u0438 \u0442\u0430\u0431\u043b\u0438\u0446\u0430 \u043e\u0442 \u0441\u0442\u0430\u0440\u043e\u0438 \u0441\u0445\u0435\u043c\u044b (\u0431\u0435\u0437 \u043d\u043e\u0432\u044b\u0445 \u043f\u043e\u043b\u0435\u0438) \u2014...",
+      "norm_label": "\u0434\u043e\u0431\u0430\u0432\u043b\u044f\u0435\u0442 \u043d\u0435\u0434\u043e\u0441\u0442\u0430\u044e\u0449\u0438\u0435 \u043a\u043e\u043b\u043e\u043d\u043a\u0438 \u0442\u0430\u0431\u043b\u0438\u0446\u044b materials (\u0431\u0435\u0437 \u043f\u043e\u0442\u0435\u0440\u0438 \u0434\u0430\u043d\u043d\u044b\u0445). \u0435\u0441\u043b\u0438...",
       "source_file": "utils/database.py",
-      "source_location": "L47"
+      "source_location": "L48"
     },
     {
       "id": "memory_05_routes_rules_routes_rules_py_\u043f\u0440\u0430\u0432\u0438\u043b\u0430_\u0437\u0430\u043c\u0435\u043d\u044b",
@@ -14704,7 +14745,7 @@
       "node_kind": "heading",
       "norm_label": "\u0432\u0441\u043f\u043e\u043c\u043e\u0433\u0430\u0442\u0435\u043b\u044c\u043d\u044b\u0435 \u0444\u0443\u043d\u043a\u0446\u0438\u0438",
       "source_file": "memory/11-routes-materials.md",
-      "source_location": "L34"
+      "source_location": "L39"
     },
     {
       "id": "memory_11_routes_materials_\u0437\u0430\u0432\u0438\u0441\u0438\u043c\u043e\u0441\u0442\u0438",
@@ -14716,7 +14757,7 @@
       "node_kind": "heading",
       "norm_label": "\u0437\u0430\u0432\u0438\u0441\u0438\u043c\u043e\u0441\u0442\u0438",
       "source_file": "memory/11-routes-materials.md",
-      "source_location": "L49"
+      "source_location": "L54"
     },
     {
       "id": "memory_11_routes_materials_\u043f\u043e\u0432\u0435\u0434\u0435\u043d\u0438\u0435",
@@ -14728,7 +14769,7 @@
       "node_kind": "heading",
       "norm_label": "\u043f\u043e\u0432\u0435\u0434\u0435\u043d\u0438\u0435",
       "source_file": "memory/11-routes-materials.md",
-      "source_location": "L41"
+      "source_location": "L46"
     },
     {
       "id": "memory_11_routes_materials_\u0444\u043e\u0440\u043c\u0430_\u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u0438\u044f_post_api_materials_add",
@@ -14740,7 +14781,7 @@
       "node_kind": "heading",
       "norm_label": "\u0444\u043e\u0440\u043c\u0430 \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u0438\u044f (post /api/materials/add)",
       "source_file": "memory/11-routes-materials.md",
-      "source_location": "L20"
+      "source_location": "L21"
     },
     {
       "id": "memory_11_routes_materials_\u0445\u0440\u0430\u043d\u0435\u043d\u0438\u0435",
@@ -14752,7 +14793,7 @@
       "node_kind": "heading",
       "norm_label": "\u0445\u0440\u0430\u043d\u0435\u043d\u0438\u0435",
       "source_file": "memory/11-routes-materials.md",
-      "source_location": "L27"
+      "source_location": "L31"
     },
     {
       "id": "memory_11_routes_materials_\u0447\u0442\u043e_\u0434\u0435\u043b\u0430\u0435\u0442",
@@ -15679,26 +15720,81 @@
       "source_location": "L145"
     },
     {
+      "id": "tests_test_magic_routes_py_patch",
+      "label": "patch",
+      "_origin": "ast",
+      "community": 73,
+      "community_name": "save_state",
+      "file_type": "code",
+      "norm_label": "patch",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "utils_state",
+      "label": "utils/state.py",
+      "_origin": "ast",
+      "community": 73,
+      "community_name": "save_state",
+      "file_type": "code",
+      "norm_label": "utils/state.py",
+      "source_file": "utils/state.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "utils_state_py_any",
+      "label": "Any",
+      "_origin": "ast",
+      "community": 73,
+      "community_name": "save_state",
+      "file_type": "code",
+      "norm_label": "any",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "routes_magic_rationale_158",
+      "label": "Background worker: copy and number files, generate Excel registry.",
+      "_origin": "ast",
+      "community": 73,
+      "community_name": "save_state",
+      "file_type": "rationale",
+      "norm_label": "background worker: copy and number files, generate excel registry.",
+      "source_file": "routes/magic.py",
+      "source_location": "L158"
+    },
+    {
       "id": "routes_magic_rationale_53",
       "label": "Start file copy/numbering worker in background thread.",
       "_origin": "ast",
-      "community": 72,
-      "community_name": "magic.py",
+      "community": 73,
+      "community_name": "save_state",
       "file_type": "rationale",
       "norm_label": "start file copy/numbering worker in background thread.",
       "source_file": "routes/magic.py",
       "source_location": "L53"
     },
     {
-      "id": "routes_magic_rationale_37",
-      "label": "\u0423\u0431\u0438\u0440\u0430\u0435\u0442 \u0441\u0442\u0430\u0440\u044b\u0439 \u043f\u043e\u0440\u044f\u0434\u043a\u043e\u0432\u044b\u0439 \u043d\u043e\u043c\u0435\u0440 'NN.' \u0432 \u043d\u0430\u0447\u0430\u043b\u0435 \u0438\u043c\u0435\u043d\u0438 \u0444\u0430\u0439\u043b\u0430. '01.\u0410\u043a\u0442.pdf' \u2192\u2026",
+      "id": "tests_test_magic_routes_rationale_298",
+      "label": "\u041e\u0434\u0438\u043d\u0430\u043a\u043e\u0432\u044b\u0435 \u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u044b \u0432 \u0438\u0442\u043e\u0433\u043e\u0432\u043e\u0439 \u043f\u0430\u043f\u043a\u0435 \u0440\u0430\u0437\u043b\u0438\u0447\u0430\u044e\u0442\u0441\u044f \u043d\u043e\u043c\u0435\u0440\u043e\u043c (01/02), \u0430 \u043d\u0435\u2026",
       "_origin": "ast",
       "community": 73,
-      "community_name": "strip_leading_number",
+      "community_name": "save_state",
       "file_type": "rationale",
-      "norm_label": "\u0443\u0431\u0438\u0440\u0430\u0435\u0442 \u0441\u0442\u0430\u0440\u044b\u0438 \u043f\u043e\u0440\u044f\u0434\u043a\u043e\u0432\u044b\u0438 \u043d\u043e\u043c\u0435\u0440 'nn.' \u0432 \u043d\u0430\u0447\u0430\u043b\u0435 \u0438\u043c\u0435\u043d\u0438 \u0444\u0430\u0438\u043b\u0430. '01.\u0430\u043a\u0442.pdf' \u2192...",
-      "source_file": "routes/magic.py",
-      "source_location": "L37"
+      "norm_label": "\u043e\u0434\u0438\u043d\u0430\u043a\u043e\u0432\u044b\u0435 \u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u044b \u0432 \u0438\u0442\u043e\u0433\u043e\u0432\u043e\u0438 \u043f\u0430\u043f\u043a\u0435 \u0440\u0430\u0437\u043b\u0438\u0447\u0430\u044e\u0442\u0441\u044f \u043d\u043e\u043c\u0435\u0440\u043e\u043c (01/02), \u0430 \u043d\u0435...",
+      "source_file": "tests/test_magic_routes.py",
+      "source_location": "L298"
+    },
+    {
+      "id": "utils_state_rationale_1",
+      "label": "Thread-safe atomic state.json persistence \u2014 with type hints.",
+      "_origin": "ast",
+      "community": 73,
+      "community_name": "save_state",
+      "file_type": "rationale",
+      "norm_label": "thread-safe atomic state.json persistence \u2014 with type hints.",
+      "source_file": "utils/state.py",
+      "source_location": "L1"
     },
     {
       "id": "routes_aocr_py_path",
@@ -15809,6 +15905,28 @@
       "norm_label": "blueprint: /api/directory/* + /api/directories/* \u2014 directory crud and listing.",
       "source_file": "routes/directories.py",
       "source_location": "L1"
+    },
+    {
+      "id": "tests_test_materials_routes_rationale_271",
+      "label": "\u0415\u0434\u0438\u043d\u0438\u0446\u0430 \u0438\u0437\u043c\u0435\u0440\u0435\u043d\u0438\u044f \u0432\u0438\u0434\u043d\u0430 \u0432 \u043f\u043e\u0434\u043f\u0438\u0441\u0438 \u043f\u0430\u0441\u043f\u043e\u0440\u0442\u0430.",
+      "_origin": "ast",
+      "community": 80,
+      "community_name": "TestPassports",
+      "file_type": "rationale",
+      "norm_label": "\u0435\u0434\u0438\u043d\u0438\u0446\u0430 \u0438\u0437\u043c\u0435\u0440\u0435\u043d\u0438\u044f \u0432\u0438\u0434\u043d\u0430 \u0432 \u043f\u043e\u0434\u043f\u0438\u0441\u0438 \u043f\u0430\u0441\u043f\u043e\u0440\u0442\u0430.",
+      "source_file": "tests/test_materials_routes.py",
+      "source_location": "L271"
+    },
+    {
+      "id": "tests_test_materials_routes_rationale_290",
+      "label": "\u041f\u0430\u0441\u043f\u043e\u0440\u0442 \u0431\u0435\u0437 \u0434\u0430\u0442\u044b \u0432 \u0432\u044b\u043f\u0430\u0434\u0430\u044e\u0449\u0435\u043c \u0441\u043f\u0438\u0441\u043a\u0435 \u043f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0435\u0442\u0441\u044f \u043a\u0430\u043a \u00ab\u043e\u0442 \u0431/\u0434\u00bb.",
+      "_origin": "ast",
+      "community": 80,
+      "community_name": "TestPassports",
+      "file_type": "rationale",
+      "norm_label": "\u043f\u0430\u0441\u043f\u043e\u0440\u0442 \u0431\u0435\u0437 \u0434\u0430\u0442\u044b \u0432 \u0432\u044b\u043f\u0430\u0434\u0430\u044e\u0449\u0435\u043c \u0441\u043f\u0438\u0441\u043a\u0435 \u043f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0435\u0442\u0441\u044f \u043a\u0430\u043a \u00ab\u043e\u0442 \u0431/\u0434\u00bb.",
+      "source_file": "tests/test_materials_routes.py",
+      "source_location": "L290"
     },
     {
       "id": "memory_22_\u043c\u0441\u0433",
@@ -18047,7 +18165,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "routes/materials.py",
-      "source_location": "L107",
+      "source_location": "L108",
       "weight": 1.0
     },
     {
@@ -18059,7 +18177,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "routes/materials.py",
-      "source_location": "L135",
+      "source_location": "L136",
       "weight": 1.0
     },
     {
@@ -18071,7 +18189,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "routes/materials.py",
-      "source_location": "L147",
+      "source_location": "L148",
       "weight": 1.0
     },
     {
@@ -18083,7 +18201,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "routes/materials.py",
-      "source_location": "L163",
+      "source_location": "L164",
       "weight": 1.0
     },
     {
@@ -18107,7 +18225,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "routes/materials.py",
-      "source_location": "L262",
+      "source_location": "L276",
       "weight": 1.0
     },
     {
@@ -18119,7 +18237,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "routes/materials.py",
-      "source_location": "L273",
+      "source_location": "L287",
       "weight": 1.0
     },
     {
@@ -18131,7 +18249,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "routes/materials.py",
-      "source_location": "L240",
+      "source_location": "L254",
       "weight": 1.0
     },
     {
@@ -18179,7 +18297,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "routes/materials.py",
-      "source_location": "L195",
+      "source_location": "L197",
       "weight": 1.0
     },
     {
@@ -18191,7 +18309,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "routes/materials.py",
-      "source_location": "L201",
+      "source_location": "L204",
+      "weight": 1.0
+    },
+    {
+      "source": "routes_materials_get_units",
+      "target": "utils_database_get_material_units",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "routes/materials.py",
+      "source_location": "L220",
       "weight": 1.0
     },
     {
@@ -18215,7 +18345,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "routes/materials.py",
-      "source_location": "L217",
+      "source_location": "L231",
       "weight": 1.0
     },
     {
@@ -25787,7 +25917,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L336",
+      "source_location": "L402",
       "weight": 1.0
     },
     {
@@ -25799,7 +25929,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L313",
+      "source_location": "L379",
       "weight": 1.0
     },
     {
@@ -25811,7 +25941,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L295",
+      "source_location": "L361",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_materials_routes_testunits_test_add_saves_unit",
+      "target": "utils_database_get_all_materials",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_materials_routes.py",
+      "source_location": "L264",
       "weight": 1.0
     },
     {
@@ -26651,7 +26793,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "utils/database.py",
-      "source_location": "L225",
+      "source_location": "L234",
       "weight": 1.0
     },
     {
@@ -26663,7 +26805,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "utils/database.py",
-      "source_location": "L91",
+      "source_location": "L86",
       "weight": 1.0
     },
     {
@@ -26675,7 +26817,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "utils/database.py",
-      "source_location": "L360",
+      "source_location": "L369",
       "weight": 1.0
     },
     {
@@ -26687,7 +26829,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "utils/database.py",
-      "source_location": "L182",
+      "source_location": "L191",
       "weight": 1.0
     },
     {
@@ -26699,7 +26841,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "utils/database.py",
-      "source_location": "L249",
+      "source_location": "L258",
       "weight": 1.0
     },
     {
@@ -26711,7 +26853,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "utils/database.py",
-      "source_location": "L140",
+      "source_location": "L136",
       "weight": 1.0
     },
     {
@@ -26723,7 +26865,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "utils/database.py",
-      "source_location": "L370",
+      "source_location": "L379",
       "weight": 1.0
     },
     {
@@ -26735,7 +26877,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "utils/database.py",
-      "source_location": "L117",
+      "source_location": "L113",
       "weight": 1.0
     },
     {
@@ -26747,7 +26889,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "utils/database.py",
-      "source_location": "L238",
+      "source_location": "L247",
       "weight": 1.0
     },
     {
@@ -26759,7 +26901,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "utils/database.py",
-      "source_location": "L130",
+      "source_location": "L126",
       "weight": 1.0
     },
     {
@@ -26771,7 +26913,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "utils/database.py",
-      "source_location": "L169",
+      "source_location": "L165",
+      "weight": 1.0
+    },
+    {
+      "source": "utils_database_get_material_units",
+      "target": "utils_database_get_db",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "utils/database.py",
+      "source_location": "L179",
       "weight": 1.0
     },
     {
@@ -26783,7 +26937,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "utils/database.py",
-      "source_location": "L351",
+      "source_location": "L360",
       "weight": 1.0
     },
     {
@@ -26795,7 +26949,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "utils/database.py",
-      "source_location": "L383",
+      "source_location": "L392",
       "weight": 1.0
     },
     {
@@ -26807,7 +26961,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "utils/database.py",
-      "source_location": "L207",
+      "source_location": "L216",
       "weight": 1.0
     },
     {
@@ -26831,7 +26985,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "utils/database.py",
-      "source_location": "L40",
+      "source_location": "L41",
       "weight": 1.0
     },
     {
@@ -26843,7 +26997,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "utils/database.py",
-      "source_location": "L273",
+      "source_location": "L282",
       "weight": 1.0
     },
     {
@@ -26855,7 +27009,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "utils/database.py",
-      "source_location": "L194",
+      "source_location": "L203",
       "weight": 1.0
     },
     {
@@ -26867,7 +27021,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "utils/database.py",
-      "source_location": "L196",
+      "source_location": "L205",
       "weight": 1.0
     },
     {
@@ -26879,7 +27033,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "utils/database.py",
-      "source_location": "L393",
+      "source_location": "L402",
       "weight": 1.0
     },
     {
@@ -26891,7 +27045,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "utils/database.py",
-      "source_location": "L150",
+      "source_location": "L146",
       "weight": 1.0
     },
     {
@@ -26903,7 +27057,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "utils/database.py",
-      "source_location": "L259",
+      "source_location": "L268",
       "weight": 1.0
     },
     {
@@ -27851,7 +28005,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "routes/materials.py",
-      "source_location": "L257",
+      "source_location": "L271",
       "weight": 1.0
     },
     {
@@ -27863,7 +28017,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "routes/materials.py",
-      "source_location": "L235",
+      "source_location": "L249",
       "weight": 1.0
     },
     {
@@ -27887,7 +28041,19 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "routes/materials.py",
-      "source_location": "L190",
+      "source_location": "L192",
+      "weight": 1.0
+    },
+    {
+      "source": "routes_materials_get_units",
+      "target": "routes_materials_py_route",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "decorator",
+      "source_file": "routes/materials.py",
+      "source_location": "L215",
       "weight": 1.0
     },
     {
@@ -27899,7 +28065,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "routes/materials.py",
-      "source_location": "L212",
+      "source_location": "L226",
       "weight": 1.0
     },
     {
@@ -29075,7 +29241,19 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "routes/materials.py",
-      "source_location": "L192",
+      "source_location": "L194",
+      "weight": 1.0
+    },
+    {
+      "source": "routes_materials",
+      "target": "utils_database_get_material_units",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "routes/materials.py",
+      "source_location": "L217",
       "weight": 1.0
     },
     {
@@ -29087,7 +29265,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "routes/materials.py",
-      "source_location": "L214",
+      "source_location": "L228",
       "weight": 1.0
     },
     {
@@ -29099,7 +29277,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "routes/materials.py",
-      "source_location": "L237",
+      "source_location": "L251",
       "weight": 1.0
     },
     {
@@ -30047,7 +30225,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L282",
+      "source_location": "L249",
       "weight": 1.0
     },
     {
@@ -30059,7 +30237,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L311",
+      "source_location": "L377",
       "weight": 1.0
     },
     {
@@ -32170,7 +32348,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/11-routes-materials.md",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0
     },
     {
@@ -32181,7 +32359,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/11-routes-materials.md",
-      "source_location": "L27",
+      "source_location": "L31",
       "weight": 1.0
     },
     {
@@ -32192,7 +32370,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/11-routes-materials.md",
-      "source_location": "L34",
+      "source_location": "L39",
       "weight": 1.0
     },
     {
@@ -32203,18 +32381,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/11-routes-materials.md",
-      "source_location": "L41",
-      "weight": 1.0
-    },
-    {
-      "source": "memory_11_routes_materials_routes_materials_py_\u0431\u0430\u0437\u0430_\u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u043e\u0432",
-      "target": "memory_11_routes_materials_\u0437\u0430\u0432\u0438\u0441\u0438\u043c\u043e\u0441\u0442\u0438",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "memory/11-routes-materials.md",
-      "source_location": "L49",
+      "source_location": "L46",
       "weight": 1.0
     },
     {
@@ -32226,6 +32393,17 @@
       "confidence_score": 1.0,
       "source_file": "memory/11-routes-materials.md",
       "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "memory_11_routes_materials_routes_materials_py_\u0431\u0430\u0437\u0430_\u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u043e\u0432",
+      "target": "memory_11_routes_materials_\u0437\u0430\u0432\u0438\u0441\u0438\u043c\u043e\u0441\u0442\u0438",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "memory/11-routes-materials.md",
+      "source_location": "L54",
       "weight": 1.0
     },
     {
@@ -32533,7 +32711,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/15-utils-database.md",
-      "source_location": "L66",
+      "source_location": "L67",
       "weight": 1.0
     },
     {
@@ -32555,7 +32733,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/15-utils-database.md",
-      "source_location": "L91",
+      "source_location": "L93",
       "weight": 1.0
     },
     {
@@ -32566,7 +32744,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/15-utils-database.md",
-      "source_location": "L68",
+      "source_location": "L69",
       "weight": 1.0
     },
     {
@@ -32577,7 +32755,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/15-utils-database.md",
-      "source_location": "L79",
+      "source_location": "L81",
       "weight": 1.0
     },
     {
@@ -32588,7 +32766,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/15-utils-database.md",
-      "source_location": "L84",
+      "source_location": "L86",
       "weight": 1.0
     },
     {
@@ -32610,7 +32788,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/15-utils-database.md",
-      "source_location": "L34",
+      "source_location": "L35",
       "weight": 1.0
     },
     {
@@ -32621,7 +32799,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/15-utils-database.md",
-      "source_location": "L45",
+      "source_location": "L46",
       "weight": 1.0
     },
     {
@@ -32632,7 +32810,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/15-utils-database.md",
-      "source_location": "L53",
+      "source_location": "L54",
       "weight": 1.0
     },
     {
@@ -33138,7 +33316,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L66",
+      "source_location": "L68",
       "weight": 1.0
     },
     {
@@ -33149,7 +33327,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L73",
+      "source_location": "L75",
       "weight": 1.0
     },
     {
@@ -33160,7 +33338,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L78",
+      "source_location": "L80",
       "weight": 1.0
     },
     {
@@ -33171,7 +33349,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L38",
+      "source_location": "L40",
       "weight": 1.0
     },
     {
@@ -33193,7 +33371,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L56",
+      "source_location": "L58",
       "weight": 1.0
     },
     {
@@ -33204,7 +33382,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L64",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -33215,7 +33393,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L83",
+      "source_location": "L85",
       "weight": 1.0
     },
     {
@@ -33237,7 +33415,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L92",
+      "source_location": "L94",
       "weight": 1.0
     },
     {
@@ -34799,7 +34977,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "routes/materials.py",
-      "source_location": "L191",
+      "source_location": "L193",
+      "weight": 1.0
+    },
+    {
+      "source": "routes_materials",
+      "target": "routes_materials_get_units",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "routes/materials.py",
+      "source_location": "L216",
       "weight": 1.0
     },
     {
@@ -34810,7 +34999,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "routes/materials.py",
-      "source_location": "L213",
+      "source_location": "L227",
       "weight": 1.0
     },
     {
@@ -34821,7 +35010,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "routes/materials.py",
-      "source_location": "L236",
+      "source_location": "L250",
       "weight": 1.0
     },
     {
@@ -34832,7 +35021,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "routes/materials.py",
-      "source_location": "L258",
+      "source_location": "L272",
       "weight": 1.0
     },
     {
@@ -37301,7 +37490,7 @@
     },
     {
       "source": "tests_test_materials_routes",
-      "target": "tests_test_materials_routes_testpassports",
+      "target": "tests_test_materials_routes_testunits",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -37323,13 +37512,24 @@
     },
     {
       "source": "tests_test_materials_routes",
+      "target": "tests_test_materials_routes_testpassports",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_materials_routes.py",
+      "source_location": "L269",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_materials_routes",
       "target": "tests_test_materials_routes_testresetmaterials",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L280",
+      "source_location": "L346",
       "weight": 1.0
     },
     {
@@ -37340,7 +37540,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L305",
+      "source_location": "L371",
       "weight": 1.0
     },
     {
@@ -37351,7 +37551,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L326",
+      "source_location": "L392",
       "weight": 1.0
     },
     {
@@ -37835,7 +38035,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "utils/database.py",
-      "source_location": "L116",
+      "source_location": "L112",
       "weight": 1.0
     },
     {
@@ -37857,7 +38057,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "utils/database.py",
-      "source_location": "L129",
+      "source_location": "L125",
       "weight": 1.0
     },
     {
@@ -37868,7 +38068,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "utils/database.py",
-      "source_location": "L139",
+      "source_location": "L135",
       "weight": 1.0
     },
     {
@@ -37879,7 +38079,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "utils/database.py",
-      "source_location": "L149",
+      "source_location": "L145",
       "weight": 1.0
     },
     {
@@ -37890,7 +38090,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "utils/database.py",
-      "source_location": "L167",
+      "source_location": "L163",
+      "weight": 1.0
+    },
+    {
+      "source": "utils_database",
+      "target": "utils_database_get_material_units",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "utils/database.py",
+      "source_location": "L177",
       "weight": 1.0
     },
     {
@@ -37901,7 +38112,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "utils/database.py",
-      "source_location": "L181",
+      "source_location": "L190",
       "weight": 1.0
     },
     {
@@ -37912,18 +38123,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "utils/database.py",
-      "source_location": "L192",
-      "weight": 1.0
-    },
-    {
-      "source": "utils_database",
-      "target": "utils_database_init_converter_db",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "utils/database.py",
-      "source_location": "L206",
+      "source_location": "L201",
       "weight": 1.0
     },
     {
@@ -37939,13 +38139,24 @@
     },
     {
       "source": "utils_database",
+      "target": "utils_database_init_converter_db",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "utils/database.py",
+      "source_location": "L215",
+      "weight": 1.0
+    },
+    {
+      "source": "utils_database",
       "target": "utils_database_add_conversion",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "utils/database.py",
-      "source_location": "L224",
+      "source_location": "L233",
       "weight": 1.0
     },
     {
@@ -37956,7 +38167,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "utils/database.py",
-      "source_location": "L237",
+      "source_location": "L246",
       "weight": 1.0
     },
     {
@@ -37967,7 +38178,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "utils/database.py",
-      "source_location": "L248",
+      "source_location": "L257",
       "weight": 1.0
     },
     {
@@ -37978,7 +38189,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "utils/database.py",
-      "source_location": "L258",
+      "source_location": "L267",
       "weight": 1.0
     },
     {
@@ -37989,7 +38200,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "utils/database.py",
-      "source_location": "L272",
+      "source_location": "L281",
       "weight": 1.0
     },
     {
@@ -38000,7 +38211,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "utils/database.py",
-      "source_location": "L350",
+      "source_location": "L359",
       "weight": 1.0
     },
     {
@@ -38011,7 +38222,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "utils/database.py",
-      "source_location": "L359",
+      "source_location": "L368",
       "weight": 1.0
     },
     {
@@ -38022,7 +38233,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "utils/database.py",
-      "source_location": "L369",
+      "source_location": "L378",
       "weight": 1.0
     },
     {
@@ -38033,7 +38244,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "utils/database.py",
-      "source_location": "L382",
+      "source_location": "L391",
       "weight": 1.0
     },
     {
@@ -38044,7 +38255,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "utils/database.py",
-      "source_location": "L392",
+      "source_location": "L401",
       "weight": 1.0
     },
     {
@@ -38055,7 +38266,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "utils/database.py",
-      "source_location": "L46",
+      "source_location": "L47",
       "weight": 1.0
     },
     {
@@ -38066,7 +38277,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "utils/database.py",
-      "source_location": "L79",
+      "source_location": "L73",
       "weight": 1.0
     },
     {
@@ -41454,7 +41665,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L327",
+      "source_location": "L393",
       "weight": 1.0
     },
     {
@@ -41465,7 +41676,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L331",
+      "source_location": "L397",
       "weight": 1.0
     },
     {
@@ -41476,7 +41687,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L306",
+      "source_location": "L372",
       "weight": 1.0
     },
     {
@@ -41487,7 +41698,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L310",
+      "source_location": "L376",
       "weight": 1.0
     },
     {
@@ -41525,13 +41736,24 @@
     },
     {
       "source": "tests_test_materials_routes_testpassports",
+      "target": "tests_test_materials_routes_testpassports_test_passport_label_has_unit",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_materials_routes.py",
+      "source_location": "L270",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_materials_routes_testpassports",
       "target": "tests_test_materials_routes_testpassports_test_passport_without_date_label",
       "relation": "method",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L223",
+      "source_location": "L289",
       "weight": 1.0
     },
     {
@@ -41542,7 +41764,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L242",
+      "source_location": "L308",
       "weight": 1.0
     },
     {
@@ -41553,7 +41775,40 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L281",
+      "source_location": "L347",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_materials_routes_testunits",
+      "target": "tests_test_materials_routes_testunits_test_units_empty",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_materials_routes.py",
+      "source_location": "L223",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_materials_routes_testunits",
+      "target": "tests_test_materials_routes_testunits_test_units_collect_previously_entered",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_materials_routes.py",
+      "source_location": "L228",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_materials_routes_testunits",
+      "target": "tests_test_materials_routes_testunits_test_add_saves_unit",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_materials_routes.py",
+      "source_location": "L248",
       "weight": 1.0
     },
     {
@@ -43878,14 +44133,36 @@
       "weight": 1.0
     },
     {
-      "source": "tests_test_materials_routes_rationale_224",
+      "source": "tests_test_materials_routes_rationale_229",
+      "target": "tests_test_materials_routes_testunits_test_units_collect_previously_entered",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_materials_routes.py",
+      "source_location": "L229",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_materials_routes_rationale_271",
+      "target": "tests_test_materials_routes_testpassports_test_passport_label_has_unit",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_materials_routes.py",
+      "source_location": "L271",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_materials_routes_rationale_290",
       "target": "tests_test_materials_routes_testpassports_test_passport_without_date_label",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L224",
+      "source_location": "L290",
       "weight": 1.0
     },
     {
@@ -44384,36 +44661,47 @@
       "weight": 1.0
     },
     {
-      "source": "utils_database_rationale_168",
+      "source": "utils_database_rationale_164",
       "target": "utils_database_get_material_passports",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "utils/database.py",
-      "source_location": "L168",
+      "source_location": "L164",
       "weight": 1.0
     },
     {
-      "source": "utils_database_rationale_193",
+      "source": "utils_database_rationale_178",
+      "target": "utils_database_get_material_units",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "utils/database.py",
+      "source_location": "L178",
+      "weight": 1.0
+    },
+    {
+      "source": "utils_database_rationale_202",
       "target": "utils_database_reset_materials",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "utils/database.py",
-      "source_location": "L193",
+      "source_location": "L202",
       "weight": 1.0
     },
     {
-      "source": "utils_database_rationale_47",
+      "source": "utils_database_rationale_48",
       "target": "utils_database_ensure_materials_new_schema",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "utils/database.py",
-      "source_location": "L47",
+      "source_location": "L48",
       "weight": 1.0
     },
     {
@@ -44908,7 +45196,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/11-routes-materials.md",
-      "source_location": "L55",
+      "source_location": "L60",
       "weight": 1.0
     },
     {
@@ -45018,7 +45306,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L98",
+      "source_location": "L100",
       "weight": 1.0
     },
     {
@@ -45029,7 +45317,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L98",
+      "source_location": "L100",
       "weight": 1.0
     },
     {
@@ -45040,7 +45328,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L98",
+      "source_location": "L100",
       "weight": 1.0
     },
     {
@@ -45051,7 +45339,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L98",
+      "source_location": "L100",
       "weight": 1.0
     },
     {
@@ -45320,5 +45608,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "79d393f374bdd59878a414ab11fe8f0e382db984"
+  "built_at_commit": "3e9a90c9af0f6599eebb20ccced51cf7972b648b"
 }

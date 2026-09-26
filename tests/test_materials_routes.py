@@ -219,7 +219,73 @@ class TestAddMaterial:
         assert resp.status_code == 200
 
 
+class TestUnits:
+    def test_units_empty(self, app_client, temp_db_all):
+        resp = app_client.get("/api/materials/units")
+        assert resp.status_code == 200
+        assert resp.get_json()["units"] == []
+
+    def test_units_collect_previously_entered(self, app_client, temp_db_all, temp_dir):
+        """Ранее введённые единицы попадают в выпадающий список (уникальные)."""
+        with patch("routes.materials.MATERIALS_DIR", temp_dir):
+            for unit in ("шт", "т", "шт"):
+                resp = app_client.post(
+                    "/api/materials/add",
+                    data={
+                        "doc_name": "Сертификат",
+                        "material_name": "Сваи",
+                        "unit": unit,
+                        "arrival_date": "2026-09-26",
+                        "file": (io.BytesIO(b"%PDF-1.4 fake"), "x.pdf"),
+                    },
+                    content_type="multipart/form-data",
+                )
+                assert resp.status_code == 200
+        data = app_client.get("/api/materials/units").get_json()
+        assert data["success"] is True
+        assert data["units"] == ["т", "шт"]  # отсортировано, без повторов
+
+    def test_add_saves_unit(self, app_client, temp_db_all, temp_dir):
+        from utils.database import get_all_materials
+
+        with patch("routes.materials.MATERIALS_DIR", temp_dir):
+            resp = app_client.post(
+                "/api/materials/add",
+                data={
+                    "doc_name": "Сертификат",
+                    "material_name": "Сваи",
+                    "unit": "шт",
+                    "arrival_date": "2026-09-26",
+                    "file": (io.BytesIO(b"%PDF-1.4 fake"), "x.pdf"),
+                },
+                content_type="multipart/form-data",
+            )
+            assert resp.status_code == 200
+        mats = get_all_materials()
+        assert len(mats) == 1
+        assert mats[0]["unit"] == "шт"
+
+
 class TestPassports:
+    def test_passport_label_has_unit(self, app_client, temp_db_all, temp_dir):
+        """Единица измерения видна в подписи паспорта."""
+        with patch("routes.materials.MATERIALS_DIR", temp_dir):
+            app_client.post(
+                "/api/materials/add",
+                data={
+                    "doc_name": "Сертификат",
+                    "material_name": "Сваи",
+                    "unit": "шт",
+                    "number": "255",
+                    "arrival_date": "2026-09-26",
+                    "file": (io.BytesIO(b"%PDF-1.4 fake"), "svai.pdf"),
+                },
+                content_type="multipart/form-data",
+            )
+        data = app_client.get("/api/materials/passports").get_json()
+        assert data["success"] is True
+        assert "· шт" in data["passports"][0]["label"]
+
     def test_passport_without_date_label(self, app_client, temp_db_all, temp_dir):
         """Паспорт без даты в выпадающем списке показывается как «от б/д»."""
         with patch("routes.materials.MATERIALS_DIR", temp_dir):

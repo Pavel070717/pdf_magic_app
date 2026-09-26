@@ -60,9 +60,9 @@
     "semantic_hash": ""
   },
   "routes/materials.py": {
-    "mtime": 1790407673.8331957,
-    "seen": 1790407749.8853767,
-    "ast_hash": "3faf3f1f23c85a5a9c027695cce616ed",
+    "mtime": 1790408218.535257,
+    "seen": 1790408354.1169496,
+    "ast_hash": "c5456a3fb2c96205fe05122eeb5b8d08",
     "semantic_hash": ""
   },
   "routes/registry.py": {
@@ -192,9 +192,9 @@
     "semantic_hash": ""
   },
   "tests/test_materials_routes.py": {
-    "mtime": 1790407716.7604043,
-    "seen": 1790407749.8853767,
-    "ast_hash": "855967c4e813d011099acb0ed591a8ca",
+    "mtime": 1790408260.279349,
+    "seen": 1790408354.1179454,
+    "ast_hash": "1e6153ae8efe15fd67278798ca3ad51c",
     "semantic_hash": ""
   },
   "tests/test_registry_routes.py": {
@@ -240,9 +240,9 @@
     "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
   },
   "utils/database.py": {
-    "mtime": 1790406967.7379527,
-    "seen": 1790407096.0209858,
-    "ast_hash": "d9c86b838c22dd556b1b4ac5f66328f2",
+    "mtime": 1790408282.3492427,
+    "seen": 1790408354.1179454,
+    "ast_hash": "e424f0806b255b58fd1ecfc3ec9a4a27",
     "semantic_hash": ""
   },
   "utils/excel_registry.py": {
@@ -432,9 +432,9 @@
     "semantic_hash": ""
   },
   "memory/11-routes-materials.md": {
-    "mtime": 1790407743.6902556,
-    "seen": 1790407749.8901043,
-    "ast_hash": "343560de4028622ff92ee8320cd48a8c",
+    "mtime": 1790408339.0624678,
+    "seen": 1790408354.1209188,
+    "ast_hash": "cea8e80cc40103b691b9531c95a5d77a",
     "semantic_hash": ""
   },
   "memory/12-routes-registry.md": {
@@ -456,9 +456,9 @@
     "semantic_hash": ""
   },
   "memory/15-utils-database.md": {
-    "mtime": 1790407059.4644568,
-    "seen": 1790407096.0209858,
-    "ast_hash": "149fe8c90666b5a61203605f03bce26a",
+    "mtime": 1790408347.2148752,
+    "seen": 1790408354.1209188,
+    "ast_hash": "a2755a68c226ebb5f7cf6d10af35204b",
     "semantic_hash": ""
   },
   "memory/16-utils-state.md": {
@@ -480,9 +480,9 @@
     "semantic_hash": ""
   },
   "memory/19-\u0422\u0435\u0441\u0442\u044b.md": {
-    "mtime": 1790407732.9464104,
-    "seen": 1790407749.8901043,
-    "ast_hash": "6f8f43ce5d84d93b8ef0cc7bd2c0fc92",
+    "mtime": 1790408315.3293233,
+    "seen": 1790408354.1209188,
+    "ast_hash": "5fa88dbc681e4f11e61028d8af3cfc52",
     "semantic_hash": ""
   },
   "memory/20-CI-CD.md": {
@@ -492,9 +492,9 @@
     "semantic_hash": ""
   },
   "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md": {
-    "mtime": 1790407739.4716241,
-    "seen": 1790407749.8901043,
-    "ast_hash": "0c7d6b9150a81aa8292729ab7d21a48c",
+    "mtime": 1790408327.410706,
+    "seen": 1790408354.1209188,
+    "ast_hash": "184983dbf8236335578570b02e27e1a8",
     "semantic_hash": ""
   },
   "mypy_errors.txt": {
@@ -546,9 +546,9 @@
     "semantic_hash": ""
   },
   "templates/materials.html": {
-    "mtime": 1790407688.1939912,
-    "seen": 1790407749.8901043,
-    "ast_hash": "a6becc5285343492647c433ff891ca69",
+    "mtime": 1790408249.9631033,
+    "seen": 1790408354.1219425,
+    "ast_hash": "2aa410a0371c5dc331eaa2a0913723ec",
     "semantic_hash": ""
   },
   "templates/registry_form.html": {
