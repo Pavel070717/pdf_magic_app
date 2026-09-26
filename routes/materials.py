@@ -3,12 +3,55 @@ Blueprint: /api/materials/* — materials CRUD with PDF storage.
 """
 
 import re
+from pathlib import Path
 
 from flask import Blueprint, jsonify, request, send_file
 
 from routes.core import MATERIALS_DIR, logger, sanitize_text
 
 materials_bp = Blueprint("materials", __name__)
+
+
+def _parse_iso_date(value: str) -> str:
+    """Принимает 'ГГГГ-ММ-ДД' или 'ДД.ММ.ГГГГ', возвращает 'ГГГГ-ММ-ДД'."""
+    value = (value or "").strip().replace(".", "-")
+    parts = [p.strip() for p in value.split("-") if p.strip()]
+    if len(parts) != 3 or not all(p.isdigit() for p in parts):
+        return ""
+    if len(parts[0]) == 4:  # ГГГГ-ММ-ДД
+        y, m, d = parts
+    elif len(parts[2]) == 4:  # ДД-ММ-ГГГГ
+        d, m, y = parts
+    else:
+        return ""
+    try:
+        if not (1 <= int(m) <= 12 and 1 <= int(d) <= 31 and int(y) >= 1900):
+            return ""
+    except ValueError:
+        return ""
+    return f"{int(y):04d}-{int(m):02d}-{int(d):02d}"
+
+
+def _readable_date(iso: str) -> str:
+    if not iso or not len(iso.split("-")) == 3:
+        return iso or ""
+    y, m, d = iso.split("-")
+    return f"{d}.{m}.{y}"
+
+
+def _safe_name(text: str) -> str:
+    return re.sub(r'[\\/*?:"<>|;]', "_", text)
+
+
+def _next_file_number(folder: Path) -> str:
+    from utils.database import count_materials_in_folder
+
+    count = count_materials_in_folder(folder.name)
+    for n in range(count + 1, count + 50):
+        candidate = f"{n:02d}_"
+        if not any(p.name.startswith(candidate) for p in folder.iterdir()):
+            return f"{n:02d}"
+    return f"{count + 1:02d}"
 
 
 @materials_bp.route("/api/materials", methods=["GET"])
@@ -47,6 +90,8 @@ def add_material_endpoint():
         number = sanitize_text(request.form.get("number", ""))
         date = sanitize_text(request.form.get("date", ""))
         producer = sanitize_text(request.form.get("producer", ""))
+        arrival_input = sanitize_text(request.form.get("arrival_date", ""))
+        quantity_raw = sanitize_text(request.form.get("quantity", "0"))
         file = request.files.get("file")
 
         if not doc_name:
@@ -59,6 +104,21 @@ def add_material_endpoint():
                 jsonify({"success": False, "error": "Введите наименование материала"}),
                 400,
             )
+        arrival_date = _parse_iso_date(arrival_input)
+        if not arrival_date:
+            return (
+                jsonify(
+                    {
+                        "success": False,
+                        "error": "Укажите дату поступления (дд.мм.гггг или гггг-мм-дд)",
+                    }
+                ),
+                400,
+            )
+        try:
+            quantity = float(str(quantity_raw or "0").replace(",", "."))
+        except ValueError:
+            quantity = 0.0
         if not file or file.filename == "":
             return jsonify({"success": False, "error": "Загрузите PDF-файл"}), 400
         if file.content_type and not file.content_type.startswith("application/pdf"):
@@ -72,45 +132,101 @@ def add_material_endpoint():
         materials_dir = MATERIALS_DIR
         materials_dir.mkdir(parents=True, exist_ok=True)
 
-        def safe_name(text: str) -> str:
-            return re.sub(r'[\\/*?:"<>|;]', "_", text)
+        safe_doc = _safe_name(doc_name)
+        safe_mat = _safe_name(material_name)
+        safe_num = _safe_name(number or "—")
+        safe_date = _safe_name(date or "—")
 
-        safe_doc = safe_name(doc_name)
-        safe_mat = safe_name(material_name)
-        safe_num = safe_name(number or "—")
-        safe_date = safe_name(date or "—")
-        new_filename = f"{safe_doc};{safe_mat};{safe_num};{safe_date}.pdf"
-        filepath = materials_dir / new_filename
+        # Папка поступления: ISO-дата — проводник сортирует старые → новые
+        folder_name = arrival_date
+        folder_path = materials_dir / folder_name
+        folder_path.mkdir(parents=True, exist_ok=True)
+
+        num = _next_file_number(folder_path)
+        new_filename = f"{num}_{safe_doc};{safe_mat};{safe_num};{safe_date}.pdf"
+        filepath = folder_path / new_filename
 
         counter = 1
         while filepath.exists():
-            new_filename = f"{safe_doc};{safe_mat};{safe_num};{safe_date}_{counter}.pdf"
-            filepath = materials_dir / new_filename
+            new_filename = (
+                f"{num}_{counter}_{safe_doc};{safe_mat};{safe_num};{safe_date}.pdf"
+            )
+            filepath = folder_path / new_filename
             counter += 1
 
         file.save(str(filepath))
         logger.info(f"PDF материала сохранён: {filepath}")
 
+        stored_filename = f"{folder_name}/{filepath.name}"
         material_id = add_material(
             doc_name=doc_name,
             material_name=material_name,
             number=number,
             date=date,
             producer=producer,
-            filename=new_filename,
+            filename=stored_filename,
             original_filename=file.filename or "unknown.pdf",
+            arrival_date=arrival_date,
+            quantity=quantity,
+            folder=folder_name,
         )
 
         return jsonify(
             {
                 "success": True,
                 "material_id": material_id,
-                "filename": new_filename,
+                "filename": stored_filename,
+                "folder": folder_name,
                 "path": str(filepath),
             }
         )
     except Exception as e:
         logger.exception("Ошибка добавления материала")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@materials_bp.route("/api/materials/passports")
+def get_passports():
+    from utils.database import get_material_passports
+
+    try:
+        rows = get_material_passports()
+        for r in rows:
+            r["label"] = (
+                (
+                    f"{r['doc_name']} {r['material_name']}"
+                    f" (№ {r['number'] or '—'})"
+                    f" от {_readable_date(r['date'])} · {r['producer']}"
+                )
+                .replace("  ", " ")
+                .strip(" ·")
+            )
+        return jsonify({"success": True, "passports": rows})
+    except Exception as e:
+        logger.exception("Ошибка получения паспортов")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@materials_bp.route("/api/materials/reset", methods=["POST"])
+def reset_materials_endpoint():
+    from utils.database import reset_materials
+
+    try:
+        reset_materials()
+        materials_dir = MATERIALS_DIR
+        if materials_dir.exists():
+            for item in materials_dir.iterdir():
+                if item.is_dir():
+                    import shutil
+
+                    shutil.rmtree(item, ignore_errors=True)
+                else:
+                    item.unlink(missing_ok=True)
+            materials_dir.mkdir(parents=True, exist_ok=True)
+        logger.info("Раздел «База материалов» обнулён")
+        return jsonify({"success": True})
+    except Exception as e:
+        logger.exception("Ошибка сброса материалов")
         return jsonify({"success": False, "error": str(e)}), 500
 
 

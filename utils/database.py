@@ -29,14 +29,51 @@ def init_db() -> None:
                 number TEXT DEFAULT '',
                 date TEXT DEFAULT '',
                 producer TEXT DEFAULT '',
+                arrival_date TEXT DEFAULT '',
+                quantity REAL DEFAULT 0,
+                folder TEXT DEFAULT '',
                 filename TEXT NOT NULL,
                 original_filename TEXT NOT NULL,
                 created_at TEXT NOT NULL DEFAULT (datetime('now'))
             )
         """)
+        _ensure_materials_new_schema(conn)
         conn.commit()
     finally:
         conn.close()
+
+
+def _ensure_materials_new_schema(conn) -> None:
+    """Обнуляет раздел материалов: если таблица от старой схемы (без новых
+    полей) — пересоздаёт её начисто. Остальные таблицы не трогает."""
+    cols = {row[1] for row in conn.execute("PRAGMA table_info(materials)").fetchall()}
+    required = {"arrival_date", "quantity", "folder"}
+    if not required.issubset(cols):
+        conn.execute("DROP TABLE IF EXISTS materials")
+        conn.execute("""
+            CREATE TABLE materials (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                doc_name TEXT NOT NULL,
+                material_name TEXT NOT NULL,
+                number TEXT DEFAULT '',
+                date TEXT DEFAULT '',
+                producer TEXT DEFAULT '',
+                arrival_date TEXT DEFAULT '',
+                quantity REAL DEFAULT 0,
+                folder TEXT DEFAULT '',
+                filename TEXT NOT NULL,
+                original_filename TEXT NOT NULL,
+                created_at TEXT NOT NULL DEFAULT (datetime('now'))
+            )
+        """)
+        conn.execute("""
+            CREATE INDEX IF NOT EXISTS idx_materials_arrival
+            ON materials (arrival_date)
+        """)
+        conn.execute("""
+            CREATE INDEX IF NOT EXISTS idx_materials_folder
+            ON materials (folder)
+        """)
 
 
 def add_material(
@@ -47,18 +84,25 @@ def add_material(
     producer: str,
     filename: str,
     original_filename: str,
+    arrival_date: str = "",
+    quantity: float = 0.0,
+    folder: str = "",
 ) -> int:
     conn = get_db()
     try:
         cursor = conn.execute(
-            """INSERT INTO materials (doc_name, material_name, number, date, producer, filename, original_filename)
-               VALUES (?, ?, ?, ?, ?, ?, ?)""",
+            """INSERT INTO materials (doc_name, material_name, number, date, producer,
+               arrival_date, quantity, folder, filename, original_filename)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 doc_name,
                 material_name,
                 number or "",
                 date or "",
                 producer or "",
+                arrival_date or "",
+                quantity or 0.0,
+                folder or "",
                 filename,
                 original_filename,
             ),
@@ -73,8 +117,9 @@ def get_all_materials() -> list[dict[str, object]]:
     conn = get_db()
     try:
         cursor = conn.execute(
-            """SELECT id, doc_name, material_name, number, date, producer, filename, original_filename, created_at
-               FROM materials ORDER BY created_at DESC"""
+            """SELECT id, doc_name, material_name, number, date, producer,
+               arrival_date, quantity, folder, filename, original_filename, created_at
+               FROM materials ORDER BY created_at DESC, id DESC"""
         )
         return [dict(row) for row in cursor.fetchall()]
     finally:
@@ -106,13 +151,51 @@ def search_materials(query: str) -> list[dict[str, object]]:
     try:
         like = f"%{query}%"
         cursor = conn.execute(
-            """SELECT id, doc_name, material_name, number, date, producer, filename, original_filename, created_at
+            """SELECT id, doc_name, material_name, number, date, producer,
+               arrival_date, quantity, folder, filename, original_filename, created_at
                FROM materials
-               WHERE doc_name LIKE ? OR material_name LIKE ? OR number LIKE ? OR producer LIKE ?
+               WHERE doc_name LIKE ? OR material_name LIKE ? OR number LIKE ?
+                  OR producer LIKE ? OR arrival_date LIKE ?
                ORDER BY created_at DESC""",
-            (like, like, like, like),
+            (like, like, like, like, like),
         )
         return [dict(row) for row in cursor.fetchall()]
+    finally:
+        conn.close()
+
+
+def get_material_passports() -> list[dict[str, object]]:
+    """Уникальные «паспорта» (сочетания всех полей), отсортированные по имени."""
+    conn = get_db()
+    try:
+        cursor = conn.execute("""SELECT doc_name, material_name, number, date, producer,
+               MAX(created_at) AS latest
+               FROM materials
+               GROUP BY doc_name, material_name, number, date, producer
+               ORDER BY doc_name, material_name""")
+        return [dict(row) for row in cursor.fetchall()]
+    finally:
+        conn.close()
+
+
+def count_materials_in_folder(folder: str) -> int:
+    conn = get_db()
+    try:
+        cursor = conn.execute(
+            "SELECT COUNT(*) AS c FROM materials WHERE folder = ?", (folder,)
+        )
+        return int(cursor.fetchone()["c"] or 0)
+    finally:
+        conn.close()
+
+
+def reset_materials() -> None:
+    """Обнуляет таблицу материалов (только её, остальные таблицы не трогает)."""
+    conn = get_db()
+    try:
+        _ensure_materials_new_schema(conn)
+        conn.execute("DELETE FROM materials")
+        conn.commit()
     finally:
         conn.close()
 

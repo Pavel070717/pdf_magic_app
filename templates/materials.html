@@ -10,34 +10,87 @@
   </div>
 </div>
 
-<div style="padding: 24px; max-width: 1000px;">
+<div style="padding: 24px; max-width: 1100px;">
   <form id="mat-add" class="glass-card padded" style="margin-bottom: 16px;" onsubmit="return addMaterial(event)">
-    <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 16px;">Добавить материал</h3>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+      <h3 style="font-size: 14px; font-weight: 700;">Добавить материал</h3>
+      <button type="button" class="btn btn-danger btn-sm" onclick="resetMaterialsSection()" title="Очистить раздел «База материалов»">🗑 Обнулить раздел</button>
+    </div>
+
+    <div class="field" style="margin-bottom: 12px;">
+      <label>Выбрать из ранее добавленных паспортов</label>
+      <select id="mat-passport" onchange="applyPassport(this)" style="width: 100%; padding: 10px 12px; background: var(--bg-elevated); color: var(--text-primary); border: 1px solid var(--border-strong); border-radius: var(--radius-sm);">
+        <option value="">— новый (заполнить вручную) —</option>
+      </select>
+    </div>
+
     <div class="grid-2" style="margin-bottom: 12px;">
       <div class="field"><label>Наименование документа</label><input type="text" name="doc_name" required></div>
       <div class="field"><label>Наименование материала</label><input type="text" name="material_name" required></div>
       <div class="field"><label>Номер</label><input type="text" name="number"></div>
-      <div class="field"><label>Дата</label><input type="text" name="date" placeholder="ДД.ММ.ГГГГ"></div>
+      <div class="field"><label>Дата документа</label><input type="date" name="date"></div>
     </div>
-    <div class="field"><label>Производитель</label><input type="text" name="producer"></div>
-    <div style="display: flex; gap: 12px; align-items: flex-end; margin-top: 12px;">
-      <div class="field" style="flex: 1; margin-bottom: 0;"><label>PDF сертификат</label><input type="file" name="file" accept=".pdf" required></div>
-      <button type="submit" class="btn btn-primary" style="margin-bottom: 0;">Добавить</button>
+    <div class="grid-2" style="margin-bottom: 12px;">
+      <div class="field"><label>Производитель</label><input type="text" name="producer"></div>
+      <div class="field"><label>Дата поступления</label><input type="date" name="arrival_date" required></div>
+      <div class="field"><label>Количество поступившего материала</label><input type="number" name="quantity" step="any" min="0" value="0"></div>
+      <div class="field"><label>PDF сертификат</label><input type="file" name="file" accept=".pdf" required></div>
+    </div>
+    <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+      <button type="submit" class="btn btn-primary">Добавить</button>
+      <span class="text-muted text-sm">Файл появится в папке поступления <b id="mat-folder-hint"></b> с номером 01, 02…</span>
     </div>
     <div id="mat-msg" class="text-sm" style="margin-top: 10px;"></div>
   </form>
 
   <div class="glass-card" style="overflow: hidden;">
-    <div style="padding: 14px 18px; border-bottom: 1px solid var(--border);">
-      <input type="text" placeholder="Поиск..." id="mat-search"
-        style="max-width: 400px;"
-        oninput="loadMaterials(this.value)">
+    <div style="padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+      <input type="text" placeholder="Поиск (документ, материал, №, производитель, дата)..." id="mat-search"
+        style="max-width: 420px;" oninput="loadMaterials(this.value)">
+      <span id="mat-count" class="badge badge-accent text-sm"></span>
     </div>
     <div id="materials-list" class="padded"><span class="text-muted text-sm">Загрузка...</span></div>
   </div>
 </div>
 
 <script>
+// =============================================================================
+// Паспорта: загрузка списка + автозаполнение формы
+// =============================================================================
+function loadPassports() {
+  fetch('/api/materials/passports').then(function(r) { return r.json(); }).then(function(d) {
+    var el = document.getElementById('mat-passport');
+    var opts = '<option value="">— новый (заполнить вручную) —</option>';
+    (d.passports || []).forEach(function(p, i) {
+      opts += '<option value="' + i + '" data-doc="' + escapeHtml(p.doc_name) + '"' +
+        ' data-mat="' + escapeHtml(p.material_name) + '" data-num="' + escapeHtml(p.number || '') + '"' +
+        ' data-date="' + escapeHtml(p.date || '') + '" data-prod="' + escapeHtml(p.producer || '') + '">' +
+        escapeHtml(p.label) + '</option>';
+    });
+    el.innerHTML = opts;
+  }).catch(function() {});
+}
+
+function applyPassport(sel) {
+  var opt = sel.options[sel.selectedIndex];
+  if (!opt || !opt.value) return;
+  var form = document.getElementById('mat-add');
+  form.querySelector('[name="doc_name"]').value = opt.dataset.doc || '';
+  form.querySelector('[name="material_name"]').value = opt.dataset.mat || '';
+  form.querySelector('[name="number"]').value = opt.dataset.num || '';
+  form.querySelector('[name="date"]').value = opt.dataset.date || '';
+  form.querySelector('[name="producer"]').value = opt.dataset.prod || '';
+}
+
+function updateFolderHint() {
+  var el = document.getElementById('mat-folder-hint');
+  var v = document.getElementById('arrival-date-input').value;
+  if (!v) { el.textContent = ''; return; }
+  el.textContent = '«база материалов/' + v + '»';
+  var form = document.getElementById('mat-add');
+  form.querySelector('[name="arrival_date"]').value = v;
+}
+
 // =============================================================================
 // Add material (multipart via FormData + fetch)
 // =============================================================================
@@ -52,9 +105,10 @@ function addMaterial(e) {
     .then(function(r) { return r.json(); })
     .then(function(d) {
       if (d.success) {
-        msg.innerHTML = '<span class="text-success">✅ Материал добавлен</span>';
+        msg.innerHTML = '<span class="text-success">✅ Материал добавлен → папка «' + escapeHtml(d.folder || '') + '»</span>';
         form.reset();
         loadMaterials(document.getElementById('mat-search').value);
+        loadPassports();
       } else {
         msg.innerHTML = '<span class="text-danger">❌ ' + escapeHtml(d.error || 'Ошибка') + '</span>';
       }
@@ -69,25 +123,30 @@ function addMaterial(e) {
 // Load materials (with optional search query)
 // =============================================================================
 function loadMaterials(q) {
-  var url = q ? '/api/materials/search?q=' + encodeURIComponent(q) : '/api/materials';
+  var url = q ? '/api/materials?q=' + encodeURIComponent(q) : '/api/materials';
   fetch(url).then(function(r) { return r.json(); }).then(function(d) {
     var el = document.getElementById('materials-list');
     var mats = d.materials || d || [];
+    document.getElementById('mat-count').textContent = mats.length + ' зап.';
+    document.getElementById('mat-count').style.display = mats.length ? '' : 'none';
     if (!mats.length) {
       el.innerHTML = '<span class="text-muted">Материалы не найдены</span>';
       return;
     }
     var html = '<table><thead><tr>' +
-      '<th>Документ</th><th>Материал</th><th>№</th><th>Дата</th><th>Производитель</th><th>Файл</th><th></th>' +
+      '<th>Документ</th><th>Материал</th><th>№</th><th>Дата док.</th><th>Производитель</th>' +
+      '<th>Дата поступл.</th><th>Кол-во</th><th>Файл</th><th></th>' +
       '</tr></thead><tbody>';
     mats.forEach(function(m) {
       html += '<tr>' +
         '<td>' + escapeHtml(m.doc_name || '') + '</td>' +
         '<td>' + escapeHtml(m.material_name || '') + '</td>' +
         '<td class="text-muted">' + escapeHtml(m.number || '—') + '</td>' +
-        '<td class="text-muted">' + escapeHtml(m.date || '—') + '</td>' +
+        '<td class="text-muted">' + escapeHtml(fmtDate(m.date) || '—') + '</td>' +
         '<td class="text-muted">' + escapeHtml(m.producer || '—') + '</td>' +
-        '<td><a class="text-accent text-xs" href="/api/materials/download/' + encodeURIComponent(m.id || 0) + '">📎</a></td>' +
+        '<td class="text-muted">' + escapeHtml(fmtDate(m.arrival_date) || '—') + '</td>' +
+        '<td class="text-muted">' + escapeHtml(m.quantity || '—') + '</td>' +
+        '<td><a class="text-accent text-xs" title="' + escapeHtml(m.folder || '') + '" href="/api/materials/pdf/' + encodeURIComponent(m.id || 0) + '">📎</a></td>' +
         '<td><button class="btn btn-danger btn-sm" onclick="deleteMat(' + (m.id || 0) + ')">🗑️</button></td>' +
         '</tr>';
     });
@@ -108,14 +167,37 @@ function deleteMat(id) {
     .then(function(d) {
       if (d.success) {
         loadMaterials(document.getElementById('mat-search').value);
+        loadPassports();
         showToast('Материал удалён', 'success');
       }
     });
 }
 
 // =============================================================================
+// Reset раздела «База материалов» (только этот раздел)
+// =============================================================================
+function resetMaterialsSection() {
+  if (!confirm('Обнулить раздел «База материалов»?\nБудут удалены все записи и PDF-файлы из папки «база материалов». Остальной проект не тронется.')) return;
+  fetch('/api/materials/reset', { method: 'POST' })
+    .then(function(r) { return r.json(); }).then(function(d) {
+    if (d.success) {
+      loadMaterials('');
+      loadPassports();
+      showToast('Раздел «База материалов» обнулён', 'success');
+    }
+  });
+}
+
+// =============================================================================
 // Helpers
 // =============================================================================
+function fmtDate(v) {
+  if (!v) return '';
+  var m = String(v).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (m) return m[3] + '.' + m[2] + '.' + m[1];
+  return String(v);
+}
+
 function escapeHtml(str) {
   if (str === null || str === undefined) return '';
   var div = document.createElement('div');
@@ -126,7 +208,20 @@ function escapeHtml(str) {
 // =============================================================================
 // Init
 // =============================================================================
-document.addEventListener('DOMContentLoaded', function() { loadMaterials(); });
+document.addEventListener('DOMContentLoaded', function() {
+  loadMaterials();
+  loadPassports();
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0');
+  var todayISO = today.getFullYear() + '-' + mm + '-' + dd;
+  var form = document.getElementById('mat-add');
+  var input = form.querySelector('[name="arrival_date"]');
+  input.id = 'arrival-date-input';
+  input.value = todayISO;
+  updateFolderHint();
+  input.addEventListener('change', updateFolderHint);
+});
 </script>
 
 {% endblock %}
