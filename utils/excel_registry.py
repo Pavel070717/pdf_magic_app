@@ -342,11 +342,11 @@ def read_aosr_cell_from_xlsx(xlsx_path: Path) -> str:
             # АОСР: ЯЧЕЙКА С НАИМЕНОВАНИЕМ ДОКУМЕНТА — менять ТОЛЬКО здесь
             # Сейчас считывается A77 (раньше была A81). Правь строку ниже.
             # ═══════════════════════════════════════════════════════════════
-            val = ws["A77"].value
+            val = ws["A78"].value
             if val is not None:
                 return str(val).strip()
     except Exception as e:
-        logger.warning(f"Ошибка чтения A77 из {xlsx_path}: {e}")
+        logger.warning(f"Ошибка чтения A78 из {xlsx_path}: {e}")
     finally:
         if wb is not None:
             try:

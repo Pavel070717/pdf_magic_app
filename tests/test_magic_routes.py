@@ -186,7 +186,7 @@ class TestCopyWorker:
 
         xlsx_path = src_dir / "АОСР_№1_22.05.2025.xlsx"
         book = Workbook()
-        book.active["A77"] = "Бетонирование плиты"
+        book.active["A78"] = "Бетонирование плиты"
         book.save(xlsx_path)
         book.close()
 
