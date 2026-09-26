@@ -28,7 +28,11 @@
       <div class="field"><label>Наименование документа</label><input type="text" name="doc_name" required></div>
       <div class="field"><label>Наименование материала</label><input type="text" name="material_name" required></div>
       <div class="field"><label>Номер</label><input type="text" name="number"></div>
-      <div class="field"><label>Дата документа</label><input type="date" name="date"></div>
+      <div class="field"><label>Дата документа</label><input type="date" name="date" id="mat-date-input" style="min-width: 0;">
+        <label style="display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 12px; color: var(--text-secondary); cursor: pointer;">
+          <input type="checkbox" id="mat-date-no-date" onchange="toggleNoDate(this)"> б/д — без даты
+        </label>
+      </div>
     </div>
     <div class="grid-2" style="margin-bottom: 12px;">
       <div class="field"><label>Производитель</label><input type="text" name="producer"></div>
@@ -80,6 +84,20 @@ function applyPassport(sel) {
   form.querySelector('[name="number"]').value = opt.dataset.num || '';
   form.querySelector('[name="date"]').value = opt.dataset.date || '';
   form.querySelector('[name="producer"]').value = opt.dataset.prod || '';
+  var noDate = document.getElementById('mat-date-no-date');
+  noDate.checked = !opt.dataset.date;
+  toggleNoDate(noDate);
+}
+
+function toggleNoDate(cb) {
+  var input = document.getElementById('mat-date-input');
+  if (!input) return;
+  if (cb && cb.checked) {
+    input.value = '';
+    input.disabled = true;
+  } else {
+    input.disabled = false;
+  }
 }
 
 function updateFolderHint() {
@@ -107,6 +125,12 @@ function addMaterial(e) {
       if (d.success) {
         msg.innerHTML = '<span class="text-success">✅ Материал добавлен → папка «' + escapeHtml(d.folder || '') + '»</span>';
         form.reset();
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0');
+        var arr = form.querySelector('[name="arrival_date"]');
+        arr.value = today.getFullYear() + '-' + mm + '-' + dd;
+        updateFolderHint();
         loadMaterials(document.getElementById('mat-search').value);
         loadPassports();
       } else {
@@ -142,7 +166,7 @@ function loadMaterials(q) {
         '<td>' + escapeHtml(m.doc_name || '') + '</td>' +
         '<td>' + escapeHtml(m.material_name || '') + '</td>' +
         '<td class="text-muted">' + escapeHtml(m.number || '—') + '</td>' +
-        '<td class="text-muted">' + escapeHtml(fmtDate(m.date) || '—') + '</td>' +
+        '<td class="text-muted">' + escapeHtml(fmtDate(m.date) || (m.date ? '—' : 'б/д')) + '</td>' +
         '<td class="text-muted">' + escapeHtml(m.producer || '—') + '</td>' +
         '<td class="text-muted">' + escapeHtml(fmtDate(m.arrival_date) || '—') + '</td>' +
         '<td class="text-muted">' + escapeHtml(m.quantity || '—') + '</td>' +

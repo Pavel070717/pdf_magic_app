@@ -135,7 +135,9 @@ def add_material_endpoint():
         safe_doc = _safe_name(doc_name)
         safe_mat = _safe_name(material_name)
         safe_num = _safe_name(number or "—")
-        safe_date = _safe_name(date or "—")
+        # Пустая дата документа = «без даты» (б/д). Слэш из токена заменяется
+        # на "_", как и в остальных частях имени (на Windows "/" запрещён).
+        safe_date = _safe_name(date or "б/д")
 
         # Папка поступления: ISO-дата — проводник сортирует старые → новые
         folder_name = arrival_date
@@ -196,7 +198,7 @@ def get_passports():
                 (
                     f"{r['doc_name']} {r['material_name']}"
                     f" (№ {r['number'] or '—'})"
-                    f" от {_readable_date(r['date'])} · {r['producer']}"
+                    f" от {_readable_date(r['date']) or 'б/д'} · {r['producer']}"
                 )
                 .replace("  ", " ")
                 .strip(" ·")

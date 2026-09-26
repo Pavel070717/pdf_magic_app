@@ -149,6 +149,45 @@ class TestAddMaterial:
         folders = sorted(p.name for p in temp_dir.iterdir() if p.is_dir())
         assert folders == ["2025-12-01", "2026-01-15", "2026-09-26"]
 
+    def test_no_date_uses_b_d_token(self, app_client, temp_db_all, temp_dir):
+        """Пустая дата документа → в имени файла токен «б_д»."""
+        with patch("routes.materials.MATERIALS_DIR", temp_dir):
+            resp = app_client.post(
+                "/api/materials/add",
+                data={
+                    "doc_name": "Сертификат",
+                    "material_name": "Сваи",
+                    "arrival_date": "2026-09-26",
+                    "file": (io.BytesIO(b"%PDF-1.4 fake"), "svai.pdf"),
+                },
+                content_type="multipart/form-data",
+            )
+            assert resp.status_code == 200
+        files = list((temp_dir / "2026-09-26").glob("*.pdf"))
+        assert len(files) == 1
+        assert ";б_д.pdf" in files[0].name
+
+    def test_slash_in_name_becomes_underscore(self, app_client, temp_db_all, temp_dir):
+        """'/' в наименовании документа/материала на выходе заменяется на '_'."""
+        with patch("routes.materials.MATERIALS_DIR", temp_dir):
+            resp = app_client.post(
+                "/api/materials/add",
+                data={
+                    "doc_name": "Акт/Приёмка",
+                    "material_name": "Бетон/раствор",
+                    "number": "255/1",
+                    "arrival_date": "2026-09-26",
+                    "file": (io.BytesIO(b"%PDF-1.4 fake"), "x.pdf"),
+                },
+                content_type="multipart/form-data",
+            )
+            assert resp.status_code == 200
+        files = list((temp_dir / "2026-09-26").glob("*.pdf"))
+        assert len(files) == 1
+        name = files[0].name
+        assert "/" not in name
+        assert name.startswith("01_Акт_Приёмка;Бетон_раствор;255_1;")
+
     def test_non_pdf_content_type(self, app_client, temp_db_all, temp_dir):
         with patch("routes.materials.MATERIALS_DIR", temp_dir):
             data = {
@@ -181,6 +220,25 @@ class TestAddMaterial:
 
 
 class TestPassports:
+    def test_passport_without_date_label(self, app_client, temp_db_all, temp_dir):
+        """Паспорт без даты в выпадающем списке показывается как «от б/д»."""
+        with patch("routes.materials.MATERIALS_DIR", temp_dir):
+            app_client.post(
+                "/api/materials/add",
+                data={
+                    "doc_name": "Сертификат",
+                    "material_name": "Сваи",
+                    "number": "255",
+                    "arrival_date": "2026-09-26",
+                    "file": (io.BytesIO(b"%PDF-1.4 fake"), "svai.pdf"),
+                },
+                content_type="multipart/form-data",
+            )
+        data = app_client.get("/api/materials/passports").get_json()
+        assert data["success"] is True
+        assert len(data["passports"]) == 1
+        assert "б/д" in data["passports"][0]["label"]
+
     def test_passports_list_groups_unique(self, app_client, temp_db_all, temp_dir):
         with patch("routes.materials.MATERIALS_DIR", temp_dir):
             for day in ("2026-09-26", "2026-10-05"):
