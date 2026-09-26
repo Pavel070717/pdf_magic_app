@@ -45,9 +45,10 @@
         <input type="text" name="quantity" inputmode="decimal" value="0,000" min="0"
           onfocus="focusQtyInput(this)" onblur="fmtQtyInput(this)"></div>
       <div class="field"><label>Дата поступления</label><input type="date" name="arrival_date" required></div>
-      <div class="field"><label>Сопроводительный документ (PDF, фото и др.)</label><input type="file" name="file" id="mat-file-input" onchange="updateReasonHint()"></div>
+      <div class="field"><label>Сопроводительный документ (PDF, фото и др.)</label><input type="file" name="file" id="mat-file-input" onchange="hideReasonError()"></div>
       <div class="field"><label>Причина отсутствия сопроводительного документа</label>
-        <input type="text" name="reason" id="mat-reason-input" oninput="updateReasonHint()" placeholder="заполняется, если документ не прикреплён"></div>
+        <input type="text" name="reason" id="mat-reason-input" oninput="hideReasonError()" placeholder="заполняется, если документ не прикреплён">
+        <div id="mat-reason-error" class="text-danger text-sm" style="display: none; color: #ff4d4f; margin-top: 4px;">✕ В случае отсутствия файла обязательно укажите причину</div></div>
     </div>
     <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
       <button type="submit" class="btn btn-primary">Добавить</button>
@@ -142,13 +143,17 @@ function addMaterial(e) {
 
   var fileInput = document.getElementById('mat-file-input');
   var reasonInput = document.getElementById('mat-reason-input');
+  var reasonError = document.getElementById('mat-reason-error');
   var noFile = !fileInput.files || !fileInput.files.length;
   var reasonText = String(reasonInput.value || '').trim();
   if (noFile && !reasonText) {
-    msg.innerHTML = '<span class="text-danger">❌ Прикрепите сопроводительный документ или укажите причину его отсутствия</span>';
-    updateReasonHint();
+    reasonInput.style.borderColor = '#ff4d4f';
+    reasonError.style.display = 'block';
+    reasonInput.focus();
+    msg.innerHTML = '';
     return false;
   }
+  hideReasonError();
 
   msg.innerHTML = '<span class="text-muted">Добавление...</span>';
 
@@ -164,7 +169,6 @@ function addMaterial(e) {
         var arr = form.querySelector('[name="arrival_date"]');
         arr.value = today.getFullYear() + '-' + mm + '-' + dd;
         updateFolderHint();
-        updateReasonHint();
         loadMaterials(document.getElementById('mat-search').value);
         loadPassports();
         loadUnits();
@@ -178,15 +182,14 @@ function addMaterial(e) {
   return false;
 }
 
-// Если файл не прикреплён — подсвечиваем поле причины (оно обязательно)
-function updateReasonHint() {
-  var fileInput = document.getElementById('mat-file-input');
+// Поле причины подсвечивается и выдаёт красную подсказку ТОЛЬКО в момент
+// нажатия «Добавить», если файл не прикреплён и причина пуста.
+function hideReasonError() {
   var reasonInput = document.getElementById('mat-reason-input');
-  if (!fileInput || !reasonInput) return;
-  var noFile = !fileInput.files || !fileInput.files.length;
-  var need = noFile && !String(reasonInput.value || '').trim();
-  reasonInput.style.borderColor = need ? '#ff4d4f' : '';
-  reasonInput.title = need ? 'Документ не прикреплён — укажите причину' : '';
+  var reasonError = document.getElementById('mat-reason-error');
+  if (!reasonInput || !reasonError) return;
+  reasonInput.style.borderColor = '';
+  reasonError.style.display = 'none';
 }
 
 // =============================================================================

@@ -492,9 +492,9 @@
     "semantic_hash": ""
   },
   "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md": {
-    "mtime": 1790425285.175655,
-    "seen": 1790425290.7732,
-    "ast_hash": "43097755e8519de021ca612b6475806b",
+    "mtime": 1790425645.5206468,
+    "seen": 1790425652.8254945,
+    "ast_hash": "e733ccc9c2c8861d46beac1b435ce8c3",
     "semantic_hash": ""
   },
   "mypy_errors.txt": {
@@ -546,9 +546,9 @@
     "semantic_hash": ""
   },
   "templates/materials.html": {
-    "mtime": 1790424276.692262,
-    "seen": 1790424401.0743654,
-    "ast_hash": "f825b76c2d9730333074cbeadea94397",
+    "mtime": 1790425598.057245,
+    "seen": 1790425652.8254945,
+    "ast_hash": "c60e2d300cec755c4eda128a1c717876",
     "semantic_hash": ""
   },
   "templates/registry_form.html": {
