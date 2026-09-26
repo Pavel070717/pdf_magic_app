@@ -88,10 +88,10 @@ class TestAddMaterial:
         assert folder.is_dir()
         files = list(folder.glob("*.pdf"))
         assert len(files) == 1
-        assert files[0].name.startswith("01_")
+        assert files[0].name.startswith("01.")
 
     def test_same_day_numbering(self, app_client, temp_db_all, temp_dir):
-        """Два материала в один день — файлы 01_, 02_ в одной папке."""
+        """Два материала в один день — файлы 01., 02. в одной папке."""
         with patch("routes.materials.MATERIALS_DIR", temp_dir):
             for name in ("Steel", "Concrete"):
                 resp = app_client.post(
@@ -107,7 +107,7 @@ class TestAddMaterial:
                 )
                 assert resp.status_code == 200
         names = sorted(p.name for p in (temp_dir / "2026-09-26").glob("*.pdf"))
-        assert names[0].startswith("01_") and names[1].startswith("02_")
+        assert names[0].startswith("01.") and names[1].startswith("02.")
 
     def test_same_passport_other_day_new_folder(
         self, app_client, temp_db_all, temp_dir
@@ -187,7 +187,7 @@ class TestAddMaterial:
         assert len(files) == 1
         name = files[0].name
         assert "/" not in name
-        assert name.startswith("01_Акт_Приёмка;Бетон_раствор;255_1;")
+        assert name.startswith("01.Акт_Приёмка;Бетон_раствор;255_1;")
 
     def test_any_file_type_accepted(self, app_client, temp_db_all, temp_dir):
         """Прикреплять можно любой файл (не только PDF) — сохраняется с его
@@ -207,7 +207,7 @@ class TestAddMaterial:
         assert resp.status_code == 200
         files = list((temp_dir / "2026-09-26").glob("*.jpg"))
         assert len(files) == 1
-        assert files[0].name.startswith("01_")
+        assert files[0].name.startswith("01.")
 
     def test_no_file_with_reason_creates_txt(self, app_client, temp_db_all, temp_dir):
         """Без файла, но с причиной: txt с причинами появляется в папке даты,
@@ -231,7 +231,7 @@ class TestAddMaterial:
             assert folder.is_dir()
             txts = list(folder.glob("*.txt"))
             assert len(txts) == 1
-            assert txts[0].name.startswith("01_")
+            assert txts[0].name.startswith("01.")
             assert txts[0].read_text(encoding="utf-8").strip() == (
                 "документация уйдет с поставкой завтра"
             )

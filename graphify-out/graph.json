@@ -12264,12 +12264,12 @@
     },
     {
       "id": "tests_test_materials_routes_rationale_94",
-      "label": "\u0414\u0432\u0430 \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u0430 \u0432 \u043e\u0434\u0438\u043d \u0434\u0435\u043d\u044c \u2014 \u0444\u0430\u0439\u043b\u044b 01_, 02_ \u0432 \u043e\u0434\u043d\u043e\u0439 \u043f\u0430\u043f\u043a\u0435.",
+      "label": "\u0414\u0432\u0430 \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u0430 \u0432 \u043e\u0434\u0438\u043d \u0434\u0435\u043d\u044c \u2014 \u0444\u0430\u0439\u043b\u044b 01., 02. \u0432 \u043e\u0434\u043d\u043e\u0439 \u043f\u0430\u043f\u043a\u0435.",
       "_origin": "ast",
       "community": 31,
       "community_name": "TestAddMaterial",
       "file_type": "rationale",
-      "norm_label": "\u0434\u0432\u0430 \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u0430 \u0432 \u043e\u0434\u0438\u043d \u0434\u0435\u043d\u044c \u2014 \u0444\u0430\u0438\u043b\u044b 01_, 02_ \u0432 \u043e\u0434\u043d\u043e\u0438 \u043f\u0430\u043f\u043a\u0435.",
+      "norm_label": "\u0434\u0432\u0430 \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u0430 \u0432 \u043e\u0434\u0438\u043d \u0434\u0435\u043d\u044c \u2014 \u0444\u0430\u0438\u043b\u044b 01., 02. \u0432 \u043e\u0434\u043d\u043e\u0438 \u043f\u0430\u043f\u043a\u0435.",
       "source_file": "tests/test_materials_routes.py",
       "source_location": "L94"
     },
@@ -45709,5 +45709,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "a7217d866a91d20ba141c650af50185899759353"
+  "built_at_commit": "e5c73cd5e4784f9cfedf9b85782a96f5a43465f4"
 }

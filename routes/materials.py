@@ -49,7 +49,7 @@ def _next_file_number(folder: Path) -> str:
 
     count = count_materials_in_folder(folder.name)
     for n in range(count + 1, count + 50):
-        candidate = f"{n:02d}_"
+        candidate = f"{n:02d}."
         if not any(p.name.startswith(candidate) for p in folder.iterdir()):
             return f"{n:02d}"
     return f"{count + 1:02d}"
@@ -160,14 +160,14 @@ def add_material_endpoint():
         folder_path.mkdir(parents=True, exist_ok=True)
 
         num = _next_file_number(folder_path)
-        new_filename = f"{num}_{safe_doc};{safe_mat};{safe_num};{safe_date}{ext}"
+        new_filename = f"{num}.{safe_doc};{safe_mat};{safe_num};{safe_date}{ext}"
         filepath = folder_path / new_filename
 
         counter = 1
-        base = f"{num}_{safe_doc};{safe_mat};{safe_num};{safe_date}"
+        base = f"{num}.{safe_doc};{safe_mat};{safe_num};{safe_date}"
         while filepath.exists():
             new_filename = (
-                f"{num}_{counter}_{safe_doc};{safe_mat};{safe_num};{safe_date}{ext}"
+                f"{num}.{counter}.{safe_doc};{safe_mat};{safe_num};{safe_date}{ext}"
             )
             filepath = folder_path / new_filename
             counter += 1
