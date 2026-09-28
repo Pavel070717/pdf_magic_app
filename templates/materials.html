@@ -49,7 +49,9 @@
       <select id="mat-passport" onchange="applyPassport(this)" style="width: 100%; padding: 10px 12px; background: var(--bg-elevated); color: var(--text-primary); border: 1px solid var(--border-strong); border-radius: var(--radius-sm);">
         <option value="">— выберите паспорт —</option>
       </select>
+      <div id="mat-copy-hint" class="text-muted text-sm" style="display: none; margin-top: 4px;">Файл подтянется из ранее добавленного паспорта (прикладывать не нужно)</div>
     </div>
+    <input type="hidden" name="copy_from" id="mat-copy-from" value="">
 
     <div class="grid-3" style="margin-bottom: 12px;">
       <div class="field"><label>Наименование документа</label><input type="text" name="doc_name" required></div>
@@ -131,6 +133,8 @@ function setPassportEntry(mode) {
   var rf = form.querySelector('input[name="entry_mode"][value="fav"]');
   if (rn) rn.checked = newMode;
   if (rf) rf.checked = !newMode;
+  var copyFrom = document.getElementById('mat-copy-from');
+  var hint = document.getElementById('mat-copy-hint');
   if (newMode) {
     var sel = document.getElementById('mat-passport');
     if (sel) sel.selectedIndex = 0;
@@ -140,17 +144,35 @@ function setPassportEntry(mode) {
     });
     var dateInput = document.getElementById('mat-date-input');
     var noDate = document.getElementById('mat-date-no-date');
-    if (dateInput) dateInput.readOnly = false;
-    if (noDate) noDate.disabled = false;
+    if (copyFrom) copyFrom.value = '';
+    if (dateInput) { dateInput.readOnly = false; dateInput.disabled = false; }
+    if (noDate) { noDate.disabled = false; }
+    if (hint) hint.style.display = 'none';
   }
 }
 
 // Выбор паспорта из списка: форма сначала ОЧИЩАЕТСЯ, затем заполняется
 // данными паспорта (иначе старые значения из прошлой попытки «доезжают»).
+// Поля документа блокируются (readOnly), файл подтянется сам — на сервер
+// уходит copy_from с id паспорта.
 function applyPassport(sel) {
   var form = document.getElementById('mat-add');
   var opt = sel.options[sel.selectedIndex];
-  if (!opt || !opt.value) return;
+  var copyFrom = document.getElementById('mat-copy-from');
+  var hint = document.getElementById('mat-copy-hint');
+  if (!opt || !opt.value) {
+    if (copyFrom) copyFrom.value = '';
+    if (hint) hint.style.display = 'none';
+    ['doc_name', 'material_name', 'number', 'producer', 'unit'].forEach(function(n) {
+      var i = form.querySelector('[name="' + n + '"]');
+      if (i) i.readOnly = false;
+    });
+    var di = document.getElementById('mat-date-input');
+    var nd = document.getElementById('mat-date-no-date');
+    if (di) { di.readOnly = false; di.disabled = false; }
+    if (nd) { nd.disabled = false; }
+    return;
+  }
   var p = passportsList[parseInt(opt.value, 10)];
   if (!p) return;
 
@@ -177,6 +199,8 @@ function applyPassport(sel) {
     noDate.checked = true;
     if (dateInput) dateInput.disabled = true;
   }
+  if (copyFrom) copyFrom.value = p.id || '';
+  if (hint) hint.style.display = (p.id ? '' : 'none');
   hideReasonError();
 }
 
@@ -189,21 +213,6 @@ function loadUnits() {
     });
     el.innerHTML = html;
   }).catch(function() {});
-}
-
-function applyPassport(sel) {
-  var opt = sel.options[sel.selectedIndex];
-  if (!opt || !opt.value) return;
-  var form = document.getElementById('mat-add');
-  form.querySelector('[name="doc_name"]').value = opt.dataset.doc || '';
-  form.querySelector('[name="material_name"]').value = opt.dataset.mat || '';
-  form.querySelector('[name="number"]').value = opt.dataset.num || '';
-  form.querySelector('[name="date"]').value = opt.dataset.date || '';
-  form.querySelector('[name="producer"]').value = opt.dataset.prod || '';
-  form.querySelector('[name="unit"]').value = opt.dataset.unit || '';
-  var noDate = document.getElementById('mat-date-no-date');
-  noDate.checked = !opt.dataset.date;
-  toggleNoDate(noDate);
 }
 
 function toggleNoDate(cb) {
@@ -273,6 +282,8 @@ function addMaterial(e) {
   var reasonError = document.getElementById('mat-reason-error');
   var missingCb = document.getElementById('mat-missing-doc');
   var missingChecked = !!(missingCb && missingCb.checked);
+  var copyFrom = document.getElementById('mat-copy-from');
+  var willCopy = !!(copyFrom && copyFrom.value);
   var noFile = !fileInput.files || !fileInput.files.length;
   var reasonText = String(reasonInput.value || '').trim();
 
@@ -285,9 +296,9 @@ function addMaterial(e) {
       msg.innerHTML = '';
       return false;
     }
-  } else if (noFile) {
+  } else if (noFile && !willCopy) {
     fileInput.style.borderColor = '#ff4d4f';
-    msg.innerHTML = '<span class="text-danger">❌ Прикрепите сопроводительный документ</span>';
+    msg.innerHTML = '<span class="text-danger">❌ Прикрепите сопроводительный документ или выберите паспорт из ранее добавленных</span>';
     return false;
   }
   hideReasonError();

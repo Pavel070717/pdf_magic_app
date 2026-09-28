@@ -265,6 +265,51 @@ class TestAddMaterial:
         assert "№ №" not in files[1]
         assert ";№ 90;02.09.2026.pdf" in files[1]
 
+    def test_readd_passport_copies_file_from_previous(
+        self, app_client, temp_db_all, temp_dir
+    ):
+        """Повторное добавление паспорта (copy_from = id ранее добавленного)
+        без файла: сопроводительный файл копируется в папку новой даты,
+        поле не требуется и причина не нужна."""
+        from utils.database import get_all_materials
+
+        with patch("routes.materials.MATERIALS_DIR", temp_dir):
+            first = app_client.post(
+                "/api/materials/add",
+                data={
+                    "doc_name": "Паспорт",
+                    "material_name": "на песок из карьера Ламга",
+                    "number": "15",
+                    "date": "2026-08-03",
+                    "arrival_date": "2026-09-26",
+                    "file": (io.BytesIO(b"%PDF-1.4 fake content"), "pass.pdf"),
+                },
+                content_type="multipart/form-data",
+            )
+            assert first.status_code == 200
+            src_id = first.get_json()["material_id"]
+
+            second = app_client.post(
+                "/api/materials/add",
+                data={
+                    "doc_name": "Паспорт",
+                    "material_name": "на песок из карьера Ламга",
+                    "number": "15",
+                    "date": "2026-08-03",
+                    "arrival_date": "2026-10-05",
+                    "copy_from": str(src_id),
+                },
+                content_type="multipart/form-data",
+            )
+            assert second.status_code == 200
+            assert second.get_json()["count"] == 1
+
+        copied = list((temp_dir / "2026-10-05").glob("*.pdf"))
+        assert len(copied) == 1
+        assert copied[0].read_bytes() == b"%PDF-1.4 fake content"
+        assert copied[0].name.startswith("01.")
+        assert len(get_all_materials()) == 2
+
     def test_any_file_type_accepted(self, app_client, temp_db_all, temp_dir):
         """Прикреплять можно любой файл (не только PDF) — сохраняется с его
         расширением."""

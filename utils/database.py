@@ -165,11 +165,12 @@ def search_materials(query: str) -> list[dict[str, object]]:
 
 
 def get_material_passports() -> list[dict[str, object]]:
-    """Уникальные «паспорта» (сочетания всех полей), отсортированные по имени."""
+    """Уникальные «паспорта» (сочетания всех полей), отсортированные по имени.
+    id — id свежайшей записи с этим сочетанием (для копирования файла)."""
     conn = get_db()
     try:
         cursor = conn.execute("""SELECT doc_name, material_name, number, date, producer,
-               unit, MAX(created_at) AS latest
+               unit, MAX(id) AS id, MAX(created_at) AS latest
                FROM materials
                GROUP BY doc_name, material_name, number, date, producer, unit
                ORDER BY doc_name, material_name""")

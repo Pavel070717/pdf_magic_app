@@ -4,6 +4,7 @@ Blueprint: /api/materials/* — materials CRUD with PDF storage.
 
 import os
 import re
+import shutil
 from pathlib import Path
 
 from flask import Blueprint, jsonify, request, send_file
@@ -93,10 +94,24 @@ def add_material_endpoint():
         producer = sanitize_text(request.form.get("producer", ""))
         unit = sanitize_text(request.form.get("unit", ""))
         reason = sanitize_text(request.form.get("reason", "")).strip()
+        copy_from = sanitize_text(request.form.get("copy_from", "")).strip()
         arrival_input = sanitize_text(request.form.get("arrival_date", ""))
         quantity_raw = sanitize_text(request.form.get("quantity", "0"))
         files = [f for f in request.files.getlist("file") if f and f.filename]
         has_file = bool(files)
+
+        # Файл можно не прикреплять, если выбран паспорт из ранее добавленных:
+        # его сопроводительный документ копируется в новую папку даты поступления.
+        copy_source_path = None
+        if not has_file and copy_from.isdigit():
+            from utils.database import get_material
+
+            src = get_material(int(copy_from))
+            if src and src.get("filename"):
+                src_path = MATERIALS_DIR / src["filename"]
+                if src_path.exists() and not src_path.name.lower().endswith(".txt"):
+                    copy_source_path = src_path
+        has_file = has_file or copy_source_path is not None
 
         if not doc_name:
             return (
@@ -185,7 +200,7 @@ def add_material_endpoint():
 
         created_ids = []
         saved_paths = []
-        if has_file:
+        if files:
             for f in files:
                 ext = os.path.splitext(f.filename or "")[1].lower() or ".pdf"
                 filepath, stored_filename, material_id = _save_one(ext)
@@ -193,6 +208,13 @@ def add_material_endpoint():
                 logger.info(f"Файл материала сохранён: {filepath}")
                 created_ids.append(material_id)
                 saved_paths.append(stored_filename)
+        elif copy_source_path is not None:
+            ext = os.path.splitext(copy_source_path.name)[1].lower() or ".pdf"
+            filepath, stored_filename, material_id = _save_one(ext)
+            shutil.copyfile(copy_source_path, filepath)
+            logger.info(f"Файл скопирован из ранее добавленного: {filepath}")
+            created_ids.append(material_id)
+            saved_paths.append(stored_filename)
         else:
             filepath, stored_filename, material_id = _save_one(".txt")
             filepath.write_text(reason, encoding="utf-8")
