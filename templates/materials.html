@@ -479,12 +479,50 @@ function filteredAndSorted() {
   return list;
 }
 
+// Один материал (документ + материал) — один пункт реестра: паспорта
+// собираются в одну строку, их номера и даты стекаются друг под друга.
+function groupRecords(arr) {
+  var map = {};
+  arr.forEach(function(m) {
+    var k = (m.doc_name || '') + '\u0000' + (m.material_name || '');
+    if (!map[k]) map[k] = { doc: m.doc_name || '', mat: m.material_name || '', items: [] };
+    map[k].items.push(m);
+  });
+  return Object.keys(map).map(function(k) { return map[k]; });
+}
+
+function groupCell(group, col) {
+  if (col.key === 'doc_name') return escapeHtml(group.doc);
+  if (col.key === 'material_name') return escapeHtml(group.mat);
+  if (col.key === 'number') {
+    var num = group.items.map(function(i) {
+      return '<span class="text-nowrap text-muted">' + escapeHtml(i.number || '—') + '</span>';
+    });
+    return '<span class="text-muted">' + num.join('<br>') + '</span>';
+  }
+  if (col.key === 'date') {
+    var dts = group.items.map(function(i) {
+      return '<span class="text-nowrap text-muted">' + escapeHtml(i.date ? fmtDate(i.date) : 'без даты') + '</span>';
+    });
+    return '<span class="text-muted">' + dts.join('<br>') + '</span>';
+  }
+  if (col.key === 'has_file') {
+    return group.items.map(function(i) {
+      return '<a class="text-accent text-xs" style="display: block;" title="' + escapeHtml(i.folder || '') +
+        '" href="/api/materials/pdf/' + encodeURIComponent(i.id || 0) + '">' +
+        (materialHasFile(i) ? '📎' : '✎') + '</a>';
+    }).join('');
+  }
+  return matCell(group.items[0], col);
+}
+
 function renderMaterialsTable() {
   var el = document.getElementById('materials-list');
   var list = filteredAndSorted();
+  var groups = groupRecords(list);
   var total = materialsCache.length;
   var cnt = document.getElementById('mat-count');
-  cnt.textContent = total ? list.length + ' / ' + total + ' зап.' : '0 зап.';
+  cnt.textContent = total ? groups.length + ' / ' + groupRecords(materialsCache).length + ' зап.' : '0 зап.';
   cnt.style.display = total ? '' : 'none';
   if (!total) { el.innerHTML = '<span class="text-muted">Материалы не найдены</span>'; return; }
   var html = '<table><thead><tr>';
@@ -494,10 +532,11 @@ function renderMaterialsTable() {
       '" onclick="openMatFilter(event, \'' + col.key + '\')">⏷</span></th>';
   });
   html += '<th></th></tr></thead><tbody>';
-  list.forEach(function(m) {
+  groups.forEach(function(g) {
     html += '<tr>';
-    MAT_COLS.forEach(function(col) { html += '<td>' + matCell(m, col) + '</td>'; });
-    html += '<td><button class="btn btn-danger btn-sm" onclick="deleteMat(' + (m.id || 0) + ')">🗑️</button></td></tr>';
+    MAT_COLS.forEach(function(col) { html += '<td>' + groupCell(g, col) + '</td>'; });
+    var ids = g.items.map(function(i) { return i.id || 0; }).join(',');
+    html += '<td><button class="btn btn-danger btn-sm" onclick="deleteMatGroup([' + ids + '])">🗑️</button></td></tr>';
   });
   html += '</tbody></table>';
   el.innerHTML = html;
@@ -717,6 +756,26 @@ function deleteMat(id) {
         showToast('Материал удалён', 'success');
       }
     });
+}
+
+// Удаление всего пункта реестра (материал со всеми его паспортами).
+function deleteMatGroup(ids) {
+  if (!ids || !ids.length) return;
+  if (!confirm('Удалить материал (все паспорта)?')) return;
+  var q = document.getElementById('mat-search').value;
+  var i = 0;
+  function next() {
+    if (i >= ids.length) {
+      loadMaterials(q);
+      loadPassports();
+      showToast('Материал удалён', 'success');
+      return;
+    }
+    fetch('/api/materials/' + encodeURIComponent(ids[i]), { method: 'DELETE' })
+      .then(function(r) { return r.json(); })
+      .then(function() { i++; next(); });
+  }
+  next();
 }
 
 // =============================================================================

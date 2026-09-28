@@ -178,7 +178,7 @@ def add_material_endpoint():
             # Уже введённый «№» не дублируется; пустой номер = «—».
             number_clean = num_text.strip()
             if number_clean and not number_clean.startswith("№"):
-                number_clean = "№ " + number_clean
+                number_clean = "№" + number_clean
             safe_num = _safe_name(number_clean or "—")
             # Дата документа в имени файла — в читаемом виде «ДД.ММ.ГГГГ»,
             # пустая дата = «без даты».

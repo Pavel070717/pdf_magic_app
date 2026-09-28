@@ -187,7 +187,7 @@ class TestAddMaterial:
         assert len(files) == 1
         name = files[0].name
         assert "/" not in name
-        assert name.startswith("01.Акт_Приёмка Бетон_раствор;№ 255_1;без даты.")
+        assert name.startswith("01.Акт_Приёмка Бетон_раствор;№255_1;без даты.")
 
     def test_multiple_passports_saved_separately(
         self, app_client, temp_db_all, temp_dir
@@ -243,7 +243,7 @@ class TestAddMaterial:
         assert len(files) == 1
         name = files[0].name
         assert name.startswith(
-            "01.Паспорт на песок из карьера Ламга;№ 15;03.08.2026.pdf"
+            "01.Паспорт на песок из карьера Ламга;№15;03.08.2026.pdf"
         )
 
         with patch("routes.materials.MATERIALS_DIR", temp_dir):
@@ -336,10 +336,10 @@ class TestAddMaterial:
         files = sorted(p.name for p in (temp_dir / "2026-09-26").glob("*.pdf"))
         assert len(files) == 2
         assert files[0].startswith(
-            "01.Паспорт на песок Песок из карьера Ламга;№ 15;03.08.2026."
+            "01.Паспорт на песок Песок из карьера Ламга;№15;03.08.2026."
         )
         assert files[1].startswith(
-            "02.Паспорт на песок Песок из карьера Ламга;№ 16;10.08.2026."
+            "02.Паспорт на песок Песок из карьера Ламга;№16;10.08.2026."
         )
         assert len(get_all_materials()) == 2
 
