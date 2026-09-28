@@ -187,7 +187,83 @@ class TestAddMaterial:
         assert len(files) == 1
         name = files[0].name
         assert "/" not in name
-        assert name.startswith("01.Акт_Приёмка;Бетон_раствор;255_1;")
+        assert name.startswith("01.Акт_Приёмка;№ 255_1;без даты.")
+
+    def test_multiple_passports_saved_separately(
+        self, app_client, temp_db_all, temp_dir
+    ):
+        """Несколько паспортов одного материала → отдельная запись и свой
+        порядковый номер на каждый файл."""
+        from utils.database import get_all_materials
+
+        with patch("routes.materials.MATERIALS_DIR", temp_dir):
+            resp = app_client.post(
+                "/api/materials/add",
+                data={
+                    "doc_name": "Паспорт на песок",
+                    "material_name": "Песок карьера Ламга",
+                    "number": "12",
+                    "arrival_date": "2026-09-26",
+                    "file": [
+                        (io.BytesIO(b"%PDF-1.4 fake"), "pass1.pdf"),
+                        (io.BytesIO(b"%PDF-1.4 fake"), "pass2.pdf"),
+                    ],
+                },
+                content_type="multipart/form-data",
+            )
+            assert resp.status_code == 200
+            assert resp.get_json()["count"] == 2
+        files = sorted(p.name for p in (temp_dir / "2026-09-26").glob("*.pdf"))
+        assert len(files) == 2
+        assert files[0].startswith("01.")
+        assert files[1].startswith("02.")
+        assert len(get_all_materials()) == 2
+
+    def test_filename_no_material_number_with_num_prefix(
+        self, app_client, temp_db_all, temp_dir
+    ):
+        """В имя файла материал не попадает; перед номером добавляется «№ »,
+        а уже введённый «№» не дублируется."""
+        with patch("routes.materials.MATERIALS_DIR", temp_dir):
+            resp = app_client.post(
+                "/api/materials/add",
+                data={
+                    "doc_name": "Паспорт на песок из карьера Ламга",
+                    "material_name": "Песок",
+                    "number": "77",
+                    "date": "2026-09-01",
+                    "arrival_date": "2026-09-26",
+                    "file": (io.BytesIO(b"%PDF-1.4 fake"), "x.pdf"),
+                },
+                content_type="multipart/form-data",
+            )
+            assert resp.status_code == 200
+        files = list((temp_dir / "2026-09-26").glob("*.pdf"))
+        assert len(files) == 1
+        name = files[0].name
+        assert name.startswith(
+            "01.Паспорт на песок из карьера Ламга;№ 77;2026-09-01.pdf"
+        )
+        assert "Песок" not in name
+
+        with patch("routes.materials.MATERIALS_DIR", temp_dir):
+            resp = app_client.post(
+                "/api/materials/add",
+                data={
+                    "doc_name": "Паспорт на песок из карьера Ламга",
+                    "material_name": "Песок",
+                    "number": "№ 90",
+                    "date": "2026-09-02",
+                    "arrival_date": "2026-09-26",
+                    "file": (io.BytesIO(b"%PDF-1.4 fake"), "y.pdf"),
+                },
+                content_type="multipart/form-data",
+            )
+            assert resp.status_code == 200
+        files = sorted(p.name for p in (temp_dir / "2026-09-26").glob("*.pdf"))
+        assert files[1].startswith("02.")
+        assert "№ №" not in files[1]
+        assert ";№ 90;2026-09-02.pdf" in files[1]
 
     def test_any_file_type_accepted(self, app_client, temp_db_all, temp_dir):
         """Прикреплять можно любой файл (не только PDF) — сохраняется с его

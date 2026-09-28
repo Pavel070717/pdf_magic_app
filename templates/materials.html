@@ -34,9 +34,20 @@
     </div>
 
     <div class="field" style="margin-bottom: 12px;">
+      <label>Способ заполнения</label>
+      <div style="display: flex; gap: 16px; align-items: center; font-size: 13px; color: var(--text-secondary);">
+        <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+          <input type="radio" name="entry_mode" value="new" checked onchange="setPassportEntry('new')"> Новый паспорт
+        </label>
+        <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+          <input type="radio" name="entry_mode" value="fav" onchange="setPassportEntry('fav')"> Из ранее добавленных
+        </label>
+      </div>
+    </div>
+    <div class="field" id="mat-passport-row" style="display: none; margin-bottom: 12px;">
       <label>Выбрать из ранее добавленных паспортов</label>
       <select id="mat-passport" onchange="applyPassport(this)" style="width: 100%; padding: 10px 12px; background: var(--bg-elevated); color: var(--text-primary); border: 1px solid var(--border-strong); border-radius: var(--radius-sm);">
-        <option value="">— новый (заполнить вручную) —</option>
+        <option value="">— выберите паспорт —</option>
       </select>
     </div>
 
@@ -63,7 +74,8 @@
       <div class="field"><label>Дата поступления</label><input type="date" name="arrival_date" required></div>
       <div class="field">
         <label>Сопроводительный документ (PDF, фото и др.)</label>
-        <input type="file" name="file" id="mat-file-input" onchange="hideReasonError()">
+        <input type="file" name="file" id="mat-file-input" multiple onchange="hideReasonError()">
+        <span class="text-muted text-sm" style="display: block; margin-top: 4px;">можно выбрать несколько паспортов (один материал — 2 и более файлов)</span>
         <label style="display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 12px; color: var(--text-secondary); cursor: pointer; white-space: nowrap;">
           <input type="checkbox" id="mat-missing-doc" onchange="toggleMissingDoc(this)"> Отсутствует сопроводительный документ
         </label>
@@ -95,19 +107,77 @@
 // =============================================================================
 // Паспорта: загрузка списка + автозаполнение формы
 // =============================================================================
+var passportsList = [];
+
 function loadPassports() {
   fetch('/api/materials/passports').then(function(r) { return r.json(); }).then(function(d) {
+    passportsList = d.passports || [];
     var el = document.getElementById('mat-passport');
-    var opts = '<option value="">— новый (заполнить вручную) —</option>';
-    (d.passports || []).forEach(function(p, i) {
-      opts += '<option value="' + i + '" data-doc="' + escapeHtml(p.doc_name) + '"' +
-        ' data-mat="' + escapeHtml(p.material_name) + '" data-num="' + escapeHtml(p.number || '') + '"' +
-        ' data-date="' + escapeHtml(p.date || '') + '" data-prod="' + escapeHtml(p.producer || '') + '"' +
-        ' data-unit="' + escapeHtml(p.unit || '') + '">' +
-        escapeHtml(p.label) + '</option>';
+    var opts = '<option value="">— выберите паспорт —</option>';
+    passportsList.forEach(function(p, i) {
+      opts += '<option value="' + i + '">' + escapeHtml(p.label) + '</option>';
     });
     el.innerHTML = opts;
   }).catch(function() {});
+}
+
+// Переключение способа заполнения: новый паспорт / из ранее добавленных.
+function setPassportEntry(mode) {
+  var row = document.getElementById('mat-passport-row');
+  var newMode = mode !== 'fav';
+  if (row) row.style.display = newMode ? 'none' : '';
+  var form = document.getElementById('mat-add');
+  var rn = form.querySelector('input[name="entry_mode"][value="new"]');
+  var rf = form.querySelector('input[name="entry_mode"][value="fav"]');
+  if (rn) rn.checked = newMode;
+  if (rf) rf.checked = !newMode;
+  if (newMode) {
+    var sel = document.getElementById('mat-passport');
+    if (sel) sel.selectedIndex = 0;
+    ['doc_name', 'material_name', 'number', 'producer', 'unit'].forEach(function(n) {
+      var i = form.querySelector('[name="' + n + '"]');
+      if (i) i.readOnly = false;
+    });
+    var dateInput = document.getElementById('mat-date-input');
+    var noDate = document.getElementById('mat-date-no-date');
+    if (dateInput) dateInput.readOnly = false;
+    if (noDate) noDate.disabled = false;
+  }
+}
+
+// Выбор паспорта из списка: форма сначала ОЧИЩАЕТСЯ, затем заполняется
+// данными паспорта (иначе старые значения из прошлой попытки «доезжают»).
+function applyPassport(sel) {
+  var form = document.getElementById('mat-add');
+  var opt = sel.options[sel.selectedIndex];
+  if (!opt || !opt.value) return;
+  var p = passportsList[parseInt(opt.value, 10)];
+  if (!p) return;
+
+  ['doc_name', 'material_name', 'number', 'producer', 'unit'].forEach(function(n) {
+    var i = form.querySelector('[name="' + n + '"]');
+    if (i) { i.value = ''; i.readOnly = true; }
+  });
+  var dateInput = document.getElementById('mat-date-input');
+  var noDate = document.getElementById('mat-date-no-date');
+  if (dateInput) {
+    dateInput.value = '';
+    dateInput.readOnly = true;
+    dateInput.disabled = false;
+  }
+  if (noDate) { noDate.checked = false; noDate.disabled = false; }
+
+  form.querySelector('[name="doc_name"]').value = p.doc_name || '';
+  form.querySelector('[name="material_name"]').value = p.material_name || '';
+  form.querySelector('[name="number"]').value = p.number || '';
+  form.querySelector('[name="producer"]').value = p.producer || '';
+  form.querySelector('[name="unit"]').value = p.unit || '';
+  if (dateInput) dateInput.value = p.date || '';
+  if (noDate && !p.date) {
+    noDate.checked = true;
+    if (dateInput) dateInput.disabled = true;
+  }
+  hideReasonError();
 }
 
 function loadUnits() {
@@ -228,10 +298,12 @@ function addMaterial(e) {
     .then(function(r) { return r.json(); })
     .then(function(d) {
       if (d.success) {
-        msg.innerHTML = '<span class="text-success">✅ Материал добавлен → папка «' + escapeHtml(d.folder || '') + '»</span>';
+        var saved = d.count && d.count > 1 ? ' Добавлено файлов: ' + d.count : '';
+        msg.innerHTML = '<span class="text-success">✅ Материал добавлен' + saved + ' → папка «' + escapeHtml(d.folder || '') + '»</span>';
         form.reset();
         var missingCb = document.getElementById('mat-missing-doc');
         if (missingCb) { missingCb.checked = false; toggleMissingDoc(missingCb); }
+        setPassportEntry('new');
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
         var mm = String(today.getMonth() + 1).padStart(2, '0');

@@ -95,8 +95,8 @@ def add_material_endpoint():
         reason = sanitize_text(request.form.get("reason", "")).strip()
         arrival_input = sanitize_text(request.form.get("arrival_date", ""))
         quantity_raw = sanitize_text(request.form.get("quantity", "0"))
-        file = request.files.get("file")
-        has_file = bool(file and file.filename)
+        files = [f for f in request.files.getlist("file") if f and f.filename]
+        has_file = bool(files)
 
         if not doc_name:
             return (
@@ -141,67 +141,68 @@ def add_material_endpoint():
         materials_dir.mkdir(parents=True, exist_ok=True)
 
         safe_doc = _safe_name(doc_name)
-        safe_mat = _safe_name(material_name)
-        safe_num = _safe_name(number or "—")
+        # Материал в имя файла не попадает — только Документ;№;Дата.
+        number_clean = number.strip()
+        if number_clean and not number_clean.startswith("№"):
+            number_clean = "№ " + number_clean
+        safe_num = _safe_name(number_clean or "—")
         # Пустая дата документа = «без даты». Слэш из токена заменяется на "_",
         # как и в остальных частях имени (на Windows "/" запрещён).
         safe_date = _safe_name(date or "без даты")
 
-        # Расширение файла — из прикреплённого файла (это может быть не только
-        # PDF, но и фото и т.п.). Если файла нет — создаём txt с причиной.
-        if has_file:
-            ext = os.path.splitext(file.filename or "")[1].lower() or ".pdf"
-        else:
-            ext = ".txt"
-
-        # Папка поступления: ISO-дата — проводник сортирует старые → новые
-        folder_name = arrival_date
-        folder_path = materials_dir / folder_name
-        folder_path.mkdir(parents=True, exist_ok=True)
-
-        num = _next_file_number(folder_path)
-        new_filename = f"{num}.{safe_doc};{safe_mat};{safe_num};{safe_date}{ext}"
-        filepath = folder_path / new_filename
-
-        counter = 1
-        base = f"{num}.{safe_doc};{safe_mat};{safe_num};{safe_date}"
-        while filepath.exists():
-            new_filename = (
-                f"{num}.{counter}.{safe_doc};{safe_mat};{safe_num};{safe_date}{ext}"
-            )
+        def _save_one(ext: str) -> int:
+            folder_path = materials_dir / arrival_date
+            folder_path.mkdir(parents=True, exist_ok=True)
+            num = _next_file_number(folder_path)
+            base = f"{num}.{safe_doc};{safe_num};{safe_date}"
+            new_filename = f"{base}{ext}"
             filepath = folder_path / new_filename
-            counter += 1
+            counter = 1
+            while filepath.exists():
+                new_filename = f"{num}.{counter}.{safe_doc};{safe_num};{safe_date}{ext}"
+                filepath = folder_path / new_filename
+                counter += 1
+            stored_filename = f"{arrival_date}/{filepath.name}"
+            material_id = add_material(
+                doc_name=doc_name,
+                material_name=material_name,
+                number=number,
+                date=date,
+                producer=producer,
+                filename=stored_filename,
+                original_filename=f"{base}{ext}",
+                arrival_date=arrival_date,
+                quantity=quantity,
+                folder=arrival_date,
+                unit=unit,
+                reason=reason,
+            )
+            return filepath, stored_filename, material_id
 
+        created_ids = []
+        saved_paths = []
         if has_file:
-            file.save(str(filepath))
-            logger.info(f"Файл материала сохранён: {filepath}")
+            for f in files:
+                ext = os.path.splitext(f.filename or "")[1].lower() or ".pdf"
+                filepath, stored_filename, material_id = _save_one(ext)
+                f.save(str(filepath))
+                logger.info(f"Файл материала сохранён: {filepath}")
+                created_ids.append(material_id)
+                saved_paths.append(stored_filename)
         else:
+            filepath, stored_filename, material_id = _save_one(".txt")
             filepath.write_text(reason, encoding="utf-8")
             logger.info(f"txt причины отсутствия сохранён: {filepath}")
-
-        stored_filename = f"{folder_name}/{filepath.name}"
-        material_id = add_material(
-            doc_name=doc_name,
-            material_name=material_name,
-            number=number,
-            date=date,
-            producer=producer,
-            filename=stored_filename,
-            original_filename=file.filename if has_file else f"{base}{ext}",
-            arrival_date=arrival_date,
-            quantity=quantity,
-            folder=folder_name,
-            unit=unit,
-            reason=reason,
-        )
+            created_ids.append(material_id)
+            saved_paths.append(stored_filename)
 
         return jsonify(
             {
                 "success": True,
-                "material_id": material_id,
-                "filename": stored_filename,
-                "folder": folder_name,
-                "path": str(filepath),
+                "material_id": created_ids[0] if created_ids else 0,
+                "count": len(created_ids),
+                "filenames": saved_paths,
+                "folder": arrival_date,
             }
         )
     except Exception as e:
