@@ -508,7 +508,7 @@
       "file_type": "code",
       "norm_label": "testdeletematerial",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L503"
+      "source_location": "L504"
     },
     {
       "id": "tests_test_materials_routes_testgetmaterialpdf",
@@ -521,7 +521,7 @@
       "file_type": "code",
       "norm_label": "testgetmaterialpdf",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L482"
+      "source_location": "L483"
     },
     {
       "id": "tests_test_materials_routes_testgetmaterials",
@@ -547,7 +547,7 @@
       "file_type": "code",
       "norm_label": "testresetmaterials",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L457"
+      "source_location": "L458"
     },
     {
       "id": "tests_test_materials_routes_testunits",
@@ -560,7 +560,7 @@
       "file_type": "code",
       "norm_label": "testunits",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L333"
+      "source_location": "L334"
     },
     {
       "id": "tests_test_materials_routes_testaddmaterial",
@@ -924,7 +924,7 @@
       "file_type": "code",
       "norm_label": "testpassports",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L380"
+      "source_location": "L381"
     },
     {
       "id": "tests_test_excel_registry_testbuildheader",
@@ -4573,7 +4573,7 @@
       "file_type": "code",
       "norm_label": "delete_material_endpoint()",
       "source_file": "routes/materials.py",
-      "source_location": "L295"
+      "source_location": "L297"
     },
     {
       "id": "routes_materials_get_material_pdf",
@@ -4585,7 +4585,7 @@
       "file_type": "code",
       "norm_label": "get_material_pdf()",
       "source_file": "routes/materials.py",
-      "source_location": "L273"
+      "source_location": "L275"
     },
     {
       "id": "routes_materials_get_passports",
@@ -4597,7 +4597,7 @@
       "file_type": "code",
       "norm_label": "get_passports()",
       "source_file": "routes/materials.py",
-      "source_location": "L216"
+      "source_location": "L218"
     },
     {
       "id": "routes_materials_get_units",
@@ -4609,7 +4609,7 @@
       "file_type": "code",
       "norm_label": "get_units()",
       "source_file": "routes/materials.py",
-      "source_location": "L239"
+      "source_location": "L241"
     },
     {
       "id": "routes_materials_next_file_number",
@@ -4657,7 +4657,7 @@
       "file_type": "code",
       "norm_label": "reset_materials_endpoint()",
       "source_file": "routes/materials.py",
-      "source_location": "L250"
+      "source_location": "L252"
     },
     {
       "id": "routes_materials_safe_name",
@@ -6229,7 +6229,7 @@
       "file_type": "code",
       "norm_label": ".test_delete_existing()",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L508"
+      "source_location": "L509"
     },
     {
       "id": "tests_test_materials_routes_testdeletematerial_test_nonexistent",
@@ -6241,7 +6241,7 @@
       "file_type": "code",
       "norm_label": ".test_nonexistent()",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L504"
+      "source_location": "L505"
     },
     {
       "id": "tests_test_materials_routes_testgetmaterialpdf_test_material_pdf_not_found",
@@ -6253,7 +6253,7 @@
       "file_type": "code",
       "norm_label": ".test_material_pdf_not_found()",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L487"
+      "source_location": "L488"
     },
     {
       "id": "tests_test_materials_routes_testgetmaterialpdf_test_nonexistent_material",
@@ -6265,7 +6265,7 @@
       "file_type": "code",
       "norm_label": ".test_nonexistent_material()",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L483"
+      "source_location": "L484"
     },
     {
       "id": "tests_test_materials_routes_testgetmaterials_test_empty_list",
@@ -6313,7 +6313,7 @@
       "file_type": "code",
       "norm_label": ".test_reset_clears_section()",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L458"
+      "source_location": "L459"
     },
     {
       "id": "tests_test_materials_routes_testunits_test_add_saves_unit",
@@ -6325,7 +6325,7 @@
       "file_type": "code",
       "norm_label": ".test_add_saves_unit()",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L359"
+      "source_location": "L360"
     },
     {
       "id": "tests_test_materials_routes_testunits_test_units_collect_previously_entered",
@@ -6337,7 +6337,7 @@
       "file_type": "code",
       "norm_label": ".test_units_collect_previously_entered()",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L339"
+      "source_location": "L340"
     },
     {
       "id": "tests_test_materials_routes_testunits_test_units_empty",
@@ -6349,7 +6349,7 @@
       "file_type": "code",
       "norm_label": ".test_units_empty()",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L334"
+      "source_location": "L335"
     },
     {
       "id": "tests_test_materials_routes_testaddmaterial_test_add_without_optional_fields",
@@ -6361,7 +6361,7 @@
       "file_type": "code",
       "norm_label": ".test_add_without_optional_fields()",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L317"
+      "source_location": "L318"
     },
     {
       "id": "tests_test_materials_routes_testaddmaterial_test_any_file_type_accepted",
@@ -6373,7 +6373,7 @@
       "file_type": "code",
       "norm_label": ".test_any_file_type_accepted()",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L267"
+      "source_location": "L268"
     },
     {
       "id": "tests_test_materials_routes_testaddmaterial_test_filename_doc_plus_material_number_with_num_prefix",
@@ -6481,7 +6481,7 @@
       "file_type": "code",
       "norm_label": ".test_no_file_with_reason_creates_txt()",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L287"
+      "source_location": "L288"
     },
     {
       "id": "tests_test_materials_routes_testaddmaterial_test_same_day_numbering",
@@ -8713,7 +8713,7 @@
       "file_type": "code",
       "norm_label": ".test_passport_label_has_unit()",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L381"
+      "source_location": "L382"
     },
     {
       "id": "tests_test_materials_routes_testpassports_test_passport_without_date_label",
@@ -8725,7 +8725,7 @@
       "file_type": "code",
       "norm_label": ".test_passport_without_date_label()",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L400"
+      "source_location": "L401"
     },
     {
       "id": "tests_test_materials_routes_testpassports_test_passports_list_groups_unique",
@@ -8737,7 +8737,7 @@
       "file_type": "code",
       "norm_label": ".test_passports_list_groups_unique()",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L419"
+      "source_location": "L420"
     },
     {
       "id": "routes_registry_get_registry_data",
@@ -12166,7 +12166,7 @@
       "source_location": "L1"
     },
     {
-      "id": "tests_test_materials_routes_rationale_340",
+      "id": "tests_test_materials_routes_rationale_341",
       "label": "\u0420\u0430\u043d\u0435\u0435 \u0432\u0432\u0435\u0434\u0451\u043d\u043d\u044b\u0435 \u0435\u0434\u0438\u043d\u0438\u0446\u044b \u043f\u043e\u043f\u0430\u0434\u0430\u044e\u0442 \u0432 \u0432\u044b\u043f\u0430\u0434\u0430\u044e\u0449\u0438\u0439 \u0441\u043f\u0438\u0441\u043e\u043a (\u0443\u043d\u0438\u043a\u0430\u043b\u044c\u043d\u044b\u0435).",
       "_origin": "ast",
       "community": 30,
@@ -12174,7 +12174,7 @@
       "file_type": "rationale",
       "norm_label": "\u0440\u0430\u043d\u0435\u0435 \u0432\u0432\u0435\u0434\u0435\u043d\u043d\u044b\u0435 \u0435\u0434\u0438\u043d\u0438\u0446\u044b \u043f\u043e\u043f\u0430\u0434\u0430\u044e\u0442 \u0432 \u0432\u044b\u043f\u0430\u0434\u0430\u044e\u0449\u0438\u0438 \u0441\u043f\u0438\u0441\u043e\u043a (\u0443\u043d\u0438\u043a\u0430\u043b\u044c\u043d\u044b\u0435).",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L340"
+      "source_location": "L341"
     },
     {
       "id": "tests_test_materials_routes_rationale_115",
@@ -12243,7 +12243,7 @@
       "source_location": "L225"
     },
     {
-      "id": "tests_test_materials_routes_rationale_268",
+      "id": "tests_test_materials_routes_rationale_269",
       "label": "\u041f\u0440\u0438\u043a\u0440\u0435\u043f\u043b\u044f\u0442\u044c \u043c\u043e\u0436\u043d\u043e \u043b\u044e\u0431\u043e\u0439 \u0444\u0430\u0439\u043b (\u043d\u0435 \u0442\u043e\u043b\u044c\u043a\u043e PDF) \u2014 \u0441\u043e\u0445\u0440\u0430\u043d\u044f\u0435\u0442\u0441\u044f \u0441 \u0435\u0433\u043e \u0440\u0430\u0441\u0448\u0438\u0440\u0435\u043d\u0438\u0435\u043c.",
       "_origin": "ast",
       "community": 31,
@@ -12251,10 +12251,10 @@
       "file_type": "rationale",
       "norm_label": "\u043f\u0440\u0438\u043a\u0440\u0435\u043f\u043b\u044f\u0442\u044c \u043c\u043e\u0436\u043d\u043e \u043b\u044e\u0431\u043e\u0438 \u0444\u0430\u0438\u043b (\u043d\u0435 \u0442\u043e\u043b\u044c\u043a\u043e pdf) \u2014 \u0441\u043e\u0445\u0440\u0430\u043d\u044f\u0435\u0442\u0441\u044f \u0441 \u0435\u0433\u043e \u0440\u0430\u0441\u0448\u0438\u0440\u0435\u043d\u0438\u0435\u043c.",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L268"
+      "source_location": "L269"
     },
     {
-      "id": "tests_test_materials_routes_rationale_288",
+      "id": "tests_test_materials_routes_rationale_289",
       "label": "\u0411\u0435\u0437 \u0444\u0430\u0439\u043b\u0430, \u043d\u043e \u0441 \u043f\u0440\u0438\u0447\u0438\u043d\u043e\u0439: txt \u0441 \u043f\u0440\u0438\u0447\u0438\u043d\u0430\u043c\u0438 \u043f\u043e\u044f\u0432\u043b\u044f\u0435\u0442\u0441\u044f \u0432 \u043f\u0430\u043f\u043a\u0435 \u0434\u0430\u0442\u044b,\u2026",
       "_origin": "ast",
       "community": 31,
@@ -12262,7 +12262,7 @@
       "file_type": "rationale",
       "norm_label": "\u0431\u0435\u0437 \u0444\u0430\u0438\u043b\u0430, \u043d\u043e \u0441 \u043f\u0440\u0438\u0447\u0438\u043d\u043e\u0438: txt \u0441 \u043f\u0440\u0438\u0447\u0438\u043d\u0430\u043c\u0438 \u043f\u043e\u044f\u0432\u043b\u044f\u0435\u0442\u0441\u044f \u0432 \u043f\u0430\u043f\u043a\u0435 \u0434\u0430\u0442\u044b,...",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L288"
+      "source_location": "L289"
     },
     {
       "id": "tests_test_materials_routes_rationale_52",
@@ -15690,7 +15690,7 @@
       "source_location": "L26"
     },
     {
-      "id": "tests_test_materials_routes_rationale_382",
+      "id": "tests_test_materials_routes_rationale_383",
       "label": "\u0415\u0434\u0438\u043d\u0438\u0446\u0430 \u0438\u0437\u043c\u0435\u0440\u0435\u043d\u0438\u044f \u0432\u0438\u0434\u043d\u0430 \u0432 \u043f\u043e\u0434\u043f\u0438\u0441\u0438 \u043f\u0430\u0441\u043f\u043e\u0440\u0442\u0430.",
       "_origin": "ast",
       "community": 80,
@@ -15698,10 +15698,10 @@
       "file_type": "rationale",
       "norm_label": "\u0435\u0434\u0438\u043d\u0438\u0446\u0430 \u0438\u0437\u043c\u0435\u0440\u0435\u043d\u0438\u044f \u0432\u0438\u0434\u043d\u0430 \u0432 \u043f\u043e\u0434\u043f\u0438\u0441\u0438 \u043f\u0430\u0441\u043f\u043e\u0440\u0442\u0430.",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L382"
+      "source_location": "L383"
     },
     {
-      "id": "tests_test_materials_routes_rationale_401",
+      "id": "tests_test_materials_routes_rationale_402",
       "label": "\u041f\u0430\u0441\u043f\u043e\u0440\u0442 \u0431\u0435\u0437 \u0434\u0430\u0442\u044b \u0432 \u0432\u044b\u043f\u0430\u0434\u0430\u044e\u0449\u0435\u043c \u0441\u043f\u0438\u0441\u043a\u0435 \u043f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0435\u0442\u0441\u044f \u043a\u0430\u043a \u00ab\u043e\u0442 \u0431\u0435\u0437 \u0434\u0430\u0442\u044b\u00bb.",
       "_origin": "ast",
       "community": 80,
@@ -15709,7 +15709,7 @@
       "file_type": "rationale",
       "norm_label": "\u043f\u0430\u0441\u043f\u043e\u0440\u0442 \u0431\u0435\u0437 \u0434\u0430\u0442\u044b \u0432 \u0432\u044b\u043f\u0430\u0434\u0430\u044e\u0449\u0435\u043c \u0441\u043f\u0438\u0441\u043a\u0435 \u043f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0435\u0442\u0441\u044f \u043a\u0430\u043a \u00ab\u043e\u0442 \u0431\u0435\u0437 \u0434\u0430\u0442\u044b\u00bb.",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L401"
+      "source_location": "L402"
     },
     {
       "id": "routes_registry",
@@ -18273,6 +18273,18 @@
     },
     {
       "source": "routes_materials_add_material_endpoint",
+      "target": "routes_materials_readable_date",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "routes/materials.py",
+      "source_location": "L155",
+      "weight": 1.0
+    },
+    {
+      "source": "routes_materials_add_material_endpoint",
       "target": "routes_core_sanitize_text",
       "relation": "calls",
       "_origin": "ast",
@@ -18292,7 +18304,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "routes/materials.py",
-      "source_location": "L299",
+      "source_location": "L301",
       "weight": 1.0
     },
     {
@@ -18304,7 +18316,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "routes/materials.py",
-      "source_location": "L310",
+      "source_location": "L312",
       "weight": 1.0
     },
     {
@@ -18316,7 +18328,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "routes/materials.py",
-      "source_location": "L277",
+      "source_location": "L279",
       "weight": 1.0
     },
     {
@@ -18364,7 +18376,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "routes/materials.py",
-      "source_location": "L220",
+      "source_location": "L222",
       "weight": 1.0
     },
     {
@@ -18376,7 +18388,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "routes/materials.py",
-      "source_location": "L227",
+      "source_location": "L229",
       "weight": 1.0
     },
     {
@@ -18388,7 +18400,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "routes/materials.py",
-      "source_location": "L243",
+      "source_location": "L245",
       "weight": 1.0
     },
     {
@@ -18412,7 +18424,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "routes/materials.py",
-      "source_location": "L254",
+      "source_location": "L256",
       "weight": 1.0
     },
     {
@@ -25996,7 +26008,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L313",
+      "source_location": "L314",
       "weight": 1.0
     },
     {
@@ -26008,7 +26020,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L513",
+      "source_location": "L514",
       "weight": 1.0
     },
     {
@@ -26020,7 +26032,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L490",
+      "source_location": "L491",
       "weight": 1.0
     },
     {
@@ -26032,7 +26044,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L472",
+      "source_location": "L473",
       "weight": 1.0
     },
     {
@@ -26044,7 +26056,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L375",
+      "source_location": "L376",
       "weight": 1.0
     },
     {
@@ -28096,7 +28108,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "routes/materials.py",
-      "source_location": "L294",
+      "source_location": "L296",
       "weight": 1.0
     },
     {
@@ -28108,7 +28120,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "routes/materials.py",
-      "source_location": "L272",
+      "source_location": "L274",
       "weight": 1.0
     },
     {
@@ -28132,7 +28144,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "routes/materials.py",
-      "source_location": "L215",
+      "source_location": "L217",
       "weight": 1.0
     },
     {
@@ -28144,7 +28156,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "routes/materials.py",
-      "source_location": "L238",
+      "source_location": "L240",
       "weight": 1.0
     },
     {
@@ -28156,7 +28168,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "routes/materials.py",
-      "source_location": "L249",
+      "source_location": "L251",
       "weight": 1.0
     },
     {
@@ -29332,7 +29344,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "routes/materials.py",
-      "source_location": "L217",
+      "source_location": "L219",
       "weight": 1.0
     },
     {
@@ -29344,7 +29356,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "routes/materials.py",
-      "source_location": "L240",
+      "source_location": "L242",
       "weight": 1.0
     },
     {
@@ -29356,7 +29368,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "routes/materials.py",
-      "source_location": "L251",
+      "source_location": "L253",
       "weight": 1.0
     },
     {
@@ -29368,7 +29380,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "routes/materials.py",
-      "source_location": "L274",
+      "source_location": "L276",
       "weight": 1.0
     },
     {
@@ -30328,7 +30340,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L488",
+      "source_location": "L489",
       "weight": 1.0
     },
     {
@@ -35068,7 +35080,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "routes/materials.py",
-      "source_location": "L216",
+      "source_location": "L218",
       "weight": 1.0
     },
     {
@@ -35079,7 +35091,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "routes/materials.py",
-      "source_location": "L239",
+      "source_location": "L241",
       "weight": 1.0
     },
     {
@@ -35090,7 +35102,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "routes/materials.py",
-      "source_location": "L250",
+      "source_location": "L252",
       "weight": 1.0
     },
     {
@@ -35101,7 +35113,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "routes/materials.py",
-      "source_location": "L273",
+      "source_location": "L275",
       "weight": 1.0
     },
     {
@@ -35112,7 +35124,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "routes/materials.py",
-      "source_location": "L295",
+      "source_location": "L297",
       "weight": 1.0
     },
     {
@@ -37598,7 +37610,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L333",
+      "source_location": "L334",
       "weight": 1.0
     },
     {
@@ -37609,7 +37621,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L380",
+      "source_location": "L381",
       "weight": 1.0
     },
     {
@@ -37620,7 +37632,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L457",
+      "source_location": "L458",
       "weight": 1.0
     },
     {
@@ -37631,7 +37643,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L482",
+      "source_location": "L483",
       "weight": 1.0
     },
     {
@@ -37642,7 +37654,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L503",
+      "source_location": "L504",
       "weight": 1.0
     },
     {
@@ -41690,7 +41702,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L267",
+      "source_location": "L268",
       "weight": 1.0
     },
     {
@@ -41712,7 +41724,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L287",
+      "source_location": "L288",
       "weight": 1.0
     },
     {
@@ -41723,7 +41735,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L317",
+      "source_location": "L318",
       "weight": 1.0
     },
     {
@@ -41789,7 +41801,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L504",
+      "source_location": "L505",
       "weight": 1.0
     },
     {
@@ -41800,7 +41812,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L508",
+      "source_location": "L509",
       "weight": 1.0
     },
     {
@@ -41811,7 +41823,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L483",
+      "source_location": "L484",
       "weight": 1.0
     },
     {
@@ -41822,7 +41834,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L487",
+      "source_location": "L488",
       "weight": 1.0
     },
     {
@@ -41866,7 +41878,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L381",
+      "source_location": "L382",
       "weight": 1.0
     },
     {
@@ -41877,7 +41889,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L400",
+      "source_location": "L401",
       "weight": 1.0
     },
     {
@@ -41888,7 +41900,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L419",
+      "source_location": "L420",
       "weight": 1.0
     },
     {
@@ -41899,7 +41911,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L458",
+      "source_location": "L459",
       "weight": 1.0
     },
     {
@@ -41910,7 +41922,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L334",
+      "source_location": "L335",
       "weight": 1.0
     },
     {
@@ -41921,7 +41933,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L339",
+      "source_location": "L340",
       "weight": 1.0
     },
     {
@@ -41932,7 +41944,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L359",
+      "source_location": "L360",
       "weight": 1.0
     },
     {
@@ -44279,58 +44291,58 @@
       "weight": 1.0
     },
     {
-      "source": "tests_test_materials_routes_rationale_268",
+      "source": "tests_test_materials_routes_rationale_269",
       "target": "tests_test_materials_routes_testaddmaterial_test_any_file_type_accepted",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L268",
+      "source_location": "L269",
       "weight": 1.0
     },
     {
-      "source": "tests_test_materials_routes_rationale_288",
+      "source": "tests_test_materials_routes_rationale_289",
       "target": "tests_test_materials_routes_testaddmaterial_test_no_file_with_reason_creates_txt",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L288",
+      "source_location": "L289",
       "weight": 1.0
     },
     {
-      "source": "tests_test_materials_routes_rationale_340",
+      "source": "tests_test_materials_routes_rationale_341",
       "target": "tests_test_materials_routes_testunits_test_units_collect_previously_entered",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L340",
+      "source_location": "L341",
       "weight": 1.0
     },
     {
-      "source": "tests_test_materials_routes_rationale_382",
+      "source": "tests_test_materials_routes_rationale_383",
       "target": "tests_test_materials_routes_testpassports_test_passport_label_has_unit",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L382",
+      "source_location": "L383",
       "weight": 1.0
     },
     {
-      "source": "tests_test_materials_routes_rationale_401",
+      "source": "tests_test_materials_routes_rationale_402",
       "target": "tests_test_materials_routes_testpassports_test_passport_without_date_label",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_materials_routes.py",
-      "source_location": "L401",
+      "source_location": "L402",
       "weight": 1.0
     },
     {
@@ -45787,5 +45799,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "6dcd6760b04a66b9cb09a2e983cd596a89f7c8c5"
+  "built_at_commit": "23bb16d55178eaba12e6abfee59b9363737b0815"
 }

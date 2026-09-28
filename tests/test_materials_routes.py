@@ -223,7 +223,8 @@ class TestAddMaterial:
         self, app_client, temp_db_all, temp_dir
     ):
         """Имя файла начинается с «Документ Материал» (через пробел), перед
-        номером добавляется «№ », а уже введённый «№» не дублируется."""
+        номером добавляется «№ », дата в имени — «ДД.ММ.ГГГГ», а уже
+        введённый «№» не дублируется."""
         with patch("routes.materials.MATERIALS_DIR", temp_dir):
             resp = app_client.post(
                 "/api/materials/add",
@@ -242,7 +243,7 @@ class TestAddMaterial:
         assert len(files) == 1
         name = files[0].name
         assert name.startswith(
-            "01.Паспорт на песок из карьера Ламга;№ 15;2026-08-03.pdf"
+            "01.Паспорт на песок из карьера Ламга;№ 15;03.08.2026.pdf"
         )
 
         with patch("routes.materials.MATERIALS_DIR", temp_dir):
@@ -262,7 +263,7 @@ class TestAddMaterial:
         files = sorted(p.name for p in (temp_dir / "2026-09-26").glob("*.pdf"))
         assert files[1].startswith("02.")
         assert "№ №" not in files[1]
-        assert ";№ 90;2026-09-02.pdf" in files[1]
+        assert ";№ 90;02.09.2026.pdf" in files[1]
 
     def test_any_file_type_accepted(self, app_client, temp_db_all, temp_dir):
         """Прикреплять можно любой файл (не только PDF) — сохраняется с его

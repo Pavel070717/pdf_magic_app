@@ -148,9 +148,11 @@ def add_material_endpoint():
         if number_clean and not number_clean.startswith("№"):
             number_clean = "№ " + number_clean
         safe_num = _safe_name(number_clean or "—")
-        # Пустая дата документа = «без даты». Слэш из токена заменяется на "_",
-        # как и в остальных частях имени (на Windows "/" запрещён).
-        safe_date = _safe_name(date or "без даты")
+        # Дата документа в имени файла — в читаемом виде «ДД.ММ.ГГГГ»,
+        # пустая дата = «без даты». Слэш из токена заменяется на "_"
+        # (на Windows "/" запрещён).
+        date_iso = _parse_iso_date(date)
+        safe_date = _safe_name(_readable_date(date_iso) if date_iso else "без даты")
 
         def _save_one(ext: str) -> int:
             folder_path = materials_dir / arrival_date

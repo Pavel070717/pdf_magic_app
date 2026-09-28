@@ -1,16 +1,16 @@
 # Graph Report - pdf_magic_app  (2026-09-28)
 
 ## Corpus Check
-- 85 files · ~67,646 words
+- 85 files · ~67,674 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1364 nodes · 2574 edges · 93 communities (67 shown, 20 thin omitted)
+- 1364 nodes · 2575 edges · 93 communities (67 shown, 20 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 22 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `6dcd6760`
+- Built from commit: `23bb16d5`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -217,7 +217,7 @@ Cohesion: 0.15
 Nodes (4): Tests for routes/files.py — file upload, list, reorder, delete., TestClearFiles, TestGetFiles, TestRemoveFile
 
 ### Community 21 - "materials.py"
-Cohesion: 0.14
+Cohesion: 0.15
 Nodes (21): add_material_endpoint(), delete_material_endpoint(), get_material_pdf(), get_passports(), get_units(), _next_file_number(), _parse_iso_date(), Path (+13 more)
 
 ### Community 22 - "test_msg_routes.py"
