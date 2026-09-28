@@ -187,7 +187,7 @@ class TestAddMaterial:
         assert len(files) == 1
         name = files[0].name
         assert "/" not in name
-        assert name.startswith("01.Акт_Приёмка;№ 255_1;без даты.")
+        assert name.startswith("01.Акт_Приёмка Бетон_раствор;№ 255_1;без даты.")
 
     def test_multiple_passports_saved_separately(
         self, app_client, temp_db_all, temp_dir
@@ -219,19 +219,19 @@ class TestAddMaterial:
         assert files[1].startswith("02.")
         assert len(get_all_materials()) == 2
 
-    def test_filename_no_material_number_with_num_prefix(
+    def test_filename_doc_plus_material_number_with_num_prefix(
         self, app_client, temp_db_all, temp_dir
     ):
-        """В имя файла материал не попадает; перед номером добавляется «№ »,
-        а уже введённый «№» не дублируется."""
+        """Имя файла начинается с «Документ Материал» (через пробел), перед
+        номером добавляется «№ », а уже введённый «№» не дублируется."""
         with patch("routes.materials.MATERIALS_DIR", temp_dir):
             resp = app_client.post(
                 "/api/materials/add",
                 data={
-                    "doc_name": "Паспорт на песок из карьера Ламга",
-                    "material_name": "Песок",
-                    "number": "77",
-                    "date": "2026-09-01",
+                    "doc_name": "Паспорт",
+                    "material_name": "на песок из карьера Ламга",
+                    "number": "15",
+                    "date": "2026-08-03",
                     "arrival_date": "2026-09-26",
                     "file": (io.BytesIO(b"%PDF-1.4 fake"), "x.pdf"),
                 },
@@ -242,16 +242,15 @@ class TestAddMaterial:
         assert len(files) == 1
         name = files[0].name
         assert name.startswith(
-            "01.Паспорт на песок из карьера Ламга;№ 77;2026-09-01.pdf"
+            "01.Паспорт на песок из карьера Ламга;№ 15;2026-08-03.pdf"
         )
-        assert "Песок" not in name
 
         with patch("routes.materials.MATERIALS_DIR", temp_dir):
             resp = app_client.post(
                 "/api/materials/add",
                 data={
-                    "doc_name": "Паспорт на песок из карьера Ламга",
-                    "material_name": "Песок",
+                    "doc_name": "Паспорт",
+                    "material_name": "на песок из карьера Ламга",
                     "number": "№ 90",
                     "date": "2026-09-02",
                     "arrival_date": "2026-09-26",

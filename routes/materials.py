@@ -140,8 +140,10 @@ def add_material_endpoint():
         materials_dir = MATERIALS_DIR
         materials_dir.mkdir(parents=True, exist_ok=True)
 
-        safe_doc = _safe_name(doc_name)
-        # Материал в имя файла не попадает — только Документ;№;Дата.
+        # Имя файла начинается с «Документ Материал» (через пробел), далее
+        # ;№ Номер;Дата — материал входит в имя, как просит пользователь.
+        safe_doc = _safe_name(f"{doc_name} {material_name}".strip())
+        # Уже введённый «№» не дублируется; пустой номер = «—».
         number_clean = number.strip()
         if number_clean and not number_clean.startswith("№"):
             number_clean = "№ " + number_clean
