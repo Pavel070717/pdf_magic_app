@@ -479,16 +479,26 @@ function filteredAndSorted() {
   return list;
 }
 
-// Один материал (документ + материал) — один пункт реестра: паспорта
-// собираются в одну строку, их номера и даты стекаются друг под друга.
+// Один пункт реестра = один материал В ПРЕДЕЛАХ ОДНОГО ДНЯ поступления:
+// одинаковый документ+материал, пришедший в разные даты, — разные строки.
+// Паспорта одного дня собираются в одну строку, их номера и даты стекаются.
 function groupRecords(arr) {
   var map = {};
   arr.forEach(function(m) {
-    var k = (m.doc_name || '') + '\u0000' + (m.material_name || '');
-    if (!map[k]) map[k] = { doc: m.doc_name || '', mat: m.material_name || '', items: [] };
+    var k = (m.arrival_date || '') + '\u0000' + (m.doc_name || '') + '\u0000' + (m.material_name || '');
+    if (!map[k]) map[k] = {
+      arr: m.arrival_date || '',
+      doc: m.doc_name || '',
+      mat: m.material_name || '',
+      items: []
+    };
     map[k].items.push(m);
   });
-  return Object.keys(map).map(function(k) { return map[k]; });
+  var groups = Object.keys(map).map(function(k) { return map[k]; });
+  if (!sort.key) {
+    groups.sort(function(a, b) { return a.arr < b.arr ? -1 : (a.arr > b.arr ? 1 : 0); });
+  }
+  return groups;
 }
 
 function groupCell(group, col) {

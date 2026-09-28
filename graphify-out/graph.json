@@ -13140,7 +13140,7 @@
       "node_kind": "heading",
       "norm_label": "dev",
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L89"
+      "source_location": "L90"
     },
     {
       "id": "memory_21_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u0437\u0430\u0432\u0438\u0441\u0438\u043c\u043e\u0441\u0442\u0438",
@@ -13152,7 +13152,7 @@
       "node_kind": "heading",
       "norm_label": "\u0437\u0430\u0432\u0438\u0441\u0438\u043c\u043e\u0441\u0442\u0438",
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L80"
+      "source_location": "L81"
     },
     {
       "id": "memory_21_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u0438\u0437\u0432\u0435\u0441\u0442\u043d\u044b\u0435_\u043e\u0433\u0440\u0430\u043d\u0438\u0447\u0435\u043d\u0438\u044f",
@@ -13164,7 +13164,7 @@
       "node_kind": "heading",
       "norm_label": "\u0438\u0437\u0432\u0435\u0441\u0442\u043d\u044b\u0435 \u043e\u0433\u0440\u0430\u043d\u0438\u0447\u0435\u043d\u0438\u044f",
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L72"
+      "source_location": "L73"
     },
     {
       "id": "memory_21_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u043a\u0430\u043a_\u0437\u0430\u043f\u0443\u0441\u043a\u0430\u0442\u044c",
@@ -13176,7 +13176,7 @@
       "node_kind": "heading",
       "norm_label": "\u043a\u0430\u043a \u0437\u0430\u043f\u0443\u0441\u043a\u0430\u0442\u044c",
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L99"
+      "source_location": "L100"
     },
     {
       "id": "memory_21_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u043a\u043e\u043d\u0442\u0430\u043a\u0442\u044b",
@@ -13188,7 +13188,7 @@
       "node_kind": "heading",
       "norm_label": "\u043a\u043e\u043d\u0442\u0430\u043a\u0442\u044b",
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L108"
+      "source_location": "L109"
     },
     {
       "id": "memory_21_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u043e\u043f\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u044b\u0435",
@@ -13200,7 +13200,7 @@
       "node_kind": "heading",
       "norm_label": "\u043e\u043f\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u044b\u0435",
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L94"
+      "source_location": "L95"
     },
     {
       "id": "memory_21_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u043e\u0441\u043d\u043e\u0432\u043d\u044b\u0435",
@@ -13212,7 +13212,7 @@
       "node_kind": "heading",
       "norm_label": "\u043e\u0441\u043d\u043e\u0432\u043d\u044b\u0435",
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L82"
+      "source_location": "L83"
     },
     {
       "id": "memory_21_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u0441\u0442\u0430\u0442\u0443\u0441",
@@ -13236,7 +13236,7 @@
       "node_kind": "heading",
       "norm_label": "\u0441\u0442\u0440\u0443\u043a\u0442\u0443\u0440\u0430 \u043f\u0440\u043e\u0435\u043a\u0442\u0430",
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L54"
+      "source_location": "L55"
     },
     {
       "id": "memory_21_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u043f\u0440\u043e\u0435\u043a\u0442\u0430",
@@ -33489,7 +33489,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L82",
+      "source_location": "L83",
       "weight": 1.0
     },
     {
@@ -33500,7 +33500,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L89",
+      "source_location": "L90",
       "weight": 1.0
     },
     {
@@ -33511,7 +33511,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L94",
+      "source_location": "L95",
+      "weight": 1.0
+    },
+    {
+      "source": "memory_21_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u043f\u0440\u043e\u0435\u043a\u0442\u0430",
+      "target": "memory_21_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u043a\u0430\u043a_\u0437\u0430\u043f\u0443\u0441\u043a\u0430\u0442\u044c",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
+      "source_location": "L100",
       "weight": 1.0
     },
     {
@@ -33522,7 +33533,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L108",
+      "source_location": "L109",
       "weight": 1.0
     },
     {
@@ -33544,7 +33555,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L54",
+      "source_location": "L55",
       "weight": 1.0
     },
     {
@@ -33555,7 +33566,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L72",
+      "source_location": "L73",
       "weight": 1.0
     },
     {
@@ -33566,7 +33577,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L80",
+      "source_location": "L81",
       "weight": 1.0
     },
     {
@@ -33578,17 +33589,6 @@
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
       "source_location": "L9",
-      "weight": 1.0
-    },
-    {
-      "source": "memory_21_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u043f\u0440\u043e\u0435\u043a\u0442\u0430",
-      "target": "memory_21_\u0442\u0435\u043a\u0443\u0449\u0435\u0435_\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435_\u043a\u0430\u043a_\u0437\u0430\u043f\u0443\u0441\u043a\u0430\u0442\u044c",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L99",
       "weight": 1.0
     },
     {
@@ -45611,7 +45611,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L114",
+      "source_location": "L115",
       "weight": 1.0
     },
     {
@@ -45622,7 +45622,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L114",
+      "source_location": "L115",
       "weight": 1.0
     },
     {
@@ -45633,7 +45633,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L114",
+      "source_location": "L115",
       "weight": 1.0
     },
     {
@@ -45644,7 +45644,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md",
-      "source_location": "L114",
+      "source_location": "L115",
       "weight": 1.0
     },
     {
@@ -45913,5 +45913,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "1f555c28dc62ede7c9cc2670e5c2a46d0c8a07aa"
+  "built_at_commit": "5b07c0d664dc31a571573c90efb5d03adcef31b9"
 }
