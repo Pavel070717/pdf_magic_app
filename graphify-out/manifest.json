@@ -60,9 +60,9 @@
     "semantic_hash": ""
   },
   "routes/materials.py": {
-    "mtime": 1790560885.4598057,
-    "seen": 1790561059.756702,
-    "ast_hash": "41c641947b7c60919a0b4063c9473d57",
+    "mtime": 1790561784.139755,
+    "seen": 1790561882.7648025,
+    "ast_hash": "6bf532bb2c48aa61562e354d926be738",
     "semantic_hash": ""
   },
   "routes/registry.py": {
@@ -192,9 +192,9 @@
     "semantic_hash": ""
   },
   "tests/test_materials_routes.py": {
-    "mtime": 1790560969.8682916,
-    "seen": 1790561059.756702,
-    "ast_hash": "aebe1ec982d12b82e8655bed6bc999fc",
+    "mtime": 1790561793.1069698,
+    "seen": 1790561882.76707,
+    "ast_hash": "93de215bb189d3ef591c9ae70df5b9a8",
     "semantic_hash": ""
   },
   "tests/test_registry_routes.py": {
@@ -432,9 +432,9 @@
     "semantic_hash": ""
   },
   "memory/11-routes-materials.md": {
-    "mtime": 1790561046.2143261,
-    "seen": 1790561059.7642193,
-    "ast_hash": "8afe6188cd39adc11f4db92a5b9fe992",
+    "mtime": 1790561822.8232026,
+    "seen": 1790561882.769528,
+    "ast_hash": "ea51edabc3ddfcf871ec1e01d8f24b1f",
     "semantic_hash": ""
   },
   "memory/12-routes-registry.md": {
@@ -480,9 +480,9 @@
     "semantic_hash": ""
   },
   "memory/19-\u0422\u0435\u0441\u0442\u044b.md": {
-    "mtime": 1790561040.672817,
-    "seen": 1790561059.7642193,
-    "ast_hash": "64ac9a9485ec7a29e9f992bd0646f7a7",
+    "mtime": 1790561873.4900267,
+    "seen": 1790561882.769528,
+    "ast_hash": "d7ef61ed71891d5e33a1a88b7f82369b",
     "semantic_hash": ""
   },
   "memory/20-CI-CD.md": {
@@ -492,9 +492,9 @@
     "semantic_hash": ""
   },
   "memory/21-\u0422\u0435\u043a\u0443\u0449\u0435\u0435-\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435.md": {
-    "mtime": 1790561051.338142,
-    "seen": 1790561059.7642193,
-    "ast_hash": "3cc3075e01626a1d3c65c84240cea821",
+    "mtime": 1790561829.8844497,
+    "seen": 1790561882.769528,
+    "ast_hash": "00cd8c8ea586ef9419b8768e46a6c6ea",
     "semantic_hash": ""
   },
   "mypy_errors.txt": {
@@ -546,9 +546,9 @@
     "semantic_hash": ""
   },
   "templates/materials.html": {
-    "mtime": 1790560948.4625387,
-    "seen": 1790561059.7642193,
-    "ast_hash": "bfd57ba0566292bf70f721223707094b",
+    "mtime": 1790561753.20325,
+    "seen": 1790561882.7705426,
+    "ast_hash": "6bcc6ac0b1756262910a656139b2cce4",
     "semantic_hash": ""
   },
   "templates/registry_form.html": {

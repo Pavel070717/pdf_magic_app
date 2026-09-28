@@ -89,16 +89,31 @@ def add_material_endpoint():
     try:
         doc_name = sanitize_text(request.form.get("doc_name", ""))
         material_name = sanitize_text(request.form.get("material_name", ""))
-        number = sanitize_text(request.form.get("number", ""))
-        date = sanitize_text(request.form.get("date", ""))
         producer = sanitize_text(request.form.get("producer", ""))
         unit = sanitize_text(request.form.get("unit", ""))
         reason = sanitize_text(request.form.get("reason", "")).strip()
         copy_from = sanitize_text(request.form.get("copy_from", "")).strip()
         arrival_input = sanitize_text(request.form.get("arrival_date", ""))
         quantity_raw = sanitize_text(request.form.get("quantity", "0"))
-        files = [f for f in request.files.getlist("file") if f and f.filename]
-        has_file = bool(files)
+
+        # Паспортов может быть несколько: у каждого свой номер, дата и файл(ы).
+        number_rows = [sanitize_text(n) for n in request.form.getlist("number")]
+        date_rows = [sanitize_text(d) for d in request.form.getlist("date")]
+        if not number_rows:
+            number_rows = [""]
+        if not date_rows:
+            date_rows = [""]
+        while len(date_rows) < len(number_rows):
+            date_rows.append("")
+
+        def _row_files(i: int):
+            fs = [f for f in request.files.getlist(f"file_{i}") if f and f.filename]
+            if i == 0:
+                fs += [f for f in request.files.getlist("file") if f and f.filename]
+            return fs
+
+        uploaded = [(i, f) for i in range(len(number_rows)) for f in _row_files(i)]
+        has_file = bool(uploaded)
 
         # Файл можно не прикреплять, если выбран паспорт из ранее добавленных:
         # его сопроводительный документ копируется в новую папку даты поступления.
@@ -158,18 +173,21 @@ def add_material_endpoint():
         # Имя файла начинается с «Документ Материал» (через пробел), далее
         # ;№ Номер;Дата — материал входит в имя, как просит пользователь.
         safe_doc = _safe_name(f"{doc_name} {material_name}".strip())
-        # Уже введённый «№» не дублируется; пустой номер = «—».
-        number_clean = number.strip()
-        if number_clean and not number_clean.startswith("№"):
-            number_clean = "№ " + number_clean
-        safe_num = _safe_name(number_clean or "—")
-        # Дата документа в имени файла — в читаемом виде «ДД.ММ.ГГГГ»,
-        # пустая дата = «без даты». Слэш из токена заменяется на "_"
-        # (на Windows "/" запрещён).
-        date_iso = _parse_iso_date(date)
-        safe_date = _safe_name(_readable_date(date_iso) if date_iso else "без даты")
 
-        def _save_one(ext: str) -> int:
+        def _safe_tokens(num_text: str, date_text: str):
+            # Уже введённый «№» не дублируется; пустой номер = «—».
+            number_clean = num_text.strip()
+            if number_clean and not number_clean.startswith("№"):
+                number_clean = "№ " + number_clean
+            safe_num = _safe_name(number_clean or "—")
+            # Дата документа в имени файла — в читаемом виде «ДД.ММ.ГГГГ»,
+            # пустая дата = «без даты».
+            date_iso = _parse_iso_date(date_text)
+            safe_date = _safe_name(_readable_date(date_iso) if date_iso else "без даты")
+            return safe_num, safe_date
+
+        def _save_one(ext: str, num_text: str, date_text: str) -> int:
+            safe_num, safe_date = _safe_tokens(num_text, date_text)
             folder_path = materials_dir / arrival_date
             folder_path.mkdir(parents=True, exist_ok=True)
             num = _next_file_number(folder_path)
@@ -185,8 +203,8 @@ def add_material_endpoint():
             material_id = add_material(
                 doc_name=doc_name,
                 material_name=material_name,
-                number=number,
-                date=date,
+                number=num_text,
+                date=date_text,
                 producer=producer,
                 filename=stored_filename,
                 original_filename=f"{base}{ext}",
@@ -200,23 +218,29 @@ def add_material_endpoint():
 
         created_ids = []
         saved_paths = []
-        if files:
-            for f in files:
+        if uploaded:
+            for i, f in uploaded:
                 ext = os.path.splitext(f.filename or "")[1].lower() or ".pdf"
-                filepath, stored_filename, material_id = _save_one(ext)
+                filepath, stored_filename, material_id = _save_one(
+                    ext, number_rows[i], date_rows[i]
+                )
                 f.save(str(filepath))
                 logger.info(f"Файл материала сохранён: {filepath}")
                 created_ids.append(material_id)
                 saved_paths.append(stored_filename)
         elif copy_source_path is not None:
             ext = os.path.splitext(copy_source_path.name)[1].lower() or ".pdf"
-            filepath, stored_filename, material_id = _save_one(ext)
+            filepath, stored_filename, material_id = _save_one(
+                ext, number_rows[0], date_rows[0]
+            )
             shutil.copyfile(copy_source_path, filepath)
             logger.info(f"Файл скопирован из ранее добавленного: {filepath}")
             created_ids.append(material_id)
             saved_paths.append(stored_filename)
         else:
-            filepath, stored_filename, material_id = _save_one(".txt")
+            filepath, stored_filename, material_id = _save_one(
+                ".txt", number_rows[0], date_rows[0]
+            )
             filepath.write_text(reason, encoding="utf-8")
             logger.info(f"txt причины отсутствия сохранён: {filepath}")
             created_ids.append(material_id)

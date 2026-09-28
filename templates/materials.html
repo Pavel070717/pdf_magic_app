@@ -56,12 +56,6 @@
     <div class="grid-3" style="margin-bottom: 12px;">
       <div class="field"><label>Наименование документа</label><input type="text" name="doc_name" required></div>
       <div class="field"><label>Наименование материала</label><input type="text" name="material_name" required></div>
-      <div class="field"><label>Номер</label><input type="text" name="number"></div>
-      <div class="field"><label>Дата документа</label><input type="date" name="date" id="mat-date-input" style="min-width: 0;">
-        <label style="display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 12px; color: var(--text-secondary); cursor: pointer; white-space: nowrap;">
-          <input type="checkbox" id="mat-date-no-date" onchange="toggleNoDate(this)"> Без даты
-        </label>
-      </div>
       <div class="field"><label>Производитель</label><input type="text" name="producer"></div>
       <div class="field">
         <label>Единица измерения</label>
@@ -69,23 +63,27 @@
         <datalist id="unit-datalist"></datalist>
       </div>
     </div>
+
+    <div id="mat-passports"></div>
+    <div id="mat-passports-add" style="margin-bottom: 12px;">
+      <button type="button" class="btn btn-sm" onclick="addPassportBlock()">＋ Добавить ещё паспорт</button>
+      <span class="text-muted text-sm">у каждого паспорта — свой номер, дата и файл</span>
+    </div>
+
     <div class="grid-2" style="margin-bottom: 12px;">
       <div class="field"><label>Количество</label>
         <input type="text" name="quantity" inputmode="decimal" value="0,000" min="0"
           onfocus="focusQtyInput(this)" onblur="fmtQtyInput(this)"></div>
       <div class="field"><label>Дата поступления</label><input type="date" name="arrival_date" required></div>
       <div class="field">
-        <label>Сопроводительный документ (PDF, фото и др.)</label>
-        <input type="file" name="file" id="mat-file-input" multiple onchange="hideReasonError()">
-        <span class="text-muted text-sm" style="display: block; margin-top: 4px;">можно выбрать несколько паспортов (один материал — 2 и более файлов)</span>
-        <label style="display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 12px; color: var(--text-secondary); cursor: pointer; white-space: nowrap;">
+        <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-secondary); cursor: pointer; white-space: nowrap;">
           <input type="checkbox" id="mat-missing-doc" onchange="toggleMissingDoc(this)"> Отсутствует сопроводительный документ
         </label>
-      </div>
-      <div class="field" id="mat-reason-area" style="display: none;">
-        <label>Причина отсутствия сопроводительного документа</label>
-        <input type="text" name="reason" id="mat-reason-input" disabled oninput="hideReasonError()" placeholder="обязательно, т.к. документа нет">
-        <div id="mat-reason-error" class="text-danger text-sm" style="color: #ff4d4f; margin-top: 4px; display: none;">✕ В случае отсутствия документа обязательно укажите причину</div>
+        <div id="mat-reason-area" style="display: none;">
+          <label style="margin-top: 6px;">Причина отсутствия сопроводительного документа</label>
+          <input type="text" name="reason" id="mat-reason-input" disabled oninput="hideReasonError()" placeholder="обязательно, т.к. документа нет">
+          <div id="mat-reason-error" class="text-danger text-sm" style="color: #ff4d4f; margin-top: 4px; display: none;">✕ В случае отсутствия документа обязательно укажите причину</div>
+        </div>
       </div>
     </div>
     <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
@@ -123,11 +121,82 @@ function loadPassports() {
   }).catch(function() {});
 }
 
+// ─── Несколько паспортов: динамические блоки «номер + дата + файл» ───
+function passportBlockHTML() {
+  return '<div class="mat-passport-block" style="margin-bottom: 12px; padding: 12px; border: 1px dashed var(--border-strong); border-radius: 8px;">' +
+    '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">' +
+    '<b class="mat-passport-title" style="font-size: 13px;">Паспорт 1</b>' +
+    '<button type="button" class="btn btn-sm btn-danger mat-block-remove" onclick="removePassportBlock(this)">✕</button>' +
+    '</div>' +
+    '<div class="grid-3">' +
+    '<div class="field"><label>Номер паспорта</label><input type="text" name="number" class="mat-number"></div>' +
+    '<div class="field"><label>Дата документа</label><input type="date" name="date" class="mat-pdate" style="min-width: 0;">' +
+    '<label style="display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 12px; color: var(--text-secondary); cursor: pointer; white-space: nowrap;">' +
+    '<input type="checkbox" class="mat-pdate-no" onchange="toggleBlockNoDate(this)"> Без даты</label></div>' +
+    '<div class="field"><label>Файл паспорта</label>' +
+    '<input type="file" name="file_0" class="mat-pfile" multiple onchange="hideReasonError()">' +
+    '<span class="text-muted text-sm" style="display: block; margin-top: 4px;">можно выбрать 2+ файла паспорта</span></div>' +
+    '</div></div>';
+}
+
+function addPassportBlock() {
+  var box = document.getElementById('mat-passports');
+  var wrap = document.createElement('div');
+  wrap.innerHTML = passportBlockHTML();
+  box.appendChild(wrap.firstChild);
+  reindexPassports();
+}
+
+function removePassportBlock(btn) {
+  var block = btn.closest('.mat-passport-block');
+  if (block) block.remove();
+  reindexPassports();
+}
+
+function reindexPassports() {
+  var blocks = document.querySelectorAll('.mat-passport-block');
+  blocks.forEach(function(b, i) {
+    var t = b.querySelector('.mat-passport-title');
+    if (t) t.textContent = 'Паспорт ' + (i + 1);
+    var f = b.querySelector('.mat-pfile');
+    if (f) f.name = 'file_' + i;
+    var r = b.querySelector('.mat-block-remove');
+    if (r) r.style.visibility = blocks.length > 1 ? 'visible' : 'hidden';
+  });
+  hideReasonError();
+}
+
+// «Без даты» в блоке: поле даты очищается, но остаётся отправляемым (иначе
+// при нескольких паспортах строки номеров и дат разъедутся).
+function toggleBlockNoDate(cb) {
+  var block = cb.closest('.mat-passport-block');
+  var input = block ? block.querySelector('.mat-pdate') : null;
+  if (!input) return;
+  if (cb.checked) {
+    input.value = '';
+    input.style.opacity = '.5';
+    input.readOnly = true;
+  } else {
+    input.style.opacity = '';
+    input.readOnly = false;
+  }
+}
+
+function initPassportBlocks() {
+  var box = document.getElementById('mat-passports');
+  box.innerHTML = '';
+  addPassportBlock();
+}
+
 // Переключение способа заполнения: новый паспорт / из ранее добавленных.
 function setPassportEntry(mode) {
   var row = document.getElementById('mat-passport-row');
   var newMode = mode !== 'fav';
   if (row) row.style.display = newMode ? 'none' : '';
+  var parks = document.getElementById('mat-passports');
+  var addBtn = document.getElementById('mat-passports-add');
+  if (parks) parks.style.display = newMode ? '' : 'none';
+  if (addBtn) addBtn.style.display = newMode ? '' : 'none';
   var form = document.getElementById('mat-add');
   var rn = form.querySelector('input[name="entry_mode"][value="new"]');
   var rf = form.querySelector('input[name="entry_mode"][value="fav"]');
@@ -138,17 +207,39 @@ function setPassportEntry(mode) {
   if (newMode) {
     var sel = document.getElementById('mat-passport');
     if (sel) sel.selectedIndex = 0;
-    ['doc_name', 'material_name', 'number', 'producer', 'unit'].forEach(function(n) {
-      var i = form.querySelector('[name="' + n + '"]');
-      if (i) i.readOnly = false;
-    });
-    var dateInput = document.getElementById('mat-date-input');
-    var noDate = document.getElementById('mat-date-no-date');
     if (copyFrom) copyFrom.value = '';
-    if (dateInput) { dateInput.readOnly = false; dateInput.disabled = false; }
-    if (noDate) { noDate.disabled = false; }
     if (hint) hint.style.display = 'none';
+    unlockPassportFields();
   }
+}
+
+function lockPassportFields() {
+  var form = document.getElementById('mat-add');
+  ['doc_name', 'material_name', 'producer', 'unit'].forEach(function(n) {
+    var i = form.querySelector('[name="' + n + '"]');
+    if (i) { i.value = ''; i.readOnly = true; }
+  });
+  var b0 = document.querySelector('#mat-passports .mat-passport-block');
+  ['.mat-number', '.mat-pdate'].forEach(function(c) {
+    var i = b0 ? b0.querySelector(c) : null;
+    if (i) { i.value = ''; i.readOnly = true; }
+  });
+}
+
+function unlockPassportFields() {
+  var form = document.getElementById('mat-add');
+  ['doc_name', 'material_name', 'producer', 'unit'].forEach(function(n) {
+    var i = form.querySelector('[name="' + n + '"]');
+    if (i) i.readOnly = false;
+  });
+  var b0 = document.querySelector('#mat-passports .mat-passport-block');
+  if (!b0) return;
+  var no = b0.querySelector('.mat-pdate-no');
+  if (no) no.checked = false;
+  var di = b0.querySelector('.mat-pdate');
+  if (di) { di.readOnly = false; di.style.opacity = ''; }
+  var ni = b0.querySelector('.mat-number');
+  if (ni) ni.readOnly = false;
 }
 
 // Выбор паспорта из списка: форма сначала ОЧИЩАЕТСЯ, затем заполняется
@@ -156,49 +247,31 @@ function setPassportEntry(mode) {
 // Поля документа блокируются (readOnly), файл подтянется сам — на сервер
 // уходит copy_from с id паспорта.
 function applyPassport(sel) {
-  var form = document.getElementById('mat-add');
   var opt = sel.options[sel.selectedIndex];
   var copyFrom = document.getElementById('mat-copy-from');
   var hint = document.getElementById('mat-copy-hint');
+  var b0 = document.querySelector('#mat-passports .mat-passport-block');
+  var numInput = b0 ? b0.querySelector('.mat-number') : null;
+  var dateInput = b0 ? b0.querySelector('.mat-pdate') : null;
+  var noDate = b0 ? b0.querySelector('.mat-pdate-no') : null;
   if (!opt || !opt.value) {
     if (copyFrom) copyFrom.value = '';
     if (hint) hint.style.display = 'none';
-    ['doc_name', 'material_name', 'number', 'producer', 'unit'].forEach(function(n) {
-      var i = form.querySelector('[name="' + n + '"]');
-      if (i) i.readOnly = false;
-    });
-    var di = document.getElementById('mat-date-input');
-    var nd = document.getElementById('mat-date-no-date');
-    if (di) { di.readOnly = false; di.disabled = false; }
-    if (nd) { nd.disabled = false; }
+    unlockPassportFields();
     return;
   }
   var p = passportsList[parseInt(opt.value, 10)];
   if (!p) return;
+  lockPassportFields();
 
-  ['doc_name', 'material_name', 'number', 'producer', 'unit'].forEach(function(n) {
-    var i = form.querySelector('[name="' + n + '"]');
-    if (i) { i.value = ''; i.readOnly = true; }
-  });
-  var dateInput = document.getElementById('mat-date-input');
-  var noDate = document.getElementById('mat-date-no-date');
-  if (dateInput) {
-    dateInput.value = '';
-    dateInput.readOnly = true;
-    dateInput.disabled = false;
-  }
-  if (noDate) { noDate.checked = false; noDate.disabled = false; }
-
+  var form = document.getElementById('mat-add');
   form.querySelector('[name="doc_name"]').value = p.doc_name || '';
   form.querySelector('[name="material_name"]').value = p.material_name || '';
-  form.querySelector('[name="number"]').value = p.number || '';
   form.querySelector('[name="producer"]').value = p.producer || '';
   form.querySelector('[name="unit"]').value = p.unit || '';
+  if (numInput) numInput.value = p.number || '';
   if (dateInput) dateInput.value = p.date || '';
-  if (noDate && !p.date) {
-    noDate.checked = true;
-    if (dateInput) dateInput.disabled = true;
-  }
+  if (noDate) { noDate.checked = !p.date; toggleBlockNoDate(noDate); }
   if (copyFrom) copyFrom.value = p.id || '';
   if (hint) hint.style.display = (p.id ? '' : 'none');
   hideReasonError();
@@ -215,46 +288,27 @@ function loadUnits() {
   }).catch(function() {});
 }
 
-function toggleNoDate(cb) {
-  var input = document.getElementById('mat-date-input');
-  if (!input) return;
-  if (cb && cb.checked) {
-    input.value = '';
-    input.disabled = true;
-  } else {
-    input.disabled = false;
-  }
-}
-
 // Галочка «Отсутствует сопроводительный документ»: появляется поле причины,
-// блокируются номер, дата документа и выбор файла.
+// блокируются все блоки паспортов (номер, дата, файл).
 function toggleMissingDoc(cb) {
   var found = cb && cb.checked;
-  var fileInput = document.getElementById('mat-file-input');
-  var numberInput = document.querySelector('#mat-add [name="number"]');
-  var dateInput = document.getElementById('mat-date-input');
-  var noDate = document.getElementById('mat-date-no-date');
+  var blocks = document.querySelectorAll('.mat-passport-block');
   var reasonArea = document.getElementById('mat-reason-area');
   var reasonInput = document.getElementById('mat-reason-input');
 
-  if (found) {
-    if (fileInput) fileInput.disabled = true;
-    if (numberInput) numberInput.disabled = true;
-    if (dateInput) dateInput.disabled = true;
-    if (noDate) noDate.disabled = true;
-    if (noDate && noDate.checked) noDate.checked = false;
-  } else {
-    if (fileInput) fileInput.disabled = false;
-    if (numberInput) numberInput.disabled = false;
-    if (dateInput) dateInput.disabled = false;
-    if (noDate) noDate.disabled = false;
+  blocks.forEach(function(b) {
+    ['mat-number', 'mat-pdate', 'mat-pdate-no', 'mat-pfile'].forEach(function(c) {
+      var i = b.querySelector('.' + c);
+      if (i) i.disabled = found;
+    });
+  });
+
+  if (!found) {
     if (reasonInput) { reasonInput.value = ''; reasonInput.disabled = true; }
     if (reasonArea) reasonArea.style.display = 'none';
     hideReasonError();
-  }
-
-  if (found && reasonArea) {
-    reasonArea.style.display = '';
+  } else {
+    if (reasonArea) reasonArea.style.display = '';
     if (reasonInput) reasonInput.disabled = false;
   }
 }
@@ -277,14 +331,17 @@ function addMaterial(e) {
   var data = new FormData(form);
   var msg = document.getElementById('mat-msg');
 
-  var fileInput = document.getElementById('mat-file-input');
   var reasonInput = document.getElementById('mat-reason-input');
   var reasonError = document.getElementById('mat-reason-error');
   var missingCb = document.getElementById('mat-missing-doc');
   var missingChecked = !!(missingCb && missingCb.checked);
   var copyFrom = document.getElementById('mat-copy-from');
   var willCopy = !!(copyFrom && copyFrom.value);
-  var noFile = !fileInput.files || !fileInput.files.length;
+  var anyFile = false;
+  document.querySelectorAll('.mat-passport-block').forEach(function(b) {
+    var f = b.querySelector('.mat-pfile');
+    if (f && f.files && f.files.length) anyFile = true;
+  });
   var reasonText = String(reasonInput.value || '').trim();
 
   if (missingChecked) {
@@ -296,9 +353,10 @@ function addMaterial(e) {
       msg.innerHTML = '';
       return false;
     }
-  } else if (noFile && !willCopy) {
-    fileInput.style.borderColor = '#ff4d4f';
-    msg.innerHTML = '<span class="text-danger">❌ Прикрепите сопроводительный документ или выберите паспорт из ранее добавленных</span>';
+  } else if (!anyFile && !willCopy) {
+    var box = document.getElementById('mat-passports');
+    if (box) box.style.borderColor = '#ff4d4f';
+    msg.innerHTML = '<span class="text-danger">❌ Прикрепите файл паспорта или выберите паспорт из ранее добавленных</span>';
     return false;
   }
   hideReasonError();
@@ -314,6 +372,7 @@ function addMaterial(e) {
         form.reset();
         var missingCb = document.getElementById('mat-missing-doc');
         if (missingCb) { missingCb.checked = false; toggleMissingDoc(missingCb); }
+        initPassportBlocks();
         setPassportEntry('new');
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
@@ -336,10 +395,11 @@ function addMaterial(e) {
 
 // Снимает подсветку ошибок (вызывается при выборе файла / вводе причины).
 function hideReasonError() {
-  var fileInput = document.getElementById('mat-file-input');
+  var box = document.getElementById('mat-passports');
+  if (box) box.style.borderColor = '';
+  document.querySelectorAll('.mat-pfile').forEach(function(f) { f.style.borderColor = ''; });
   var reasonInput = document.getElementById('mat-reason-input');
   var reasonError = document.getElementById('mat-reason-error');
-  if (fileInput) fileInput.style.borderColor = '';
   if (reasonInput) reasonInput.style.borderColor = '';
   if (reasonError) reasonError.style.display = 'none';
 }
@@ -719,6 +779,7 @@ document.addEventListener('DOMContentLoaded', function() {
   loadMaterials();
   loadPassports();
   loadUnits();
+  initPassportBlocks();
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, '0');
   var mm = String(today.getMonth() + 1).padStart(2, '0');

@@ -310,6 +310,39 @@ class TestAddMaterial:
         assert copied[0].name.startswith("01.")
         assert len(get_all_materials()) == 2
 
+    def test_multiple_passports_distinct_number_date_file(
+        self, app_client, temp_db_all, temp_dir
+    ):
+        """Несколько паспортов в одном добавлении (file_0/file_1): у каждого
+        свой номер и дата — файлы именуются по своим номерам/датам."""
+        from utils.database import get_all_materials
+
+        with patch("routes.materials.MATERIALS_DIR", temp_dir):
+            resp = app_client.post(
+                "/api/materials/add",
+                data={
+                    "doc_name": "Паспорт на песок",
+                    "material_name": "Песок из карьера Ламга",
+                    "number": ["15", "16"],
+                    "date": ["2026-08-03", "2026-08-10"],
+                    "arrival_date": "2026-09-26",
+                    "file_0": (io.BytesIO(b"%PDF-1.4 fake A"), "a.pdf"),
+                    "file_1": (io.BytesIO(b"%PDF-1.4 fake B"), "b.pdf"),
+                },
+                content_type="multipart/form-data",
+            )
+            assert resp.status_code == 200
+            assert resp.get_json()["count"] == 2
+        files = sorted(p.name for p in (temp_dir / "2026-09-26").glob("*.pdf"))
+        assert len(files) == 2
+        assert files[0].startswith(
+            "01.Паспорт на песок Песок из карьера Ламга;№ 15;03.08.2026."
+        )
+        assert files[1].startswith(
+            "02.Паспорт на песок Песок из карьера Ламга;№ 16;10.08.2026."
+        )
+        assert len(get_all_materials()) == 2
+
     def test_any_file_type_accepted(self, app_client, temp_db_all, temp_dir):
         """Прикреплять можно любой файл (не только PDF) — сохраняется с его
         расширением."""
