@@ -67,24 +67,47 @@ function addRule(e) {
 // =============================================================================
 // Load rules list
 // =============================================================================
+var currentRules = [];
+
+function escapeAttr(str) {
+  return escapeHtml(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function escapeJs(str) {
+  return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+}
+
+function findRuleById(id) {
+  for (var i = 0; i < currentRules.length; i++) {
+    if (String(currentRules[i].id) === String(id)) return currentRules[i];
+  }
+  return null;
+}
+
+function ruleRowHTML(r) {
+  var id = String(r.id || '');
+  var isSymbol = r.type === 'symbol';
+  return '<div class="rule-row" data-id="' + escapeAttr(id) + '" style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border);">' +
+    '<span class="badge ' + (isSymbol ? 'badge-accent' : 'badge-success') + '">' + (isSymbol ? 'СИМ' : 'ТЕКСТ') + '</span>' +
+    '<span class="text-sm" style="color: var(--text-secondary);">' + escapeHtml(r.from || '') + '</span>' +
+    '<span class="text-muted">→</span>' +
+    '<span class="text-sm" style="color: var(--text-secondary);">' + escapeHtml(r.to || '') + '</span>' +
+    '<span style="display: flex; gap: 8px; margin-left: auto;">' +
+      '<button type="button" class="btn btn-primary btn-sm" onclick="editRule(\'' + escapeJs(id) + '\')">✏️ Изменить</button>' +
+      '<button type="button" class="btn btn-danger btn-sm" onclick="deleteRule(\'' + escapeJs(id) + '\')">🗑️</button>' +
+    '</span>' +
+  '</div>';
+}
+
 function loadRules() {
   fetch('/api/replace-rules').then(function(r) { return r.json(); }).then(function(d) {
+    currentRules = (d.rules || d || []).slice();
     var el = document.getElementById('rules-list');
-    var rules = d.rules || d || [];
-    if (!rules.length) {
+    if (!currentRules.length) {
       el.innerHTML = '<span class="text-muted">Правила не заданы</span>';
       return;
     }
-    el.innerHTML = rules.map(function(r) {
-      var isSymbol = r.type === 'symbol';
-      return '<div style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border);">' +
-        '<span class="badge ' + (isSymbol ? 'badge-accent' : 'badge-success') + '">' + (isSymbol ? 'СИМ' : 'ТЕКСТ') + '</span>' +
-        '<span class="text-sm" style="color: var(--text-secondary);">' + escapeHtml(r.from || '') + '</span>' +
-        '<span class="text-muted">→</span>' +
-        '<span class="text-sm" style="color: var(--text-secondary);">' + escapeHtml(r.to || '') + '</span>' +
-        '<button class="btn btn-danger btn-sm" style="margin-left: auto;" onclick="deleteRule(' + (r.id || 0) + ')">🗑️</button>' +
-        '</div>';
-    }).join('');
+    el.innerHTML = currentRules.map(ruleRowHTML).join('');
     // Remove last border
     var items = el.querySelectorAll('div[style*="border-bottom"]');
     if (items.length) items[items.length - 1].style.borderBottom = 'none';
@@ -101,10 +124,70 @@ function deleteRule(id) {
   fetch('/api/replace-rules/' + encodeURIComponent(id), { method: 'DELETE' })
     .then(function(r) { return r.json(); }).then(function(d) {
     if (d.success) {
+      currentRules = (d.rules || []).slice();
       loadRules();
       showToast('Правило удалено', 'success');
+    } else {
+      showToast(d.error || 'Ошибка удаления', 'error');
     }
+  }).catch(function() {
+    showToast('Ошибка сети', 'error');
   });
+}
+
+// =============================================================================
+// Edit rule (inline form → PUT via fetch)
+// =============================================================================
+function editRule(id) {
+  var rule = findRuleById(id);
+  if (!rule) return;
+  var row = document.querySelector('.rule-row[data-id="' + escapeAttr(id) + '"]');
+  if (!row) return;
+  var isSymbol = rule.type === 'symbol';
+  row.innerHTML = '<form class="rule-edit" style="display: flex; gap: 10px; flex-wrap: wrap; width: 100%;">' +
+    '<select name="type" style="padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text);">' +
+      '<option value="text"' + (isSymbol ? '' : ' selected') + '>Текстовое</option>' +
+      '<option value="symbol"' + (isSymbol ? ' selected' : '') + '>Символьное</option>' +
+    '</select>' +
+    '<input type="text" name="from" value="' + escapeAttr(rule.from || '') + '" required placeholder="Что заменить" style="flex: 1; min-width: 120px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text);">' +
+    '<input type="text" name="to" value="' + escapeAttr(rule.to || '') + '" placeholder="На что заменить" style="flex: 1; min-width: 120px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text);">' +
+    '<button type="submit" class="btn btn-primary btn-sm">Сохранить</button>' +
+    '<button type="button" class="btn btn-sm" onclick="cancelEdit(\'' + escapeJs(id) + '\')">Отмена</button>' +
+  '</form>';
+  row.querySelector('form').addEventListener('submit', function(ev) {
+    ev.preventDefault();
+    saveRule(id, row);
+  });
+}
+
+function saveRule(id, row) {
+  var form = row.querySelector('form');
+  var payload = {
+    type: form.querySelector('[name="type"]').value,
+    from: form.querySelector('[name="from"]').value,
+    to: form.querySelector('[name="to"]').value
+  };
+  fetch('/api/replace-rules/' + encodeURIComponent(id), {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.success) {
+      currentRules = (d.rules || []).slice();
+      loadRules();
+      showToast('Правило изменено', 'success');
+    } else {
+      showToast(d.error || 'Ошибка изменения', 'error');
+    }
+  }).catch(function() {
+    showToast('Ошибка сети', 'error');
+  });
+}
+
+function cancelEdit(id) {
+  var rule = findRuleById(id);
+  var row = document.querySelector('.rule-row[data-id="' + escapeAttr(id) + '"]');
+  if (rule && row) row.outerHTML = ruleRowHTML(rule);
 }
 
 // =============================================================================

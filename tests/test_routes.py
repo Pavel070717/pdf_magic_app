@@ -72,6 +72,47 @@ class TestRulesRoutes:
         resp = app_client.delete(f"/api/replace-rules/{rule_id}")
         assert resp.status_code == 200
 
+    def test_update_replace_rule(self, app_client):
+        rule = {"type": "symbol", "from": "_", "to": "-"}
+        resp = app_client.post(
+            "/api/replace-rules",
+            data=json.dumps(rule),
+            content_type="application/json",
+        )
+        rule_id = resp.get_json()["rules"][-1]["id"]
+        update = {"type": "text", "from": "abc", "to": "xyz"}
+        resp = app_client.put(
+            f"/api/replace-rules/{rule_id}",
+            data=json.dumps(update),
+            content_type="application/json",
+        )
+        assert resp.status_code == 200
+        data = resp.get_json()
+        assert data["success"] is True
+        last = data["rules"][-1]
+        assert last["id"] == rule_id
+        assert last["from"] == "abc"
+        assert last["to"] == "xyz"
+
+    def test_update_replace_rule_missing(self, app_client):
+        resp = app_client.put(
+            "/api/replace-rules/nonexistent",
+            data=json.dumps({"type": "text", "from": "a", "to": "b"}),
+            content_type="application/json",
+        )
+        assert resp.status_code == 404
+
+    def test_get_rules_assigns_ids_to_rules_without_id(self, app_client):
+        from utils.state import load_state, save_state
+
+        state = load_state()
+        state["replace_rules"] = [{"type": "text", "from": "старый", "to": "новый"}]
+        save_state(state)
+        resp = app_client.get("/api/replace-rules")
+        assert resp.status_code == 200
+        for r in resp.get_json()["rules"]:
+            assert r.get("id")
+
     def test_clear_replace_rules(self, app_client):
         resp = app_client.post("/api/replace-rules/clear")
         assert resp.status_code == 200

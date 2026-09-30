@@ -21,6 +21,13 @@ rules_bp = Blueprint("rules", __name__)
 def api_get_replace_rules():
     try:
         rules = get_replace_rules()
+        changed = False
+        for rule in rules:
+            if not rule.get("id"):
+                rule["id"] = str(uuid.uuid4())[:8]
+                changed = True
+        if changed:
+            save_replace_rules(rules)
         return jsonify({"success": True, "rules": rules})
     except Exception as e:
         logger.error(f"Ошибка получения правил: {e}")
@@ -62,6 +69,30 @@ def api_delete_replace_rule(rule_id):
         return jsonify({"success": True, "rules": rules})
     except Exception as e:
         logger.error(f"Ошибка удаления правила: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@rules_bp.route("/api/replace-rules/<rule_id>", methods=["PUT"])
+def api_update_replace_rule(rule_id):
+    try:
+        data = request.get_json()
+        rule_type = data.get("type", "text")
+        from_str = data.get("from", "").strip()
+        to_str = data.get("to", "").strip()
+        if not from_str:
+            return jsonify({"success": False, "error": "Введите что заменять"}), 400
+
+        rules = get_replace_rules()
+        target = next((r for r in rules if r.get("id") == rule_id), None)
+        if target is None:
+            return jsonify({"success": False, "error": "Правило не найдено"}), 404
+        target["type"] = rule_type
+        target["from"] = from_str
+        target["to"] = to_str or ""
+        save_replace_rules(rules)
+        return jsonify({"success": True, "rules": rules})
+    except Exception as e:
+        logger.exception("Ошибка изменения правила")
         return jsonify({"success": False, "error": str(e)}), 500
 
 
